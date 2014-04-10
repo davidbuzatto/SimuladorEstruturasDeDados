@@ -8,7 +8,7 @@ package gui.desenho.estruturas;
 
 import estruturas.ArvoreBinariaBusca;
 import estruturas.Fila;
-import estruturas.PercursoArvores;
+import estruturas.algoritmos.arvores.TipoPercursoArvores;
 import estruturas.Pilha;
 import java.util.ArrayList;
 import java.util.List;
@@ -168,7 +168,7 @@ public class ArvoreBinariaBuscaAnotada<Tipo extends Comparable> {
      * @param tipo Tipo do percurso a ser executado.
      * @return Lista de nós anotados na ordem do percurso executado.
      */
-    public Iterable<NoAnotado<Tipo>> percorrer( PercursoArvores tipo ) {
+    public Iterable<NoAnotado<Tipo>> percorrer( TipoPercursoArvores tipo ) {
 
         List<NoAnotado<Tipo>> elementos = new ArrayList<>();
         
@@ -351,7 +351,7 @@ public class ArvoreBinariaBuscaAnotada<Tipo extends Comparable> {
         sb.append( "Altura: " ).append( altura ).append( "\n" );
         sb.append( "Grau: " ).append( grau ).append( "\n\n" );
 
-        for ( NoAnotado<Tipo> no : percorrer( PercursoArvores.PRE_ORDEM ) ) {
+        for ( NoAnotado<Tipo> no : percorrer( TipoPercursoArvores.PRE_ORDEM ) ) {
             for ( int i = 0; i < no.nivel; i++ ) {
                 if ( i == no.nivel - 1 ) {
                     sb.append( "|--" );

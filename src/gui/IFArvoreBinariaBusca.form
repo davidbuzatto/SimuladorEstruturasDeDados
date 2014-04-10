@@ -111,19 +111,14 @@
                               <Component id="btnInserir" alignment="1" min="-2" max="-2" attributes="0"/>
                               <Component id="btnEsvaziar" alignment="1" min="-2" max="-2" attributes="0"/>
                               <Group type="102" alignment="1" attributes="0">
-                                  <Group type="103" groupAlignment="1" attributes="0">
-                                      <Component id="labelValor" min="-2" max="-2" attributes="0"/>
-                                      <Component id="btnInserir1N" min="-2" max="-2" attributes="0"/>
-                                  </Group>
+                                  <Component id="btnInserirN1" min="-2" max="-2" attributes="0"/>
                                   <EmptySpace max="-2" attributes="0"/>
-                                  <Group type="103" groupAlignment="0" max="-2" attributes="0">
-                                      <Group type="102" attributes="0">
-                                          <Component id="btnInserirN1" min="-2" max="-2" attributes="0"/>
-                                          <EmptySpace max="-2" attributes="0"/>
-                                          <Component id="btnInserirRandom" min="-2" max="-2" attributes="0"/>
-                                      </Group>
-                                      <Component id="fieldValor" max="32767" attributes="0"/>
-                                  </Group>
+                                  <Component id="btnInserirAleatorio" min="-2" max="-2" attributes="0"/>
+                              </Group>
+                              <Group type="102" alignment="1" attributes="0">
+                                  <Component id="labelValor" min="-2" max="-2" attributes="0"/>
+                                  <EmptySpace max="-2" attributes="0"/>
+                                  <Component id="fieldValor" min="-2" pref="104" max="-2" attributes="0"/>
                               </Group>
                               <Group type="102" alignment="1" attributes="0">
                                   <Component id="labelDiametro" min="-2" max="-2" attributes="0"/>
@@ -150,9 +145,8 @@
                   <Component id="btnInserir" min="-2" max="-2" attributes="0"/>
                   <EmptySpace max="-2" attributes="0"/>
                   <Group type="103" groupAlignment="3" attributes="0">
-                      <Component id="btnInserirRandom" alignment="3" min="-2" max="-2" attributes="0"/>
+                      <Component id="btnInserirAleatorio" alignment="3" min="-2" max="-2" attributes="0"/>
                       <Component id="btnInserirN1" alignment="3" min="-2" max="-2" attributes="0"/>
-                      <Component id="btnInserir1N" alignment="3" min="-2" max="-2" attributes="0"/>
                   </Group>
                   <EmptySpace max="-2" attributes="0"/>
                   <Component id="btnEsvaziar" min="-2" max="-2" attributes="0"/>
@@ -191,28 +185,20 @@
             <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="btnInserirActionPerformed"/>
           </Events>
         </Component>
-        <Component class="javax.swing.JButton" name="btnInserir1N">
-          <Properties>
-            <Property name="text" type="java.lang.String" value="1..n"/>
-          </Properties>
-          <Events>
-            <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="btnInserir1NActionPerformed"/>
-          </Events>
-        </Component>
         <Component class="javax.swing.JButton" name="btnInserirN1">
           <Properties>
-            <Property name="text" type="java.lang.String" value="n..1"/>
+            <Property name="text" type="java.lang.String" value="[ini...fim]"/>
           </Properties>
           <Events>
             <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="btnInserirN1ActionPerformed"/>
           </Events>
         </Component>
-        <Component class="javax.swing.JButton" name="btnInserirRandom">
+        <Component class="javax.swing.JButton" name="btnInserirAleatorio">
           <Properties>
-            <Property name="text" type="java.lang.String" value="random()"/>
+            <Property name="text" type="java.lang.String" value="aleat&#xf3;rio"/>
           </Properties>
           <Events>
-            <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="btnInserirRandomActionPerformed"/>
+            <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="btnInserirAleatorioActionPerformed"/>
           </Events>
         </Component>
         <Component class="javax.swing.JButton" name="btnEsvaziar">
@@ -449,7 +435,7 @@
                           <Component id="labelGrau" alignment="3" min="-2" max="-2" attributes="0"/>
                           <Component id="fieldGrau" alignment="3" min="-2" max="-2" attributes="0"/>
                       </Group>
-                      <EmptySpace pref="55" max="32767" attributes="0"/>
+                      <EmptySpace pref="59" max="32767" attributes="0"/>
                   </Group>
               </Group>
             </DimensionLayout>

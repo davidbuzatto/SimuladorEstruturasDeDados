@@ -6,8 +6,9 @@
 
 package estruturas;
 
+import estruturas.algoritmos.arvores.PercursosArvoreBinariaBusca;
+import estruturas.algoritmos.arvores.TipoPercursoArvores;
 import gui.desenho.estruturas.ArvoreBinariaBuscaAnotada;
-import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Iterator;
 import java.util.List;
@@ -15,14 +16,11 @@ import java.util.List;
 /**
  * Implementação de uma árvore binária de busca não balanceada.
  * 
- * Esta classe possui uma grande quantidade de código, entretando
- * o mais relevante são a estrutura da árvore e suas operações básicas.
- * 
- * No mundo real, os algoritmos de percurso deveriam estar em outra classe.
- * Algumas modificações de acesso foram feitas também, permitindo que alguns
+ * Algumas modificações de acesso foram feitas na classe, permitindo que alguns
  * detalhes internos da classe sejam acessíveis externamente. Essa mudança
  * teve como objetivo permitir que os dados da árvore sejam processados
- * pela classe ArvoreBuscaBinariaAnotada.
+ * pela classe ArvoreBuscaBinariaAnotada e pela classe com os algoritmos de 
+ * percursos.
  * 
  * @author David Buzatto
  */
@@ -31,7 +29,7 @@ public class ArvoreBinariaBusca<Tipo extends Comparable> implements Iterable<Tip
     /*
      * Classe interna que define os nós da árvore.
      * É pública para poder acessar a estrutura dos nós externamente
-     * no simulador. Deveria ser privada.
+     * no simulador e nos percursos. Deveria ser privada.
      */
     public class No<Tipo> {
         public Tipo valor;
@@ -335,169 +333,6 @@ public class ArvoreBinariaBusca<Tipo extends Comparable> implements Iterable<Tip
     }
     
     /**
-     * Retorna uma lista contendo os ítens da árvore na ordem do percurso
-     * especificado.
-     * 
-     * @param tipo Tipo do percurso a ser executado.
-     * @return Lista de elementos na ordem do percurso executado.
-     */
-    public Iterable<Tipo> percorrer( PercursoArvores tipo ) {
-        
-        List<Tipo> elementos = new ArrayList<>();
-        
-        switch ( tipo ) {
-            case PRE_ORDEM:
-                preOrdem( raiz, elementos );
-                break;
-            case EM_ORDEM:
-                emOrdem( raiz, elementos );
-                break;
-            case POS_ORDEM:
-                posOrdem( raiz, elementos );
-                break;
-            case EM_NIVEL:
-                emNivel( raiz, elementos );
-                break;
-            case PRE_ORDEM_INVERSO:
-                preOrdemInverso( raiz, elementos );
-                break;
-            case EM_ORDEM_INVERSO:
-                emOrdemInverso( raiz, elementos );
-                break;
-            case POS_ORDEM_INVERSO:
-                posOrdemInverso( raiz, elementos );
-                break;
-            case EM_NIVEL_INVERSO:
-                emNivelInverso( raiz, elementos );
-                break;
-        }
-        
-        
-        return elementos;
-        
-    }
-    
-    /*
-     * Métodos privados para os percursos.
-     */
-    private void preOrdem( No<Tipo> no, List<Tipo> elementos ) {
-        
-        if ( no != null ) {
-            elementos.add( no.valor );
-            preOrdem( no.esquerda, elementos );
-            preOrdem( no.direita, elementos );
-        }
-        
-    }
-    
-    private void emOrdem( No<Tipo> no, List<Tipo> elementos ) {
-        
-        if ( no != null ) {
-            emOrdem( no.esquerda, elementos );
-            elementos.add( no.valor );
-            emOrdem( no.direita, elementos );
-        }
-        
-    }
-    
-    private void posOrdem( No<Tipo> no, List<Tipo> elementos ) {
-        
-        if ( no != null ) {
-            posOrdem( no.esquerda, elementos );
-            posOrdem( no.direita, elementos );
-            elementos.add( no.valor );
-        }
-        
-    }
-    
-    private void emNivel( No<Tipo> no, List<Tipo> elementos ) {
-        
-        if ( no != null ) {
-            
-            Fila<No<Tipo>> fila = new Fila<>();
-            fila.enfileirar( no );
-
-            while ( !fila.estaVazia() ) {
-
-                No<Tipo> atual = fila.desenfileirar();
-                elementos.add( atual.valor );
-
-                if ( atual.esquerda != null ) {
-                    fila.enfileirar( atual.esquerda );
-                }
-
-                if ( atual.direita != null ) {
-                    fila.enfileirar( atual.direita );
-                }
-
-            }
-            
-        }
-        
-    }
-    
-    private void preOrdemInverso( No<Tipo> no, List<Tipo> elementos ) {
-        
-        if ( no != null ) {
-            elementos.add( no.valor );
-            preOrdemInverso( no.direita, elementos );
-            preOrdemInverso( no.esquerda, elementos );
-        }
-        
-    }
-    
-    private void emOrdemInverso( No<Tipo> no, List<Tipo> elementos ) {
-        
-        if ( no != null ) {
-            emOrdemInverso( no.direita, elementos );
-            elementos.add( no.valor );
-            emOrdemInverso( no.esquerda, elementos );
-        }
-        
-    }
-    
-    private void posOrdemInverso( No<Tipo> no, List<Tipo> elementos ) {
-        
-        if ( no != null ) {
-            posOrdemInverso( no.direita, elementos );
-            posOrdemInverso( no.esquerda, elementos );
-            elementos.add( no.valor );
-        }
-        
-    }
-    
-    private void emNivelInverso( No<Tipo> no, List<Tipo> elementos ) {
-        
-        if ( no != null ) {
-            
-            Fila<No<Tipo>> fila = new Fila<>();
-            Pilha<No<Tipo>> pilha = new Pilha<>();
-            fila.enfileirar( no );
-
-            while ( !fila.estaVazia() ) {
-
-                No<Tipo> atual = fila.desenfileirar();
-                pilha.empilhar( atual );
-
-                if ( atual.esquerda != null ) {
-                    fila.enfileirar( atual.esquerda );
-                }
-
-                if ( atual.direita != null ) {
-                    fila.enfileirar( atual.direita );
-                }
-
-            }
-
-            while ( !pilha.estaVazia() ) {
-                elementos.add( pilha.desempilhar().valor );
-            }
-        
-        }
-        
-    }
-    
-    /**
      * Cria uma representação em String da árvore.
      * Esta representação apresenta os elementos na ordem do percurso em ordem.
      */
@@ -508,10 +343,7 @@ public class ArvoreBinariaBusca<Tipo extends Comparable> implements Iterable<Tip
         
         if ( !estaVazia() ) {
             
-            List<Tipo> elementos = new ArrayList<>();
-            emOrdem( raiz, elementos );
-            
-            for ( Tipo valor : elementos ) {
+            for ( Tipo valor : PercursosArvoreBinariaBusca.percorrer( this, TipoPercursoArvores.EM_ORDEM ) ) {
                 
                 if ( valor.equals( raiz.valor ) ) {
                     sb.append( valor ).append( " <- raiz\n" );
@@ -536,11 +368,7 @@ public class ArvoreBinariaBusca<Tipo extends Comparable> implements Iterable<Tip
      */
     @Override
     public Iterator<Tipo> iterator() {
-        
-        List<Tipo> elementos = new ArrayList<>();
-        emOrdem( raiz, elementos );
-        return elementos.iterator();
-        
+        return PercursosArvoreBinariaBusca.percorrer( this, TipoPercursoArvores.EM_ORDEM ).iterator();
     }
 
     /**
@@ -586,56 +414,56 @@ public class ArvoreBinariaBusca<Tipo extends Comparable> implements Iterable<Tip
         
         System.out.println( "----- Percursos -----" );
         System.out.print( "Pré-Ordem: " );
-        for ( Integer e : abb.percorrer( PercursoArvores.PRE_ORDEM ) ) {
+        for ( Integer e : PercursosArvoreBinariaBusca.percorrer( abb, TipoPercursoArvores.PRE_ORDEM ) ) {
             System.out.print( e + " " );
         }
         System.out.println();
         
         System.out.print( "Em Ordem: " );
-        for ( Integer e : abb.percorrer( PercursoArvores.EM_ORDEM ) ) {
+        for ( Integer e : PercursosArvoreBinariaBusca.percorrer( abb, TipoPercursoArvores.EM_ORDEM ) ) {
             System.out.print( e + " " );
         }
         System.out.println();
         
         System.out.print( "Pós-Ordem: " );
-        for ( Integer e : abb.percorrer( PercursoArvores.POS_ORDEM ) ) {
+        for ( Integer e : PercursosArvoreBinariaBusca.percorrer( abb, TipoPercursoArvores.POS_ORDEM ) ) {
             System.out.print( e + " " );
         }
         System.out.println();
         
         System.out.print( "Em Nível: " );
-        for ( Integer e : abb.percorrer( PercursoArvores.EM_NIVEL ) ) {
+        for ( Integer e : PercursosArvoreBinariaBusca.percorrer( abb, TipoPercursoArvores.EM_NIVEL ) ) {
             System.out.print( e + " " );
         }
         System.out.println();
         
         System.out.print( "Pré-Ordem Inverso: " );
-        for ( Integer e : abb.percorrer( PercursoArvores.PRE_ORDEM_INVERSO ) ) {
+        for ( Integer e : PercursosArvoreBinariaBusca.percorrer( abb, TipoPercursoArvores.PRE_ORDEM_INVERSO ) ) {
             System.out.print( e + " " );
         }
         System.out.println();
         
         System.out.print( "Em Ordem Inverso: " );
-        for ( Integer e : abb.percorrer( PercursoArvores.EM_ORDEM_INVERSO ) ) {
+        for ( Integer e : PercursosArvoreBinariaBusca.percorrer( abb, TipoPercursoArvores.EM_ORDEM_INVERSO ) ) {
             System.out.print( e + " " );
         }
         System.out.println();
         
         System.out.print( "Pós-Ordem Inverso: " );
-        for ( Integer e : abb.percorrer( PercursoArvores.POS_ORDEM_INVERSO ) ) {
+        for ( Integer e : PercursosArvoreBinariaBusca.percorrer( abb, TipoPercursoArvores.POS_ORDEM_INVERSO ) ) {
             System.out.print( e + " " );
         }
         System.out.println();
         
         System.out.print( "Em Nível Inverso: " );
-        for ( Integer e : abb.percorrer( PercursoArvores.EM_NIVEL_INVERSO ) ) {
+        for ( Integer e : PercursosArvoreBinariaBusca.percorrer( abb, TipoPercursoArvores.EM_NIVEL_INVERSO ) ) {
             System.out.print( e + " " );
         }
         System.out.println();
         
         // consultas
         System.out.println( "\n----- Consultas -----" );
-        List<Integer> elementos = (List<Integer>) abb.percorrer( PercursoArvores.EM_ORDEM );
+        List<Integer> elementos = (List<Integer>) PercursosArvoreBinariaBusca.percorrer( abb, TipoPercursoArvores.EM_ORDEM );
         elementos.add( 15 );
         elementos.add( 19 );
         elementos.add( -4 );
@@ -670,9 +498,9 @@ public class ArvoreBinariaBusca<Tipo extends Comparable> implements Iterable<Tip
         abb.inserir( 13 );
         abb.inserir( 15 );
         
-        ArvoreBinariaBuscaAnotada<Integer> a = new ArvoreBinariaBuscaAnotada<>( abb );
-        System.out.println( a );
-        for ( ArvoreBinariaBuscaAnotada<Integer>.NoAnotado<Integer> n : a.percorrer( PercursoArvores.EM_ORDEM ) ) {
+        ArvoreBinariaBuscaAnotada<Integer> abbAnt = new ArvoreBinariaBuscaAnotada<>( abb );
+        System.out.println( abbAnt );
+        for ( ArvoreBinariaBuscaAnotada<Integer>.NoAnotado<Integer> n : abbAnt.percorrer( TipoPercursoArvores.EM_ORDEM ) ) {
             System.out.println( n );
         }
         

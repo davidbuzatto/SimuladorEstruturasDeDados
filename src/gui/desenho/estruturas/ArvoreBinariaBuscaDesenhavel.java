@@ -7,7 +7,7 @@
 package gui.desenho.estruturas;
 
 import estruturas.ArvoreBinariaBusca;
-import estruturas.PercursoArvores;
+import estruturas.algoritmos.arvores.TipoPercursoArvores;
 import java.awt.BasicStroke;
 import java.awt.Color;
 import java.awt.Font;
@@ -82,7 +82,7 @@ public class ArvoreBinariaBuscaDesenhavel implements Desenhavel {
             
             int rankRaiz = abbAnt.getRaiz().rank + 1;
             
-            for ( ArvoreBinariaBuscaAnotada<Integer>.NoAnotado<Integer> no : abbAnt.percorrer( PercursoArvores.EM_ORDEM ) ) {
+            for ( ArvoreBinariaBuscaAnotada<Integer>.NoAnotado<Integer> no : abbAnt.percorrer( TipoPercursoArvores.EM_ORDEM ) ) {
                 
                 no.xIni = centroH + ( ( ( no.rank + 1 ) - rankRaiz ) * espH - diametroNos / 2 ) * diametroNos / 30;
                 no.yIni = margemSuperior + ( no.nivel + 1 ) * espV - diametroNos / 2;
@@ -93,7 +93,7 @@ public class ArvoreBinariaBuscaDesenhavel implements Desenhavel {
                 
             }
             
-            for ( ArvoreBinariaBuscaAnotada<Integer>.NoAnotado<Integer> no : abbAnt.percorrer( PercursoArvores.EM_ORDEM ) ) {
+            for ( ArvoreBinariaBuscaAnotada<Integer>.NoAnotado<Integer> no : abbAnt.percorrer( TipoPercursoArvores.EM_ORDEM ) ) {
                 
                 if ( no.pai != null ) {
                     g2d.drawLine( no.xCentro, no.yCentro, no.pai.xCentro, no.pai.yCentro );
@@ -112,7 +112,7 @@ public class ArvoreBinariaBuscaDesenhavel implements Desenhavel {
                 }
             }
             
-            for ( ArvoreBinariaBuscaAnotada<Integer>.NoAnotado<Integer> no : abbAnt.percorrer( PercursoArvores.EM_ORDEM ) ) {
+            for ( ArvoreBinariaBuscaAnotada<Integer>.NoAnotado<Integer> no : abbAnt.percorrer( TipoPercursoArvores.EM_ORDEM ) ) {
                 
                 g2d.setColor( Color.WHITE );
                 

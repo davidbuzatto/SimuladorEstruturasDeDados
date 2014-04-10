@@ -4,14 +4,14 @@
  * and open the template in the editor.
  */
 
-package estruturas;
+package estruturas.algoritmos.arvores;
 
 /**
- * Enumeração para os percursos das árvores.
+ * Enumeração para os tipos de percursos das árvores.
  * 
  * @author David Buzatto
  */
-public enum PercursoArvores {
+public enum TipoPercursoArvores {
     PRE_ORDEM,
     EM_ORDEM,
     POS_ORDEM,

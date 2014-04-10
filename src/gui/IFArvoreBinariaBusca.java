@@ -7,7 +7,7 @@
 package gui;
 
 import estruturas.ArvoreBinariaBusca;
-import estruturas.PercursoArvores;
+import estruturas.algoritmos.arvores.TipoPercursoArvores;
 import gui.desenho.PainelDesenho;
 import gui.desenho.estruturas.ArvoreBinariaBuscaAnotada;
 import gui.desenho.estruturas.ArvoreBinariaBuscaDesenhavel;
@@ -71,9 +71,8 @@ public class IFArvoreBinariaBusca extends javax.swing.JInternalFrame {
         labelValor = new javax.swing.JLabel();
         fieldValor = new javax.swing.JTextField();
         btnInserir = new javax.swing.JButton();
-        btnInserir1N = new javax.swing.JButton();
         btnInserirN1 = new javax.swing.JButton();
-        btnInserirRandom = new javax.swing.JButton();
+        btnInserirAleatorio = new javax.swing.JButton();
         btnEsvaziar = new javax.swing.JButton();
         checkExibirAtributos = new javax.swing.JCheckBox();
         labelDiametro = new javax.swing.JLabel();
@@ -147,24 +146,17 @@ public class IFArvoreBinariaBusca extends javax.swing.JInternalFrame {
             }
         });
 
-        btnInserir1N.setText("1..n");
-        btnInserir1N.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                btnInserir1NActionPerformed(evt);
-            }
-        });
-
-        btnInserirN1.setText("n..1");
+        btnInserirN1.setText("[ini...fim]");
         btnInserirN1.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btnInserirN1ActionPerformed(evt);
             }
         });
 
-        btnInserirRandom.setText("random()");
-        btnInserirRandom.addActionListener(new java.awt.event.ActionListener() {
+        btnInserirAleatorio.setText("aleatório");
+        btnInserirAleatorio.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                btnInserirRandomActionPerformed(evt);
+                btnInserirAleatorioActionPerformed(evt);
             }
         });
 
@@ -332,7 +324,7 @@ public class IFArvoreBinariaBusca extends javax.swing.JInternalFrame {
                 .addGroup(painelDadosLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(labelGrau)
                     .addComponent(fieldGrau, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addContainerGap(55, Short.MAX_VALUE))
+                .addContainerGap(59, Short.MAX_VALUE))
         );
 
         javax.swing.GroupLayout painelOperacoesLayout = new javax.swing.GroupLayout(painelOperacoes);
@@ -350,16 +342,13 @@ public class IFArvoreBinariaBusca extends javax.swing.JInternalFrame {
                             .addComponent(btnInserir, javax.swing.GroupLayout.Alignment.TRAILING)
                             .addComponent(btnEsvaziar, javax.swing.GroupLayout.Alignment.TRAILING)
                             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, painelOperacoesLayout.createSequentialGroup()
-                                .addGroup(painelOperacoesLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                                    .addComponent(labelValor)
-                                    .addComponent(btnInserir1N))
+                                .addComponent(btnInserirN1)
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addGroup(painelOperacoesLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                                    .addGroup(painelOperacoesLayout.createSequentialGroup()
-                                        .addComponent(btnInserirN1)
-                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                        .addComponent(btnInserirRandom))
-                                    .addComponent(fieldValor)))
+                                .addComponent(btnInserirAleatorio))
+                            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, painelOperacoesLayout.createSequentialGroup()
+                                .addComponent(labelValor)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(fieldValor, javax.swing.GroupLayout.PREFERRED_SIZE, 104, javax.swing.GroupLayout.PREFERRED_SIZE))
                             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, painelOperacoesLayout.createSequentialGroup()
                                 .addComponent(labelDiametro)
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
@@ -378,9 +367,8 @@ public class IFArvoreBinariaBusca extends javax.swing.JInternalFrame {
                 .addComponent(btnInserir)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(painelOperacoesLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(btnInserirRandom)
-                    .addComponent(btnInserirN1)
-                    .addComponent(btnInserir1N))
+                    .addComponent(btnInserirAleatorio)
+                    .addComponent(btnInserirN1))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(btnEsvaziar)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
@@ -445,7 +433,7 @@ public class IFArvoreBinariaBusca extends javax.swing.JInternalFrame {
         painelDesenho.repaint();
     }//GEN-LAST:event_checkExibirAtributosActionPerformed
 
-    private void btnInserirRandomActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnInserirRandomActionPerformed
+    private void btnInserirAleatorioActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnInserirAleatorioActionPerformed
         
         boolean pedir = true;
         
@@ -499,103 +487,7 @@ public class IFArvoreBinariaBusca extends javax.swing.JInternalFrame {
             
         }
         
-    }//GEN-LAST:event_btnInserirRandomActionPerformed
-
-    private void btnInserirN1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnInserirN1ActionPerformed
-        
-        boolean pedir = true;
-        
-        while ( pedir ) {
-            
-            try {
-
-                String valor = JOptionPane.showInputDialog( this, "N (maior ou igual a 1): " );
-                
-                if ( valor == null ) {
-                    pedir = false;
-                } else {
-                    
-                    int n = Integer.parseInt( valor );
-                    
-                    if ( n >= 1 ) {
-                        
-                        resetarPercurso();
-                        
-                        for ( int i = n; i >= 1; i-- ) {
-                            abb.inserir( i );
-                        }
-                        
-                        abbAnt = new ArvoreBinariaBuscaAnotada<>( this.abb );
-                        abbD.setAbbAnt( abbAnt );
-                        painelDesenho.repaint();
-                        
-                        fieldRaiz.setText( abbAnt.getRaiz().valor.toString() );
-                        fieldAltura.setText( String.valueOf( abbAnt.getAltura() ) );
-                        fieldGrau.setText( String.valueOf( abbAnt.getGrau() ) );
-                        
-                        pedir = false;
-                    
-                    } else {
-                        JOptionPane.showMessageDialog( this, "Entre com um número maior ou igual a 1!", "ERRO", JOptionPane.ERROR_MESSAGE );
-                    }
-                    
-                }
-
-            } catch ( NumberFormatException exc ) {
-                JOptionPane.showMessageDialog( this, "Entre com um número inteiro!", "ERRO", JOptionPane.ERROR_MESSAGE );
-            }
-            
-        }
-        
-    }//GEN-LAST:event_btnInserirN1ActionPerformed
-
-    private void btnInserir1NActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnInserir1NActionPerformed
-        
-        boolean pedir = true;
-        
-        while ( pedir ) {
-            
-            try {
-
-                String valor = JOptionPane.showInputDialog( this, "N (maior ou igual a 1): " );
-                
-                if ( valor == null ) {
-                    pedir = false;
-                } else {
-                    
-                    int n = Integer.parseInt( valor );
-                    
-                    if ( n >= 1 ) {
-                        
-                        resetarPercurso();
-                        
-                        for ( int i = 1; i <= n; i++ ) {
-                            abb.inserir( i );
-                        }
-                        
-                        abbAnt = new ArvoreBinariaBuscaAnotada<>( this.abb );
-                        abbD.setAbbAnt( abbAnt );
-                        painelDesenho.repaint();
-                        
-                        fieldRaiz.setText( abbAnt.getRaiz().valor.toString() );
-                        fieldAltura.setText( String.valueOf( abbAnt.getAltura() ) );
-                        fieldGrau.setText( String.valueOf( abbAnt.getGrau() ) );
-            
-                        pedir = false;
-                    
-                    } else {
-                        JOptionPane.showMessageDialog( this, "Entre com um número maior ou igual a 1!", "ERRO", JOptionPane.ERROR_MESSAGE );
-                    }
-                    
-                }
-
-            } catch ( NumberFormatException exc ) {
-                JOptionPane.showMessageDialog( this, "Entre com um número inteiro!", "ERRO", JOptionPane.ERROR_MESSAGE );
-            }
-            
-        }
-        
-    }//GEN-LAST:event_btnInserir1NActionPerformed
+    }//GEN-LAST:event_btnInserirAleatorioActionPerformed
 
     private void sliderDiametroStateChanged(javax.swing.event.ChangeEvent evt) {//GEN-FIRST:event_sliderDiametroStateChanged
         abbD.setDiametroNos( sliderDiametro.getValue() );
@@ -606,7 +498,7 @@ public class IFArvoreBinariaBusca extends javax.swing.JInternalFrame {
         
         if ( SwingUtilities.isRightMouseButton( evt ) ) {
 
-            for ( ArvoreBinariaBuscaAnotada<Integer>.NoAnotado<Integer> no : abbAnt.percorrer( PercursoArvores.EM_ORDEM ) ) {
+            for ( ArvoreBinariaBuscaAnotada<Integer>.NoAnotado<Integer> no : abbAnt.percorrer( TipoPercursoArvores.EM_ORDEM ) ) {
                 
                 Point p = evt.getPoint();
                 
@@ -664,37 +556,37 @@ public class IFArvoreBinariaBusca extends javax.swing.JInternalFrame {
             if ( radioPre.isSelected() ) {
                 abbD.setListaPercurso( 
                         (List<ArvoreBinariaBuscaAnotada<Integer>.NoAnotado<Integer>>)
-                         abbAnt.percorrer( PercursoArvores.PRE_ORDEM ) );
+                         abbAnt.percorrer( TipoPercursoArvores.PRE_ORDEM ) );
             } else if ( radioEm.isSelected() ) {
                 abbD.setListaPercurso( 
                         (List<ArvoreBinariaBuscaAnotada<Integer>.NoAnotado<Integer>>)
-                         abbAnt.percorrer( PercursoArvores.EM_ORDEM ) );
+                         abbAnt.percorrer( TipoPercursoArvores.EM_ORDEM ) );
             } else if ( radioPos.isSelected() ) {
                 abbD.setListaPercurso( 
                         (List<ArvoreBinariaBuscaAnotada<Integer>.NoAnotado<Integer>>)
-                         abbAnt.percorrer( PercursoArvores.POS_ORDEM ) );
+                         abbAnt.percorrer( TipoPercursoArvores.POS_ORDEM ) );
             } else {
                 abbD.setListaPercurso( 
                         (List<ArvoreBinariaBuscaAnotada<Integer>.NoAnotado<Integer>>)
-                         abbAnt.percorrer( PercursoArvores.EM_NIVEL ) );
+                         abbAnt.percorrer( TipoPercursoArvores.EM_NIVEL ) );
             }
         } else {
             if ( radioPre.isSelected() ) {
                 abbD.setListaPercurso( 
                         (List<ArvoreBinariaBuscaAnotada<Integer>.NoAnotado<Integer>>)
-                         abbAnt.percorrer( PercursoArvores.PRE_ORDEM_INVERSO ) );
+                         abbAnt.percorrer( TipoPercursoArvores.PRE_ORDEM_INVERSO ) );
             } else if ( radioEm.isSelected() ) {
                 abbD.setListaPercurso( 
                         (List<ArvoreBinariaBuscaAnotada<Integer>.NoAnotado<Integer>>)
-                         abbAnt.percorrer( PercursoArvores.EM_ORDEM_INVERSO ) );
+                         abbAnt.percorrer( TipoPercursoArvores.EM_ORDEM_INVERSO ) );
             } else if ( radioPos.isSelected() ) {
                 abbD.setListaPercurso( 
                         (List<ArvoreBinariaBuscaAnotada<Integer>.NoAnotado<Integer>>)
-                         abbAnt.percorrer( PercursoArvores.POS_ORDEM_INVERSO ) );
+                         abbAnt.percorrer( TipoPercursoArvores.POS_ORDEM_INVERSO ) );
             } else {
                 abbD.setListaPercurso( 
                         (List<ArvoreBinariaBuscaAnotada<Integer>.NoAnotado<Integer>>)
-                         abbAnt.percorrer( PercursoArvores.EM_NIVEL_INVERSO ) );
+                         abbAnt.percorrer( TipoPercursoArvores.EM_NIVEL_INVERSO ) );
             }
         }
         
@@ -725,6 +617,76 @@ public class IFArvoreBinariaBusca extends javax.swing.JInternalFrame {
         listResPercurso.setSelectedIndex( abbD.getAtual() );
         painelDesenho.repaint();
     }//GEN-LAST:event_btnAvancarActionPerformed
+
+    private void btnInserirN1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnInserirN1ActionPerformed
+
+        boolean pedirInicio = true;
+        boolean pedirFim = true;
+        int valorInicio = 0;
+        int valorFim = 0;
+
+        while ( pedirInicio ) {
+
+            try {
+
+                String valor = JOptionPane.showInputDialog( this, "Valor do Início do Intervalo:" );
+
+                if ( valor == null ) {
+                    pedirInicio = false;
+                } else {
+                    valorInicio = Integer.parseInt( valor );
+                    pedirInicio = false;
+                }
+
+            } catch ( NumberFormatException exc ) {
+                JOptionPane.showMessageDialog( this, "Entre com um número inteiro!", "ERRO", JOptionPane.ERROR_MESSAGE );
+            }
+
+        }
+        
+        while ( pedirFim ) {
+
+            try {
+
+                String valor = JOptionPane.showInputDialog( this, "Valor do Fim do Intervalo:" );
+
+                if ( valor == null ) {
+                    pedirFim = false;
+                } else {
+
+                    valorFim = Integer.parseInt( valor );
+
+                    resetarPercurso();
+                    
+                    if ( valorInicio < valorFim ) {
+                        for ( int i = valorInicio; i <= valorFim; i++ ) {
+                            abb.inserir( i );
+                        }
+                    } else {
+                        for ( int i = valorInicio; i >= valorFim; i-- ) {
+                            abb.inserir( i );
+                        }
+                    }
+                    
+                    abbAnt = new ArvoreBinariaBuscaAnotada<>( this.abb );
+                    abbD.setAbbAnt( abbAnt );
+                    painelDesenho.repaint();
+
+                    fieldRaiz.setText( abbAnt.getRaiz().valor.toString() );
+                    fieldAltura.setText( String.valueOf( abbAnt.getAltura() ) );
+                    fieldGrau.setText( String.valueOf( abbAnt.getGrau() ) );
+
+                    pedirFim = false;
+
+                }
+
+            } catch ( NumberFormatException exc ) {
+                JOptionPane.showMessageDialog( this, "Entre com um número inteiro!", "ERRO", JOptionPane.ERROR_MESSAGE );
+            }
+
+        }
+
+    }//GEN-LAST:event_btnInserirN1ActionPerformed
 
     private void inserir() {
         
@@ -767,16 +729,15 @@ public class IFArvoreBinariaBusca extends javax.swing.JInternalFrame {
         btnAvancar.setEnabled( false );
         
     }
-    
+           
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btnAvancar;
     private javax.swing.JButton btnEsvaziar;
     private javax.swing.JButton btnExecutar;
     private javax.swing.ButtonGroup btnGroup;
     private javax.swing.JButton btnInserir;
-    private javax.swing.JButton btnInserir1N;
+    private javax.swing.JButton btnInserirAleatorio;
     private javax.swing.JButton btnInserirN1;
-    private javax.swing.JButton btnInserirRandom;
     private javax.swing.JButton btnRetroceder;
     private javax.swing.JCheckBox checkExibirAtributos;
     private javax.swing.JCheckBox checkInverter;
