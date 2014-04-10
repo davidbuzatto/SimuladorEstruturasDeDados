@@ -435,56 +435,78 @@ public class IFArvoreBinariaBusca extends javax.swing.JInternalFrame {
 
     private void btnInserirAleatorioActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnInserirAleatorioActionPerformed
         
-        boolean pedir = true;
-        
-        while ( pedir ) {
-            
+        boolean pedirInicio = true;
+        boolean pedirFim = true;
+        int valorInicio = 0;
+        int valorFim = 0;
+
+        while ( pedirInicio ) {
+
             try {
 
-                String valor = JOptionPane.showInputDialog( this, "N (maior ou igual a 1): " );
-                
+                String valor = JOptionPane.showInputDialog( this, "Valor do Início do Intervalo:" );
+
                 if ( valor == null ) {
-                    pedir = false;
+                    pedirInicio = false;
                 } else {
-                    
-                    int n = Integer.parseInt( valor );
-                    
-                    if ( n >= 1 ) {
-                        
-                        resetarPercurso();
-                        
-                        List<Integer> lista = new ArrayList<>();
-                        
-                        for ( int i = n; i >= 1; i-- ) {
-                            lista.add( i );
-                        }
-                        
-                        Collections.shuffle( lista );
-                        
-                        for ( int i : lista ) {
-                            abb.inserir( i );
-                        }
-                        
-                        abbAnt = new ArvoreBinariaBuscaAnotada<>( this.abb );
-                        abbD.setAbbAnt( abbAnt );
-                        painelDesenho.repaint();
-                        
-                        fieldRaiz.setText( abbAnt.getRaiz().valor.toString() );
-                        fieldAltura.setText( String.valueOf( abbAnt.getAltura() ) );
-                        fieldGrau.setText( String.valueOf( abbAnt.getGrau() ) );
-                        
-                        pedir = false;
-                    
-                    } else {
-                        JOptionPane.showMessageDialog( this, "Entre com um número maior ou igual a 1!", "ERRO", JOptionPane.ERROR_MESSAGE );
-                    }
-                    
+                    valorInicio = Integer.parseInt( valor );
+                    pedirInicio = false;
                 }
 
             } catch ( NumberFormatException exc ) {
                 JOptionPane.showMessageDialog( this, "Entre com um número inteiro!", "ERRO", JOptionPane.ERROR_MESSAGE );
             }
-            
+
+        }
+        
+        while ( pedirFim ) {
+
+            try {
+
+                String valor = JOptionPane.showInputDialog( this, "Valor do Fim do Intervalo:" );
+
+                if ( valor == null ) {
+                    pedirFim = false;
+                } else {
+
+                    valorFim = Integer.parseInt( valor );
+
+                    resetarPercurso();
+                    
+                    List<Integer> lista = new ArrayList<>();
+                        
+                    if ( valorInicio < valorFim ) {
+                        for ( int i = valorInicio; i <= valorFim; i++ ) {
+                            lista.add( i );
+                        }
+                    } else {
+                        for ( int i = valorInicio; i >= valorFim; i-- ) {
+                            lista.add( i );
+                        }
+                    }
+
+                    Collections.shuffle( lista );
+
+                    for ( int i : lista ) {
+                        abb.inserir( i );
+                    }
+                    
+                    abbAnt = new ArvoreBinariaBuscaAnotada<>( this.abb );
+                    abbD.setAbbAnt( abbAnt );
+                    painelDesenho.repaint();
+
+                    fieldRaiz.setText( abbAnt.getRaiz().valor.toString() );
+                    fieldAltura.setText( String.valueOf( abbAnt.getAltura() ) );
+                    fieldGrau.setText( String.valueOf( abbAnt.getGrau() ) );
+
+                    pedirFim = false;
+
+                }
+
+            } catch ( NumberFormatException exc ) {
+                JOptionPane.showMessageDialog( this, "Entre com um número inteiro!", "ERRO", JOptionPane.ERROR_MESSAGE );
+            }
+
         }
         
     }//GEN-LAST:event_btnInserirAleatorioActionPerformed
