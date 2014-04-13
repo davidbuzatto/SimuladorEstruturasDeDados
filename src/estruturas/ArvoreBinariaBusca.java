@@ -15,6 +15,9 @@ import java.util.List;
 
 /**
  * Implementação de uma árvore binária de busca não balanceada.
+ * Esta árvore opera apenas com valores. Para a utilização como tabela de símbolos
+ * (o que é o mais comum), deveria-se tratar os valores desta implementação
+ * como chaves da tabela de símbolos.
  * 
  * Algumas modificações de acesso foram feitas na classe, permitindo que alguns
  * detalhes internos da classe sejam acessíveis externamente. Essa mudança
@@ -57,7 +60,7 @@ public class ArvoreBinariaBusca<Tipo extends Comparable> implements Iterable<Tip
             /*
              * Algoritmo iterativo.
              */
-            /*NoAnotado<Tipo> novoNo = new NoAnotado<>();
+            /*No<Tipo> novoNo = new No<>();
             novoNo.valor = valor;
             novoNo.esquerda = null;
             novoNo.direita = null;
@@ -67,7 +70,7 @@ public class ArvoreBinariaBusca<Tipo extends Comparable> implements Iterable<Tip
             } else {
 
                boolean achou = false;
-               NoAnotado<Tipo> temp = raiz;
+               No<Tipo> temp = raiz;
                int comparacao = 0;
 
                while ( !achou ) {
@@ -144,7 +147,7 @@ public class ArvoreBinariaBusca<Tipo extends Comparable> implements Iterable<Tip
         
         if ( !estaVazia() ) {
 
-            NoAnotado<Tipo> temp = raiz;
+            No<Tipo> temp = raiz;
             int comparacao = 0;
 
             while ( !achou ) {
