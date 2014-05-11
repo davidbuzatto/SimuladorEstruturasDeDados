@@ -436,8 +436,29 @@ public class JanelaPrincipal extends javax.swing.JFrame {
     }//GEN-LAST:event_btnHeapMaximoActionPerformed
 
     private void btnGrafoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnGrafoActionPerformed
-        JOptionPane.showMessageDialog( this, "Não implementado!", 
-                "ERRO", JOptionPane.ERROR_MESSAGE );
+        
+        JInternalFrame iFrame = iFrames.get( "ifGrafo" );
+        
+        if ( iFrame == null ) {
+            
+            iFrame = new IFGrafo();
+            desktopPane.add( iFrame );
+            iFrames.put( "ifGrafo", iFrame );
+            
+            iFrame.addInternalFrameListener( new InternalFrameAdapter() {
+                @Override
+                public void internalFrameClosing( InternalFrameEvent e ) {
+                    iFrames.remove( "ifGrafo" );
+                }
+            });
+            
+        }
+        
+        try {
+            iFrame.setSelected( true );
+        } catch ( PropertyVetoException ex ) {
+        }
+        
     }//GEN-LAST:event_btnGrafoActionPerformed
 
     private void btnGrafoPonderadoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnGrafoPonderadoActionPerformed

@@ -536,7 +536,6 @@ public class IFArvoreBinariaBusca extends javax.swing.JInternalFrame {
                     break;
                 }
                 
-                
             }
             
         }
