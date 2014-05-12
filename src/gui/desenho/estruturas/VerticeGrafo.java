@@ -24,4 +24,7 @@ public class VerticeGrafo {
     public int yCentro;
     public int tamanho;
     
+    // identificador do grupo
+    public int id = -1;
+    
 }

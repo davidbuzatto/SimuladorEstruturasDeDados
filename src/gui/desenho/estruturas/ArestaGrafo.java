@@ -16,5 +16,10 @@ public class ArestaGrafo {
     // origem e destino em grafos não direcionados não fazem sentido
     public VerticeGrafo origem;
     public VerticeGrafo destino;
+
+    @Override
+    public String toString() {
+        return origem.v + " - " + destino.v;
+    }
     
 }

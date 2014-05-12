@@ -19,12 +19,11 @@ public class BuscaProfundidade extends Caminhos {
     private boolean[] marcado;
     private int[] arestaAte;
     private Grafo g;
-    private int f;
 
     public BuscaProfundidade( Grafo g, int f ) {
         
         this.g = g;
-        this.f = f;
+        this.fonte = f;
         
         marcado = new boolean[g.v()];
         arestaAte = new int[g.v()];
@@ -93,7 +92,7 @@ public class BuscaProfundidade extends Caminhos {
         
         StringBuilder sb = new StringBuilder();
         
-        sb.append( "Busca em Profunidade (fonte: vértice " ).append( f ).append( ")\n" );
+        sb.append( "Busca em Profunidade (fonte: vértice " ).append( fonte ).append( ")\n" );
         sb.append( "v\tmarcado[v]\tarestaAte[v]\n" );
         for ( int v = 0; v < g.v(); v++ ) {
             sb.append( String.format( "%d\t%s\t\t%s\n",

@@ -13,6 +13,9 @@ package estruturas.algoritmos.grafos;
  */
 public abstract class Caminhos {
     
+    // fonte do caminho
+    protected int fonte;
+    
     /**
      * Caminho da fonte até w.
      * 
@@ -28,5 +31,13 @@ public abstract class Caminhos {
      * @return True se existir caminho, false caso contrário.
      */
     public abstract boolean existeCaminhoAte( int w );
+
+    public int getFonte() {
+        return fonte;
+    }
+
+    public void setFonte( int fonte ) {
+        this.fonte = fonte;
+    }
     
 }

@@ -22,12 +22,16 @@ public class GrafoAnotado {
     
     private int verticeAtual;
     
-    // mapa de transição entre esta representação de grafo e a representação
-    // da estrutura de dados
-    private Map<Integer, Integer> transicao;
+    // mapa para transição de vértice do grafo anotado para o grafo
+    private Map<Integer, Integer> transicaoAnotadoParaGrafo;
+    
+    // mapa para transição de vértice do grafo para o grafo anotado
+    private Map<Integer, Integer> transicaoGrafoParaAnotado;
     
     private Map<Integer, VerticeGrafo> vertices;
     private Map<String, ArestaGrafo> arestas;
+    
+    private Grafo grafo;
     
     public GrafoAnotado() {
         vertices = new HashMap<>();
@@ -105,11 +109,16 @@ public class GrafoAnotado {
     
     public Grafo gerarGrafo() {
         
-        transicao = new HashMap<>();
+        transicaoAnotadoParaGrafo = new HashMap<>();
+        transicaoGrafoParaAnotado = new HashMap<>();
         int i = 0;
         
         for ( Entry<Integer, VerticeGrafo> v : vertices.entrySet() ) {
-            transicao.put( v.getValue().v, i++ );
+            transicaoAnotadoParaGrafo.put( v.getValue().v, i++ );
+        }
+        
+        for ( Entry<Integer, Integer> t : transicaoAnotadoParaGrafo.entrySet() ) {
+            transicaoGrafoParaAnotado.put( t.getValue(), t.getKey() );
         }
         
         Grafo g = new Grafo( vertices.size() );
@@ -117,19 +126,24 @@ public class GrafoAnotado {
         for ( Entry<String, ArestaGrafo> e : arestas.entrySet() ) {
             
             ArestaGrafo a = e.getValue();
-            int v = transicao.get( a.origem.v );
-            int w = transicao.get( a.destino.v );
+            int v = transicaoAnotadoParaGrafo.get( a.origem.v );
+            int w = transicaoAnotadoParaGrafo.get( a.destino.v );
             
             g.adicionarAresta( v, w );
             
         }
         
-        return g;
+        grafo = g;
+        return grafo;
         
     }
 
-    public Map<Integer, Integer> getTransicao() {
-        return transicao;
+    public Map<Integer, Integer> getTransicaoAnotadoParaGrafo() {
+        return transicaoAnotadoParaGrafo;
+    }
+    
+    public Map<Integer, Integer> getTransicaoGrafoParaAnotado() {
+        return transicaoGrafoParaAnotado;
     }
 
     public Map<Integer, VerticeGrafo> getVertices() {
@@ -138,6 +152,10 @@ public class GrafoAnotado {
 
     public Map<String, ArestaGrafo> getArestas() {
         return arestas;
+    }
+
+    public Grafo getGrafo() {
+        return grafo;
     }
     
     public static void main( String[] args ) {
@@ -159,6 +177,12 @@ public class GrafoAnotado {
         System.out.println( a.verticeAtual );
         System.out.println( a.gerarGrafo() );
         
+    }
+    
+    public void limpar() {
+        vertices = new HashMap<>();
+        arestas = new HashMap<>();
+        verticeAtual = 0;
     }
     
 }

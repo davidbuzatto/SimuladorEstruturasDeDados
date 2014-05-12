@@ -7,14 +7,23 @@
 package gui;
 
 import estruturas.Grafo;
+import estruturas.Lista;
 import estruturas.algoritmos.grafos.AlgoritmosBasicosGrafo;
+import estruturas.algoritmos.grafos.BuscaLargura;
+import estruturas.algoritmos.grafos.BuscaProfundidade;
 import estruturas.algoritmos.grafos.ComponentesConexos;
 import gui.desenho.PainelDesenho;
+import gui.desenho.estruturas.ArestaGrafo;
 import gui.desenho.estruturas.GrafoAnotado;
 import gui.desenho.estruturas.GrafoDesenhavel;
 import gui.desenho.estruturas.VerticeGrafo;
 import java.awt.Point;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
+import java.util.List;
 import java.util.Map.Entry;
+import javax.swing.DefaultListModel;
 import javax.swing.JOptionPane;
 import javax.swing.SwingUtilities;
 
@@ -31,9 +40,16 @@ public class IFGrafo extends javax.swing.JInternalFrame {
     private boolean movendo;
     private VerticeGrafo verticeMovimento;
     private VerticeGrafo verticeRemocao;
+    private VerticeGrafo verticeArestaO;
+    private VerticeGrafo verticeArestaD;
     private int tamanhoVertice = 40;
     private int deslocamentoX;
     private int deslocamentoY;
+    
+    private BuscaProfundidade dfs;
+    private BuscaLargura bfs;
+    
+    private DefaultListModel modeloAdj;
     
     /**
      * Creates new form IFArvoreBinariaBusca
@@ -41,11 +57,19 @@ public class IFGrafo extends javax.swing.JInternalFrame {
     public IFGrafo() {
         
         grafoAnt = new GrafoAnotado();
+        grafoD = new GrafoDesenhavel( grafoAnt );
         
+        initComponents();
         
+        modeloAdj = new DefaultListModel();
+        listaAdj.setModel( modeloAdj );
         
+        setVisible( true );
         
-        // código para testes...
+        grafoD.setPainel( painelDesenho );
+        painelDesenho.repaint();
+        
+        // grafo base
         grafoAnt.adicionarVertice( 100, 100, tamanhoVertice );
         grafoAnt.adicionarVertice( 150, 200, tamanhoVertice );
         grafoAnt.adicionarVertice( 250, 200, tamanhoVertice );
@@ -74,24 +98,7 @@ public class IFGrafo extends javax.swing.JInternalFrame {
         grafoAnt.adicionarAresta( 9, 11 );
         grafoAnt.adicionarAresta( 5, 3 );
         
-        grafo = grafoAnt.gerarGrafo();
-        
-        ComponentesConexos cc = new ComponentesConexos( grafo );
-        System.out.println( cc.quantidade() );
-        
-        // fim do código para testes
-        
-        
-        
-        
-        
-        grafoD = new GrafoDesenhavel( grafoAnt );
-        
-        initComponents();
-        setVisible( true );
-        
-        grafoD.setPainel( painelDesenho );
-        painelDesenho.repaint();
+        atualizarDadosGrafo();
         
     }
 
@@ -108,20 +115,22 @@ public class IFGrafo extends javax.swing.JInternalFrame {
         itemMenuRemover = new javax.swing.JMenuItem();
         painelDesenho = new PainelDesenho( grafoD );
         painelOperacoes = new javax.swing.JPanel();
-        tbtnNovoVertice = new javax.swing.JToggleButton();
-        tbtnNovaAresta = new javax.swing.JToggleButton();
+        tbtnInsVertices = new javax.swing.JToggleButton();
+        tbtnInsArestas = new javax.swing.JToggleButton();
+        btnRemoverArestas = new javax.swing.JButton();
+        btnRemoverTudo = new javax.swing.JButton();
         painelAlgoritmos = new javax.swing.JPanel();
-        jLabel1 = new javax.swing.JLabel();
-        jTextField1 = new javax.swing.JTextField();
-        jButton1 = new javax.swing.JButton();
-        jButton2 = new javax.swing.JButton();
-        jButton3 = new javax.swing.JButton();
-        jButton4 = new javax.swing.JButton();
-        jLabel2 = new javax.swing.JLabel();
-        jTextField2 = new javax.swing.JTextField();
-        jButton5 = new javax.swing.JButton();
-        jButton6 = new javax.swing.JButton();
-        jButton7 = new javax.swing.JButton();
+        labelFonte = new javax.swing.JLabel();
+        fieldFonte = new javax.swing.JTextField();
+        btnDFS = new javax.swing.JButton();
+        btnTabelaDFS = new javax.swing.JButton();
+        btnBFS = new javax.swing.JButton();
+        btnTabelaBFS = new javax.swing.JButton();
+        labelCaminhoAte = new javax.swing.JLabel();
+        fieldCaminhoAte = new javax.swing.JTextField();
+        btnMostrarCaminho = new javax.swing.JButton();
+        btnIdentificarCC = new javax.swing.JButton();
+        btnLimparAlgoritmos = new javax.swing.JButton();
         painelDados = new javax.swing.JPanel();
         labelV = new javax.swing.JLabel();
         labelA = new javax.swing.JLabel();
@@ -131,6 +140,9 @@ public class IFGrafo extends javax.swing.JInternalFrame {
         fieldA = new javax.swing.JTextField();
         fieldGM = new javax.swing.JTextField();
         fieldGMX = new javax.swing.JTextField();
+        labelListaAdj = new javax.swing.JLabel();
+        spAdj = new javax.swing.JScrollPane();
+        listaAdj = new javax.swing.JList();
 
         itemMenuRemover.setIcon(new javax.swing.ImageIcon(getClass().getResource("/gui/imagens/delete.png"))); // NOI18N
         itemMenuRemover.setText("remover");
@@ -166,7 +178,7 @@ public class IFGrafo extends javax.swing.JInternalFrame {
         painelDesenho.setLayout(painelDesenhoLayout);
         painelDesenhoLayout.setHorizontalGroup(
             painelDesenhoLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 674, Short.MAX_VALUE)
+            .addGap(0, 660, Short.MAX_VALUE)
         );
         painelDesenhoLayout.setVerticalGroup(
             painelDesenhoLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -175,69 +187,115 @@ public class IFGrafo extends javax.swing.JInternalFrame {
 
         painelOperacoes.setBorder(javax.swing.BorderFactory.createTitledBorder("Operações"));
 
-        tbtnNovoVertice.setText("Novo Vértice");
-        tbtnNovoVertice.addActionListener(new java.awt.event.ActionListener() {
+        tbtnInsVertices.setText("Inserir Vértices");
+        tbtnInsVertices.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                tbtnNovoVerticeActionPerformed(evt);
+                tbtnInsVerticesActionPerformed(evt);
             }
         });
 
-        tbtnNovaAresta.setText("Nova Aresta");
-        tbtnNovaAresta.addActionListener(new java.awt.event.ActionListener() {
+        tbtnInsArestas.setText("Inserir Arestas");
+        tbtnInsArestas.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                tbtnNovaArestaActionPerformed(evt);
+                tbtnInsArestasActionPerformed(evt);
+            }
+        });
+
+        btnRemoverArestas.setText("Remover Arestas");
+        btnRemoverArestas.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnRemoverArestasActionPerformed(evt);
+            }
+        });
+
+        btnRemoverTudo.setText("Remover Tudo");
+        btnRemoverTudo.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnRemoverTudoActionPerformed(evt);
             }
         });
 
         painelAlgoritmos.setBorder(javax.swing.BorderFactory.createTitledBorder("Algoritmos"));
 
-        jLabel1.setText("Fonte:");
+        labelFonte.setText("Fonte:");
 
-        jButton1.setText("Tabela DFS");
+        btnDFS.setText("DFS");
+        btnDFS.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnDFSActionPerformed(evt);
+            }
+        });
 
-        jButton2.setText("DFS");
+        btnTabelaDFS.setText("Tabela DFS");
+        btnTabelaDFS.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnTabelaDFSActionPerformed(evt);
+            }
+        });
 
-        jButton3.setText("Tabela BFS");
+        btnBFS.setText("BFS");
+        btnBFS.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnBFSActionPerformed(evt);
+            }
+        });
 
-        jButton4.setText("BFS");
+        btnTabelaBFS.setText("Tabela BFS");
+        btnTabelaBFS.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnTabelaBFSActionPerformed(evt);
+            }
+        });
 
-        jLabel2.setText("Caminho Até:");
+        labelCaminhoAte.setText("Caminho Até:");
 
-        jButton5.setText("Mostrar Caminho");
+        btnMostrarCaminho.setText("Mostrar Caminho");
+        btnMostrarCaminho.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnMostrarCaminhoActionPerformed(evt);
+            }
+        });
 
-        jButton6.setText("Limpar");
+        btnIdentificarCC.setText("Identificar Componentes Conexos");
+        btnIdentificarCC.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnIdentificarCCActionPerformed(evt);
+            }
+        });
 
-        jButton7.setText("Identificar C. Conexos");
+        btnLimparAlgoritmos.setText("Limpar Execução dos Algoritmos");
+        btnLimparAlgoritmos.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnLimparAlgoritmosActionPerformed(evt);
+            }
+        });
 
         javax.swing.GroupLayout painelAlgoritmosLayout = new javax.swing.GroupLayout(painelAlgoritmos);
         painelAlgoritmos.setLayout(painelAlgoritmosLayout);
         painelAlgoritmosLayout.setHorizontalGroup(
             painelAlgoritmosLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(painelAlgoritmosLayout.createSequentialGroup()
-                .addContainerGap()
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addGroup(painelAlgoritmosLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(painelAlgoritmosLayout.createSequentialGroup()
-                        .addComponent(jLabel1)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(jTextField1))
-                    .addGroup(painelAlgoritmosLayout.createSequentialGroup()
-                        .addComponent(jLabel2)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(jTextField2))
                     .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, painelAlgoritmosLayout.createSequentialGroup()
-                        .addGap(0, 0, Short.MAX_VALUE)
-                        .addGroup(painelAlgoritmosLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, painelAlgoritmosLayout.createSequentialGroup()
-                                .addComponent(jButton2)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(jButton1))
-                            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, painelAlgoritmosLayout.createSequentialGroup()
-                                .addComponent(jButton4)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(jButton3))
-                            .addComponent(jButton5, javax.swing.GroupLayout.Alignment.TRAILING)
-                            .addComponent(jButton6, javax.swing.GroupLayout.Alignment.TRAILING)
-                            .addComponent(jButton7, javax.swing.GroupLayout.Alignment.TRAILING))))
+                        .addComponent(labelCaminhoAte)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(fieldCaminhoAte, javax.swing.GroupLayout.PREFERRED_SIZE, 64, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, painelAlgoritmosLayout.createSequentialGroup()
+                        .addComponent(labelFonte)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(fieldFonte, javax.swing.GroupLayout.PREFERRED_SIZE, 65, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, painelAlgoritmosLayout.createSequentialGroup()
+                        .addComponent(btnDFS)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(btnTabelaDFS))
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, painelAlgoritmosLayout.createSequentialGroup()
+                        .addComponent(btnBFS)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(btnTabelaBFS))
+                    .addComponent(btnMostrarCaminho, javax.swing.GroupLayout.Alignment.TRAILING)
+                    .addComponent(btnLimparAlgoritmos, javax.swing.GroupLayout.Alignment.TRAILING)
+                    .addComponent(btnIdentificarCC, javax.swing.GroupLayout.Alignment.TRAILING))
                 .addContainerGap())
         );
         painelAlgoritmosLayout.setVerticalGroup(
@@ -245,26 +303,26 @@ public class IFGrafo extends javax.swing.JInternalFrame {
             .addGroup(painelAlgoritmosLayout.createSequentialGroup()
                 .addContainerGap()
                 .addGroup(painelAlgoritmosLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jLabel1)
-                    .addComponent(jTextField1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(labelFonte)
+                    .addComponent(fieldFonte, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(painelAlgoritmosLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jButton1)
-                    .addComponent(jButton2))
+                    .addComponent(btnTabelaDFS)
+                    .addComponent(btnDFS))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(painelAlgoritmosLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jButton3)
-                    .addComponent(jButton4))
+                    .addComponent(btnTabelaBFS)
+                    .addComponent(btnBFS))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addGroup(painelAlgoritmosLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jLabel2)
-                    .addComponent(jTextField2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(labelCaminhoAte)
+                    .addComponent(fieldCaminhoAte, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jButton5)
+                .addComponent(btnMostrarCaminho)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jButton7)
+                .addComponent(btnIdentificarCC)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jButton6)
+                .addComponent(btnLimparAlgoritmos)
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
@@ -276,7 +334,7 @@ public class IFGrafo extends javax.swing.JInternalFrame {
 
         labelGM.setText("Grau Médio:");
 
-        labelGMX.setText("Grau Máximo:");
+        labelGMX.setText("Grau Máx.:");
 
         fieldV.setEditable(false);
 
@@ -286,23 +344,38 @@ public class IFGrafo extends javax.swing.JInternalFrame {
 
         fieldGMX.setEditable(false);
 
+        labelListaAdj.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+        labelListaAdj.setText("Lista de Adjacências");
+
+        spAdj.setViewportView(listaAdj);
+
         javax.swing.GroupLayout painelDadosLayout = new javax.swing.GroupLayout(painelDados);
         painelDados.setLayout(painelDadosLayout);
         painelDadosLayout.setHorizontalGroup(
             painelDadosLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(painelDadosLayout.createSequentialGroup()
                 .addContainerGap()
-                .addGroup(painelDadosLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                    .addComponent(labelGMX)
-                    .addComponent(labelGM)
-                    .addComponent(labelA)
-                    .addComponent(labelV))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(painelDadosLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(fieldV)
-                    .addComponent(fieldA)
-                    .addComponent(fieldGM)
-                    .addComponent(fieldGMX))
+                    .addGroup(painelDadosLayout.createSequentialGroup()
+                        .addGroup(painelDadosLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                            .addComponent(labelGM)
+                            .addComponent(labelV))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addGroup(painelDadosLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
+                            .addComponent(fieldGM, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, 42, Short.MAX_VALUE)
+                            .addComponent(fieldV, javax.swing.GroupLayout.Alignment.LEADING))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addGroup(painelDadosLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addGroup(painelDadosLayout.createSequentialGroup()
+                                .addComponent(labelA)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(fieldA))
+                            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, painelDadosLayout.createSequentialGroup()
+                                .addComponent(labelGMX)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(fieldGMX))))
+                    .addComponent(labelListaAdj, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(spAdj, javax.swing.GroupLayout.PREFERRED_SIZE, 203, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addContainerGap())
         );
         painelDadosLayout.setVerticalGroup(
@@ -311,20 +384,20 @@ public class IFGrafo extends javax.swing.JInternalFrame {
                 .addContainerGap()
                 .addGroup(painelDadosLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(labelV)
-                    .addComponent(fieldV, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(painelDadosLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(fieldV, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(labelA)
                     .addComponent(fieldA, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(painelDadosLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(labelGM)
-                    .addComponent(fieldGM, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(painelDadosLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(fieldGM, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(labelGMX)
                     .addComponent(fieldGMX, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addContainerGap(123, Short.MAX_VALUE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addComponent(labelListaAdj)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(spAdj)
+                .addContainerGap())
         );
 
         javax.swing.GroupLayout painelOperacoesLayout = new javax.swing.GroupLayout(painelOperacoes);
@@ -336,20 +409,30 @@ public class IFGrafo extends javax.swing.JInternalFrame {
                 .addGroup(painelOperacoesLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(painelDados, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addComponent(painelAlgoritmos, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addGroup(painelOperacoesLayout.createSequentialGroup()
-                        .addComponent(tbtnNovoVertice)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(tbtnNovaAresta)
-                        .addGap(0, 0, Short.MAX_VALUE)))
-                .addContainerGap())
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, painelOperacoesLayout.createSequentialGroup()
+                        .addGap(0, 0, Short.MAX_VALUE)
+                        .addGroup(painelOperacoesLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, painelOperacoesLayout.createSequentialGroup()
+                                .addComponent(btnRemoverTudo)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(btnRemoverArestas))
+                            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, painelOperacoesLayout.createSequentialGroup()
+                                .addComponent(tbtnInsVertices)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(tbtnInsArestas)))))
+                .addGap(6, 6, 6))
         );
         painelOperacoesLayout.setVerticalGroup(
             painelOperacoesLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(painelOperacoesLayout.createSequentialGroup()
                 .addContainerGap()
                 .addGroup(painelOperacoesLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(tbtnNovaAresta)
-                    .addComponent(tbtnNovoVertice))
+                    .addComponent(tbtnInsArestas)
+                    .addComponent(tbtnInsVertices))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(painelOperacoesLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(btnRemoverArestas)
+                    .addComponent(btnRemoverTudo))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(painelAlgoritmos, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
@@ -378,13 +461,7 @@ public class IFGrafo extends javax.swing.JInternalFrame {
     private void itemMenuRemoverActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_itemMenuRemoverActionPerformed
 
         grafoAnt.removerVertice( verticeRemocao.v );
-        grafo = grafoAnt.gerarGrafo();
-        
-        fieldV.setText( String.valueOf( grafo.v() ) );
-        fieldA.setText( String.valueOf( grafo.e() ) );
-        fieldGM.setText( String.valueOf( 
-                        (double) Math.round( AlgoritmosBasicosGrafo.grauMedio( grafo ) * 1000 ) / 1000 ) );
-        fieldGMX.setText( String.valueOf( AlgoritmosBasicosGrafo.grauMaximo(grafo ) ) );
+        atualizarDadosGrafo();
         
         painelDesenho.repaint();
             
@@ -421,27 +498,46 @@ public class IFGrafo extends javax.swing.JInternalFrame {
         
         if ( SwingUtilities.isLeftMouseButton( evt ) ) {
 
-            if ( tbtnNovoVertice.isSelected() ) {
+            if ( tbtnInsVertices.isSelected() ) {
                 
                 grafoAnt.adicionarVertice( evt.getX(), evt.getY(), tamanhoVertice );
-                grafo = grafoAnt.gerarGrafo();
-                
-                fieldV.setText( String.valueOf( grafo.v() ) );
-                fieldA.setText( String.valueOf( grafo.e() ) );
-                fieldGM.setText( String.valueOf( 
-                        (double) Math.round( AlgoritmosBasicosGrafo.grauMedio( grafo ) * 1000 ) / 1000 ) );
-                fieldGMX.setText( String.valueOf( AlgoritmosBasicosGrafo.grauMaximo(grafo ) ) );
+                atualizarDadosGrafo();
         
-            } else if ( tbtnNovaAresta.isSelected() ) {
+            } else if ( tbtnInsArestas.isSelected() ) {
                 
-                grafo = grafoAnt.gerarGrafo();
+                for ( Entry<Integer, VerticeGrafo> v : grafoAnt.getVertices().entrySet() ) {
+                    
+                    Point p = evt.getPoint();
+
+                    int cat1 = p.x - v.getValue().xCentro;
+                    int cat2 = p.y - v.getValue().yCentro;
+
+                    if ( cat1 * cat1 + cat2 * cat2 <= tamanhoVertice * tamanhoVertice / 2 ) {
+
+                        if ( verticeArestaO == null ) {
+                            verticeArestaO = v.getValue();
+                            grafoD.setVerticeArestaOrigem( verticeArestaO );
+                        } else {
+                            
+                            verticeArestaD = v.getValue();
+                            grafoAnt.adicionarAresta( verticeArestaO.v, verticeArestaD.v );
+                            grafoD.setVerticeArestaOrigem( null );
+
+                            atualizarDadosGrafo();
+                            
+                            verticeArestaO = null;
+                            verticeArestaD = null;
+                            
+                        }
+
+                        break;
+
+                    }
+
+                }
                 
-                fieldV.setText( String.valueOf( grafo.v() ) );
-                fieldA.setText( String.valueOf( grafo.e() ) );
-                fieldGM.setText( String.valueOf( 
-                        (double) Math.round( AlgoritmosBasicosGrafo.grauMedio( grafo ) * 1000 ) / 1000 ) );
-                fieldGMX.setText( String.valueOf( AlgoritmosBasicosGrafo.grauMaximo(grafo ) ) );
-                
+                atualizarDadosGrafo();
+        
             } else {
                 
                 for ( Entry<Integer, VerticeGrafo> v : grafoAnt.getVertices().entrySet() ) {
@@ -469,8 +565,8 @@ public class IFGrafo extends javax.swing.JInternalFrame {
             
         } else if ( SwingUtilities.isRightMouseButton( evt ) ) {
             
-            tbtnNovoVertice.setSelected( false );
-            tbtnNovaAresta.setSelected( false );
+            tbtnInsVertices.setSelected( false );
+            tbtnInsArestas.setSelected( false );
             
             for ( Entry<Integer, VerticeGrafo> v : grafoAnt.getVertices().entrySet() ) {
                     
@@ -484,7 +580,7 @@ public class IFGrafo extends javax.swing.JInternalFrame {
                     verticeRemocao = v.getValue();
                     itemMenuRemover.setText( String.format( "Remover vértice \"%d\"", verticeRemocao.v ) );
                     menuPopUp.show( painelDesenho, p.x, p.y );
-
+                    
                     break;
 
                 }
@@ -497,41 +593,281 @@ public class IFGrafo extends javax.swing.JInternalFrame {
         
     }//GEN-LAST:event_painelDesenhoMousePressed
 
-    private void tbtnNovoVerticeActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_tbtnNovoVerticeActionPerformed
-        tbtnNovaAresta.setSelected( false );
-    }//GEN-LAST:event_tbtnNovoVerticeActionPerformed
+    private void tbtnInsVerticesActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_tbtnInsVerticesActionPerformed
+        tbtnInsArestas.setSelected( false );
+    }//GEN-LAST:event_tbtnInsVerticesActionPerformed
 
-    private void tbtnNovaArestaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_tbtnNovaArestaActionPerformed
-        tbtnNovoVertice.setSelected( false );
-    }//GEN-LAST:event_tbtnNovaArestaActionPerformed
-           
+    private void tbtnInsArestasActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_tbtnInsArestasActionPerformed
+        tbtnInsVertices.setSelected( false );
+    }//GEN-LAST:event_tbtnInsArestasActionPerformed
+
+    private void btnRemoverArestasActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnRemoverArestasActionPerformed
+        
+        List<ArestaGrafo> arestas = new ArrayList<>();
+        List<ArestaGrafo> arestasRemovidas = new ArrayList<>();
+        for ( Entry<String, ArestaGrafo> a : grafoAnt.getArestas().entrySet() ) {
+            arestas.add( a.getValue() );
+        }
+        
+        Collections.sort( arestas, new Comparator<ArestaGrafo>() {
+            @Override
+            public int compare( ArestaGrafo o1, ArestaGrafo o2 ) {
+                if ( o1.origem.v < o2.origem.v ) return -1;
+                if ( o1.origem.v > o2.origem.v ) return +1;
+                if ( o1.destino.v < o2.destino.v ) return -1;
+                if ( o1.destino.v > o2.destino.v ) return +1;
+                return 0;
+            }
+        });
+        
+        DialogRemoverArestaGrafo d = new DialogRemoverArestaGrafo( null, true, arestas, arestasRemovidas );
+        d.setVisible( true );
+        
+        if ( arestas.size() != grafoAnt.getArestas().size() ) {
+            for ( ArestaGrafo a : arestasRemovidas ) {
+                grafoAnt.removerAresta( a.origem.v, a.destino.v );
+            }
+        }
+        
+        atualizarDadosGrafo();
+        
+        painelDesenho.repaint();
+        
+    }//GEN-LAST:event_btnRemoverArestasActionPerformed
+
+    private void btnDFSActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnDFSActionPerformed
+        
+        try {
+            
+            int fonte = Integer.parseInt( fieldFonte.getText() );
+            boolean achou = false;
+            
+            // buscando a fonte
+            for ( Entry<Integer, VerticeGrafo> v : grafoAnt.getVertices().entrySet() ) {
+                
+                if ( v.getValue().v == fonte ) {
+                    achou = true;
+                    break;
+                }
+                
+            }
+            
+            if ( achou ) {
+                
+                atualizarDadosGrafo();
+                dfs = new BuscaProfundidade( grafo, fonte );
+                grafoD.setCaminho( dfs );
+                painelDesenho.repaint();
+                
+            } else {
+                JOptionPane.showMessageDialog( this, "O vértice fonte não existe no grafo!", "ERRO", JOptionPane.ERROR_MESSAGE );
+            }
+            
+        } catch ( NumberFormatException exc ) {
+            JOptionPane.showMessageDialog( this, "Entre com um número!", "ERRO", JOptionPane.ERROR_MESSAGE );
+        }
+        
+    }//GEN-LAST:event_btnDFSActionPerformed
+
+    private void btnBFSActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnBFSActionPerformed
+        
+        try {
+            
+            int fonte = Integer.parseInt( fieldFonte.getText() );
+            boolean achou = false;
+            
+            // buscando a fonte
+            for ( Entry<Integer, VerticeGrafo> v : grafoAnt.getVertices().entrySet() ) {
+                
+                if ( v.getValue().v == fonte ) {
+                    achou = true;
+                    break;
+                }
+                
+            }
+            
+            if ( achou ) {
+                
+                atualizarDadosGrafo();
+                bfs = new BuscaLargura( grafo, fonte );
+                grafoD.setCaminho( bfs );
+                painelDesenho.repaint();
+                
+            } else {
+                JOptionPane.showMessageDialog( this, "O vértice fonte não existe no grafo!", "ERRO", JOptionPane.ERROR_MESSAGE );
+            }
+            
+        } catch ( NumberFormatException exc ) {
+            JOptionPane.showMessageDialog( this, "Entre com um número!", "ERRO", JOptionPane.ERROR_MESSAGE );
+        }
+        
+    }//GEN-LAST:event_btnBFSActionPerformed
+
+    private void btnTabelaDFSActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnTabelaDFSActionPerformed
+        
+        if ( dfs != null ) {
+            
+            DialogTabelaDFS d = new DialogTabelaDFS( null, true, grafo, grafoAnt, dfs );
+            d.setVisible( true );
+            
+        } else {
+            JOptionPane.showMessageDialog( this, "Execute a \"Busca em Profundidade\" primeiro!", "ERRO", JOptionPane.ERROR_MESSAGE );
+        }
+        
+    }//GEN-LAST:event_btnTabelaDFSActionPerformed
+
+    private void btnTabelaBFSActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnTabelaBFSActionPerformed
+        
+        if ( bfs != null ) {
+            
+            DialogTabelaBFS d = new DialogTabelaBFS( null, true, grafo, grafoAnt, bfs );
+            d.setVisible( true );
+            
+        } else {
+            JOptionPane.showMessageDialog( this, "Execute a \"Busca em Largura\" primeiro!", "ERRO", JOptionPane.ERROR_MESSAGE );
+        }
+        
+    }//GEN-LAST:event_btnTabelaBFSActionPerformed
+
+    private void btnMostrarCaminhoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnMostrarCaminhoActionPerformed
+        
+        try {
+            
+            int ate = Integer.parseInt( fieldCaminhoAte.getText() );
+            boolean achou = false;
+
+            // buscando a fonte
+            for ( Entry<Integer, VerticeGrafo> v : grafoAnt.getVertices().entrySet() ) {
+
+                if ( v.getValue().v == ate ) {
+                    achou = true;
+                    break;
+                }
+
+            }
+
+            if ( achou ) {
+
+                if ( dfs != null || bfs != null ) {
+
+                    grafoD.setCaminhoAte( ate );
+                    painelDesenho.repaint();
+
+                } else {
+                    JOptionPane.showMessageDialog( this, "Antes de obter um caminho, execute um dos algoritmos de busca!", "ERRO", JOptionPane.ERROR_MESSAGE );
+                }
+
+            } else {
+                JOptionPane.showMessageDialog( this, "O vértice de destino não existe no grafo!", "ERRO", JOptionPane.ERROR_MESSAGE );
+            }
+                        
+        } catch ( NumberFormatException exc ) {
+            JOptionPane.showMessageDialog( this, "Entre com um número!", "ERRO", JOptionPane.ERROR_MESSAGE );
+        }
+        
+    }//GEN-LAST:event_btnMostrarCaminhoActionPerformed
+
+    private void btnIdentificarCCActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnIdentificarCCActionPerformed
+        
+        atualizarDadosGrafo();
+        ComponentesConexos cc = new ComponentesConexos( grafo );
+        grafoD.setCc( cc );
+        painelDesenho.repaint();
+        
+    }//GEN-LAST:event_btnIdentificarCCActionPerformed
+
+    private void btnLimparAlgoritmosActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnLimparAlgoritmosActionPerformed
+        atualizarDadosGrafo();
+        fieldFonte.setText( "" );
+        fieldCaminhoAte.setText( "" );
+        painelDesenho.repaint();
+    }//GEN-LAST:event_btnLimparAlgoritmosActionPerformed
+
+    private void btnRemoverTudoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnRemoverTudoActionPerformed
+        grafoAnt.limpar();
+        atualizarDadosGrafo();
+        painelDesenho.repaint();
+    }//GEN-LAST:event_btnRemoverTudoActionPerformed
+        
+    private void atualizarDadosGrafo() {
+        
+        grafo = grafoAnt.gerarGrafo();
+        
+        fieldV.setText( String.valueOf( grafo.v() ) );
+        fieldA.setText( String.valueOf( grafo.e() ) );
+        fieldGM.setText( String.valueOf(
+                (double) Math.round( AlgoritmosBasicosGrafo.grauMedio( grafo ) * 1000 ) / 1000 ) );
+        fieldGMX.setText( String.valueOf( AlgoritmosBasicosGrafo.grauMaximo( grafo ) ) );
+        
+        dfs = null;
+        bfs = null;
+        
+        grafoD.setCaminho( null );
+        grafoD.setCaminhoAte( -1 );
+        grafoD.setCc( null );
+                
+        modeloAdj.clear();
+        StringBuilder sb;
+        Lista<Integer> adj;
+        int cont;
+        
+        for ( int v = 0; v < grafo.v(); v++ ) {
+            
+            cont = 0;
+            sb = new StringBuilder();
+            
+            sb.append( grafoAnt.getTransicaoGrafoParaAnotado().get( v ) ).append( " -> { " );
+            adj = (Lista) grafo.adj( v );
+            
+            for ( int w : adj ) {
+                if ( cont == adj.getTamanho() - 1 ) {
+                    sb.append( grafoAnt.getTransicaoGrafoParaAnotado().get( w ) ).append( " " );
+                } else {
+                    sb.append( grafoAnt.getTransicaoGrafoParaAnotado().get( w ) ).append( ", " );
+                }
+                cont++;
+            }
+            
+            sb.append( "}" );
+            
+            modeloAdj.addElement( sb.toString() );
+            
+        }
+        
+    }
+    
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JButton btnBFS;
+    private javax.swing.JButton btnDFS;
+    private javax.swing.JButton btnIdentificarCC;
+    private javax.swing.JButton btnLimparAlgoritmos;
+    private javax.swing.JButton btnMostrarCaminho;
+    private javax.swing.JButton btnRemoverArestas;
+    private javax.swing.JButton btnRemoverTudo;
+    private javax.swing.JButton btnTabelaBFS;
+    private javax.swing.JButton btnTabelaDFS;
     private javax.swing.JTextField fieldA;
+    private javax.swing.JTextField fieldCaminhoAte;
+    private javax.swing.JTextField fieldFonte;
     private javax.swing.JTextField fieldGM;
     private javax.swing.JTextField fieldGMX;
     private javax.swing.JTextField fieldV;
     private javax.swing.JMenuItem itemMenuRemover;
-    private javax.swing.JButton jButton1;
-    private javax.swing.JButton jButton2;
-    private javax.swing.JButton jButton3;
-    private javax.swing.JButton jButton4;
-    private javax.swing.JButton jButton5;
-    private javax.swing.JButton jButton6;
-    private javax.swing.JButton jButton7;
-    private javax.swing.JLabel jLabel1;
-    private javax.swing.JLabel jLabel2;
-    private javax.swing.JTextField jTextField1;
-    private javax.swing.JTextField jTextField2;
     private javax.swing.JLabel labelA;
+    private javax.swing.JLabel labelCaminhoAte;
+    private javax.swing.JLabel labelFonte;
     private javax.swing.JLabel labelGM;
     private javax.swing.JLabel labelGMX;
+    private javax.swing.JLabel labelListaAdj;
     private javax.swing.JLabel labelV;
+    private javax.swing.JList listaAdj;
     private javax.swing.JPopupMenu menuPopUp;
     private javax.swing.JPanel painelAlgoritmos;
     private javax.swing.JPanel painelDados;
     private javax.swing.JPanel painelDesenho;
     private javax.swing.JPanel painelOperacoes;
-    private javax.swing.JToggleButton tbtnNovaAresta;
-    private javax.swing.JToggleButton tbtnNovoVertice;
+    private javax.swing.JScrollPane spAdj;
+    private javax.swing.JToggleButton tbtnInsArestas;
+    private javax.swing.JToggleButton tbtnInsVertices;
     // End of variables declaration//GEN-END:variables
 }
