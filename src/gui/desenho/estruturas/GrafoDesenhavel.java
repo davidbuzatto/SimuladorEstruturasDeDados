@@ -16,8 +16,6 @@ import java.awt.Color;
 import java.awt.Font;
 import java.awt.FontMetrics;
 import java.awt.Graphics2D;
-import java.util.ArrayList;
-import java.util.List;
 import java.util.Map.Entry;
 import javax.swing.JPanel;
 import uteis.UteisDesenho;
@@ -31,7 +29,7 @@ public class GrafoDesenhavel implements Desenhavel {
     
     private GrafoAnotado grafoAnt;
     private JPanel painel;
-    private VerticeGrafo verticeArestaOrigem;
+    private VerticeGrafoAnotado verticeArestaOrigem;
     private Caminhos caminho;
     private ComponentesConexos cc;
     private int caminhoAte;
@@ -86,9 +84,9 @@ public class GrafoDesenhavel implements Desenhavel {
             
             g2d.setColor( Color.BLACK );
             
-            for ( Entry<String, ArestaGrafo> a : grafoAnt.getArestas().entrySet() ) {
+            for ( Entry<String, ArestaGrafoAnotado> a : grafoAnt.getArestas().entrySet() ) {
 
-                ArestaGrafo ag = a.getValue();
+                ArestaGrafoAnotado ag = a.getValue();
                 g2d.drawLine( ag.origem.xCentro, ag.origem.yCentro,
                         ag.destino.xCentro, ag.destino.yCentro );
 
@@ -99,9 +97,9 @@ public class GrafoDesenhavel implements Desenhavel {
             g2d.setStroke( new BasicStroke( 4 ) );
             g2d.setColor( cinza );
             
-            for ( Entry<String, ArestaGrafo> a : grafoAnt.getArestas().entrySet() ) {
+            for ( Entry<String, ArestaGrafoAnotado> a : grafoAnt.getArestas().entrySet() ) {
 
-                ArestaGrafo ag = a.getValue();
+                ArestaGrafoAnotado ag = a.getValue();
                 g2d.drawLine( ag.origem.xCentro, ag.origem.yCentro,
                         ag.destino.xCentro, ag.destino.yCentro );
 
@@ -119,8 +117,8 @@ public class GrafoDesenhavel implements Desenhavel {
                 arestaAte = ((BuscaLargura) caminho).getArestaAte();
             }
             
-            VerticeGrafo origem = null;
-            VerticeGrafo destino = null;
+            VerticeGrafoAnotado origem = null;
+            VerticeGrafoAnotado destino = null;
                     
             for ( int v = 0; v < arestaAte.length; v++ ) {
                 
@@ -237,21 +235,21 @@ public class GrafoDesenhavel implements Desenhavel {
         }
         
         if ( cc == null ) {
-            for ( Entry<Integer, VerticeGrafo> v : grafoAnt.getVertices().entrySet() ) {
-                VerticeGrafo vg = v.getValue();
+            for ( Entry<Integer, VerticeGrafoAnotado> v : grafoAnt.getVertices().entrySet() ) {
+                VerticeGrafoAnotado vg = v.getValue();
                 vg.id = -1;
             }
         } else {
-            for ( Entry<Integer, VerticeGrafo> v : grafoAnt.getVertices().entrySet() ) {
-                VerticeGrafo vg = v.getValue();
+            for ( Entry<Integer, VerticeGrafoAnotado> v : grafoAnt.getVertices().entrySet() ) {
+                VerticeGrafoAnotado vg = v.getValue();
                 vg.id = cc.id( grafoAnt.getTransicaoAnotadoParaGrafo().get( vg.v ) );
             }
         }
         
         // vértices
-        for ( Entry<Integer, VerticeGrafo> v : grafoAnt.getVertices().entrySet() ) {
+        for ( Entry<Integer, VerticeGrafoAnotado> v : grafoAnt.getVertices().entrySet() ) {
             
-            VerticeGrafo vg = v.getValue();
+            VerticeGrafoAnotado vg = v.getValue();
             
             g2d.setStroke( new BasicStroke( 2 ) );
             
@@ -280,7 +278,7 @@ public class GrafoDesenhavel implements Desenhavel {
         
     }
 
-    public void setVerticeArestaOrigem( VerticeGrafo verticeArestaOrigem ) {
+    public void setVerticeArestaOrigem( VerticeGrafoAnotado verticeArestaOrigem ) {
         this.verticeArestaOrigem = verticeArestaOrigem;
     }
 

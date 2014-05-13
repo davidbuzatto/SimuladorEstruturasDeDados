@@ -6,7 +6,7 @@
 
 package gui;
 
-import gui.desenho.estruturas.ArestaGrafo;
+import gui.desenho.estruturas.ArestaGrafoAnotado;
 import java.util.List;
 import javax.swing.DefaultListModel;
 
@@ -17,14 +17,14 @@ import javax.swing.DefaultListModel;
  */
 public class DialogRemoverArestaGrafo extends javax.swing.JDialog {
 
-    private DefaultListModel<ArestaGrafo> modelo;
-    private List<ArestaGrafo> arestas;
-    private List<ArestaGrafo> arestasRemovidas;
+    private DefaultListModel<ArestaGrafoAnotado> modelo;
+    private List<ArestaGrafoAnotado> arestas;
+    private List<ArestaGrafoAnotado> arestasRemovidas;
     
     /**
      * Creates new form DialogRemoverArestaGrafo
      */
-    public DialogRemoverArestaGrafo( java.awt.Frame parent, boolean modal, List<ArestaGrafo> arestas, List<ArestaGrafo> arestasRemovidas ) {
+    public DialogRemoverArestaGrafo( java.awt.Frame parent, boolean modal, List<ArestaGrafoAnotado> arestas, List<ArestaGrafoAnotado> arestasRemovidas ) {
         
         super( parent, modal );
         initComponents();
@@ -33,7 +33,7 @@ public class DialogRemoverArestaGrafo extends javax.swing.JDialog {
         this.arestasRemovidas = arestasRemovidas;
         
         modelo = new DefaultListModel<>();
-        for ( ArestaGrafo a : arestas ) {
+        for ( ArestaGrafoAnotado a : arestas ) {
             modelo.addElement( a );
         }
         
@@ -156,7 +156,7 @@ public class DialogRemoverArestaGrafo extends javax.swing.JDialog {
         
         for ( Object o : listaArestas.getSelectedValuesList() ) {
             modelo.removeElement( o );
-            arestasRemovidas.add( (ArestaGrafo) o );
+            arestasRemovidas.add( (ArestaGrafoAnotado) o );
         }
         
     }//GEN-LAST:event_btnRemoverActionPerformed

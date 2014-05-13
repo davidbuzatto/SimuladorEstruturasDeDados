@@ -7,8 +7,10 @@
 package gui.desenho.estruturas;
 
 import estruturas.Grafo;
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
@@ -18,30 +20,30 @@ import java.util.Map.Entry;
  * 
  * @author David Buzatto
  */
-public class GrafoAnotado {
+public class GrafoAnotado implements Serializable {
     
     private int verticeAtual;
     
     // mapa para transição de vértice do grafo anotado para o grafo
-    private Map<Integer, Integer> transicaoAnotadoParaGrafo;
+    private transient Map<Integer, Integer> transicaoAnotadoParaGrafo;
     
     // mapa para transição de vértice do grafo para o grafo anotado
-    private Map<Integer, Integer> transicaoGrafoParaAnotado;
+    private transient Map<Integer, Integer> transicaoGrafoParaAnotado;
     
-    private Map<Integer, VerticeGrafo> vertices;
-    private Map<String, ArestaGrafo> arestas;
+    private Map<Integer, VerticeGrafoAnotado> vertices;
+    private Map<String, ArestaGrafoAnotado> arestas;
     
-    private Grafo grafo;
+    private transient Grafo grafo;
     
     public GrafoAnotado() {
-        vertices = new HashMap<>();
-        arestas = new HashMap<>();
+        vertices = new LinkedHashMap<>();
+        arestas = new LinkedHashMap<>();
     }
     
     // x e y são o centro do vértice no desenho
     public void adicionarVertice( int x, int y, int tamanho ) {
         
-        VerticeGrafo v = new VerticeGrafo();
+        VerticeGrafoAnotado v = new VerticeGrafoAnotado();
         
         v.v = verticeAtual++;
         
@@ -59,10 +61,10 @@ public class GrafoAnotado {
     
     public void adicionarAresta( int v, int w ) {
         
-        VerticeGrafo v1 = vertices.get( v );
-        VerticeGrafo v2 = vertices.get( w );
+        VerticeGrafoAnotado v1 = vertices.get( v );
+        VerticeGrafoAnotado v2 = vertices.get( w );
         
-        ArestaGrafo aVW = new ArestaGrafo();
+        ArestaGrafoAnotado aVW = new ArestaGrafoAnotado();
         aVW.origem = v1;
         aVW.destino = v2;
         
@@ -72,10 +74,10 @@ public class GrafoAnotado {
     
     public void removerVertice( int v ) {
         
-        VerticeGrafo ve = vertices.get( v );
+        VerticeGrafoAnotado ve = vertices.get( v );
         List<String> aRemover = new ArrayList<>();
         
-        for ( Entry<String, ArestaGrafo> e : arestas.entrySet() ) {
+        for ( Entry<String, ArestaGrafoAnotado> e : arestas.entrySet() ) {
             
             if ( e.getKey().contains( "a" + v + "-" ) ) {
                 aRemover.add( e.getKey() );
@@ -97,8 +99,8 @@ public class GrafoAnotado {
     
     public void removerAresta( int v, int w ) {
         
-        VerticeGrafo v1 = vertices.get( v );
-        VerticeGrafo v2 = vertices.get( w );
+        VerticeGrafoAnotado v1 = vertices.get( v );
+        VerticeGrafoAnotado v2 = vertices.get( w );
         
         if ( v1 != null && v2 != null ) {
             arestas.remove( "a" + v1.v + "-" + v2.v + "a" );
@@ -113,7 +115,7 @@ public class GrafoAnotado {
         transicaoGrafoParaAnotado = new HashMap<>();
         int i = 0;
         
-        for ( Entry<Integer, VerticeGrafo> v : vertices.entrySet() ) {
+        for ( Entry<Integer, VerticeGrafoAnotado> v : vertices.entrySet() ) {
             transicaoAnotadoParaGrafo.put( v.getValue().v, i++ );
         }
         
@@ -123,9 +125,9 @@ public class GrafoAnotado {
         
         Grafo g = new Grafo( vertices.size() );
         
-        for ( Entry<String, ArestaGrafo> e : arestas.entrySet() ) {
+        for ( Entry<String, ArestaGrafoAnotado> e : arestas.entrySet() ) {
             
-            ArestaGrafo a = e.getValue();
+            ArestaGrafoAnotado a = e.getValue();
             int v = transicaoAnotadoParaGrafo.get( a.origem.v );
             int w = transicaoAnotadoParaGrafo.get( a.destino.v );
             
@@ -146,11 +148,11 @@ public class GrafoAnotado {
         return transicaoGrafoParaAnotado;
     }
 
-    public Map<Integer, VerticeGrafo> getVertices() {
+    public Map<Integer, VerticeGrafoAnotado> getVertices() {
         return vertices;
     }
 
-    public Map<String, ArestaGrafo> getArestas() {
+    public Map<String, ArestaGrafoAnotado> getArestas() {
         return arestas;
     }
 
@@ -180,8 +182,8 @@ public class GrafoAnotado {
     }
     
     public void limpar() {
-        vertices = new HashMap<>();
-        arestas = new HashMap<>();
+        vertices = new LinkedHashMap<>();
+        arestas = new LinkedHashMap<>();
         verticeAtual = 0;
     }
     

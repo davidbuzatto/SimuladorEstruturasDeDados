@@ -6,16 +6,18 @@
 
 package gui.desenho.estruturas;
 
+import java.io.Serializable;
+
 /**
  * Classe para arestas de um grafo não direcionado.
  * 
  * @author David Buzatto
  */
-public class ArestaGrafo {
+public class ArestaGrafoAnotado implements Serializable {
     
     // origem e destino em grafos não direcionados não fazem sentido
-    public VerticeGrafo origem;
-    public VerticeGrafo destino;
+    public VerticeGrafoAnotado origem;
+    public VerticeGrafoAnotado destino;
 
     @Override
     public String toString() {

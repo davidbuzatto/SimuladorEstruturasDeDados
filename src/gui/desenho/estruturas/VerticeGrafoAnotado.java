@@ -6,12 +6,14 @@
 
 package gui.desenho.estruturas;
 
+import java.io.Serializable;
+
 /**
  * Classe para vértices de grafos.
  * 
  * @author David Buzatto
  */
-public class VerticeGrafo {
+public class VerticeGrafoAnotado implements Serializable {
     
     public int v;
         

@@ -39,5 +39,9 @@ public class PainelDesenho extends JPanel {
         g2d.dispose();
         
     }
+
+    public void setEstruturaDesenhavel( Desenhavel estruturaDesenhavel ) {
+        this.estruturaDesenhavel = estruturaDesenhavel;
+    }
     
 }

@@ -13,19 +13,32 @@ import estruturas.algoritmos.grafos.BuscaLargura;
 import estruturas.algoritmos.grafos.BuscaProfundidade;
 import estruturas.algoritmos.grafos.ComponentesConexos;
 import gui.desenho.PainelDesenho;
-import gui.desenho.estruturas.ArestaGrafo;
+import gui.desenho.estruturas.ArestaGrafoAnotado;
 import gui.desenho.estruturas.GrafoAnotado;
 import gui.desenho.estruturas.GrafoDesenhavel;
-import gui.desenho.estruturas.VerticeGrafo;
+import gui.desenho.estruturas.VerticeGrafoAnotado;
+import java.awt.Graphics2D;
 import java.awt.Point;
+import java.awt.RenderingHints;
+import java.awt.image.BufferedImage;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
 import java.util.Map.Entry;
+import javax.imageio.ImageIO;
 import javax.swing.DefaultListModel;
+import javax.swing.JFileChooser;
 import javax.swing.JOptionPane;
 import javax.swing.SwingUtilities;
+import javax.swing.filechooser.FileFilter;
+import javax.swing.filechooser.FileNameExtensionFilter;
 
 /**
  * Janela para a simulação de grafos.
@@ -38,10 +51,10 @@ public class IFGrafo extends javax.swing.JInternalFrame {
     private GrafoAnotado grafoAnt;
     private Grafo grafo;
     private boolean movendo;
-    private VerticeGrafo verticeMovimento;
-    private VerticeGrafo verticeRemocao;
-    private VerticeGrafo verticeArestaO;
-    private VerticeGrafo verticeArestaD;
+    private VerticeGrafoAnotado verticeMovimento;
+    private VerticeGrafoAnotado verticeRemocao;
+    private VerticeGrafoAnotado verticeArestaO;
+    private VerticeGrafoAnotado verticeArestaD;
     private int tamanhoVertice = 40;
     private int deslocamentoX;
     private int deslocamentoY;
@@ -67,7 +80,6 @@ public class IFGrafo extends javax.swing.JInternalFrame {
         setVisible( true );
         
         grafoD.setPainel( painelDesenho );
-        painelDesenho.repaint();
         
         // grafo base
         grafoAnt.adicionarVertice( 100, 100, tamanhoVertice );
@@ -99,6 +111,7 @@ public class IFGrafo extends javax.swing.JInternalFrame {
         grafoAnt.adicionarAresta( 5, 3 );
         
         atualizarDadosGrafo();
+        painelDesenho.repaint();
         
     }
 
@@ -119,6 +132,9 @@ public class IFGrafo extends javax.swing.JInternalFrame {
         tbtnInsArestas = new javax.swing.JToggleButton();
         btnRemoverArestas = new javax.swing.JButton();
         btnRemoverTudo = new javax.swing.JButton();
+        btnAbrir = new javax.swing.JButton();
+        btnSalvar = new javax.swing.JButton();
+        btnSalvarImagem = new javax.swing.JButton();
         painelAlgoritmos = new javax.swing.JPanel();
         labelFonte = new javax.swing.JLabel();
         fieldFonte = new javax.swing.JTextField();
@@ -178,7 +194,7 @@ public class IFGrafo extends javax.swing.JInternalFrame {
         painelDesenho.setLayout(painelDesenhoLayout);
         painelDesenhoLayout.setHorizontalGroup(
             painelDesenhoLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 660, Short.MAX_VALUE)
+            .addGap(0, 617, Short.MAX_VALUE)
         );
         painelDesenhoLayout.setVerticalGroup(
             painelDesenhoLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -212,6 +228,27 @@ public class IFGrafo extends javax.swing.JInternalFrame {
         btnRemoverTudo.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btnRemoverTudoActionPerformed(evt);
+            }
+        });
+
+        btnAbrir.setIcon(new javax.swing.ImageIcon(getClass().getResource("/gui/imagens/folder.png"))); // NOI18N
+        btnAbrir.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnAbrirActionPerformed(evt);
+            }
+        });
+
+        btnSalvar.setIcon(new javax.swing.ImageIcon(getClass().getResource("/gui/imagens/disk.png"))); // NOI18N
+        btnSalvar.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnSalvarActionPerformed(evt);
+            }
+        });
+
+        btnSalvarImagem.setIcon(new javax.swing.ImageIcon(getClass().getResource("/gui/imagens/photo.png"))); // NOI18N
+        btnSalvarImagem.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnSalvarImagemActionPerformed(evt);
             }
         });
 
@@ -375,7 +412,7 @@ public class IFGrafo extends javax.swing.JInternalFrame {
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                                 .addComponent(fieldGMX))))
                     .addComponent(labelListaAdj, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(spAdj, javax.swing.GroupLayout.PREFERRED_SIZE, 203, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(spAdj, javax.swing.GroupLayout.PREFERRED_SIZE, 0, Short.MAX_VALUE))
                 .addContainerGap())
         );
         painelDadosLayout.setVerticalGroup(
@@ -411,28 +448,40 @@ public class IFGrafo extends javax.swing.JInternalFrame {
                     .addComponent(painelAlgoritmos, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, painelOperacoesLayout.createSequentialGroup()
                         .addGap(0, 0, Short.MAX_VALUE)
-                        .addGroup(painelOperacoesLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, painelOperacoesLayout.createSequentialGroup()
+                        .addGroup(painelOperacoesLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                            .addGroup(painelOperacoesLayout.createSequentialGroup()
                                 .addComponent(btnRemoverTudo)
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(btnRemoverArestas))
-                            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, painelOperacoesLayout.createSequentialGroup()
+                                .addComponent(btnRemoverArestas)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(btnSalvarImagem, javax.swing.GroupLayout.PREFERRED_SIZE, 26, javax.swing.GroupLayout.PREFERRED_SIZE))
+                            .addGroup(painelOperacoesLayout.createSequentialGroup()
                                 .addComponent(tbtnInsVertices)
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(tbtnInsArestas)))))
+                                .addComponent(tbtnInsArestas)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(btnAbrir, javax.swing.GroupLayout.PREFERRED_SIZE, 26, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(btnSalvar, javax.swing.GroupLayout.PREFERRED_SIZE, 26, javax.swing.GroupLayout.PREFERRED_SIZE)))))
                 .addGap(6, 6, 6))
         );
         painelOperacoesLayout.setVerticalGroup(
             painelOperacoesLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(painelOperacoesLayout.createSequentialGroup()
                 .addContainerGap()
-                .addGroup(painelOperacoesLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(tbtnInsArestas)
-                    .addComponent(tbtnInsVertices))
+                .addGroup(painelOperacoesLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                    .addComponent(btnSalvar)
+                    .addGroup(painelOperacoesLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                        .addComponent(btnAbrir)
+                        .addGroup(painelOperacoesLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(tbtnInsArestas)
+                            .addComponent(tbtnInsVertices))))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(painelOperacoesLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(btnRemoverArestas)
-                    .addComponent(btnRemoverTudo))
+                .addGroup(painelOperacoesLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(painelOperacoesLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                        .addComponent(btnRemoverArestas)
+                        .addComponent(btnRemoverTudo))
+                    .addComponent(btnSalvarImagem))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(painelAlgoritmos, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
@@ -505,7 +554,7 @@ public class IFGrafo extends javax.swing.JInternalFrame {
         
             } else if ( tbtnInsArestas.isSelected() ) {
                 
-                for ( Entry<Integer, VerticeGrafo> v : grafoAnt.getVertices().entrySet() ) {
+                for ( Entry<Integer, VerticeGrafoAnotado> v : grafoAnt.getVertices().entrySet() ) {
                     
                     Point p = evt.getPoint();
 
@@ -540,7 +589,7 @@ public class IFGrafo extends javax.swing.JInternalFrame {
         
             } else {
                 
-                for ( Entry<Integer, VerticeGrafo> v : grafoAnt.getVertices().entrySet() ) {
+                for ( Entry<Integer, VerticeGrafoAnotado> v : grafoAnt.getVertices().entrySet() ) {
                     
                     Point p = evt.getPoint();
                 
@@ -568,7 +617,7 @@ public class IFGrafo extends javax.swing.JInternalFrame {
             tbtnInsVertices.setSelected( false );
             tbtnInsArestas.setSelected( false );
             
-            for ( Entry<Integer, VerticeGrafo> v : grafoAnt.getVertices().entrySet() ) {
+            for ( Entry<Integer, VerticeGrafoAnotado> v : grafoAnt.getVertices().entrySet() ) {
                     
                 Point p = evt.getPoint();
 
@@ -603,15 +652,15 @@ public class IFGrafo extends javax.swing.JInternalFrame {
 
     private void btnRemoverArestasActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnRemoverArestasActionPerformed
         
-        List<ArestaGrafo> arestas = new ArrayList<>();
-        List<ArestaGrafo> arestasRemovidas = new ArrayList<>();
-        for ( Entry<String, ArestaGrafo> a : grafoAnt.getArestas().entrySet() ) {
+        List<ArestaGrafoAnotado> arestas = new ArrayList<>();
+        List<ArestaGrafoAnotado> arestasRemovidas = new ArrayList<>();
+        for ( Entry<String, ArestaGrafoAnotado> a : grafoAnt.getArestas().entrySet() ) {
             arestas.add( a.getValue() );
         }
         
-        Collections.sort( arestas, new Comparator<ArestaGrafo>() {
+        Collections.sort( arestas, new Comparator<ArestaGrafoAnotado>() {
             @Override
-            public int compare( ArestaGrafo o1, ArestaGrafo o2 ) {
+            public int compare( ArestaGrafoAnotado o1, ArestaGrafoAnotado o2 ) {
                 if ( o1.origem.v < o2.origem.v ) return -1;
                 if ( o1.origem.v > o2.origem.v ) return +1;
                 if ( o1.destino.v < o2.destino.v ) return -1;
@@ -624,7 +673,7 @@ public class IFGrafo extends javax.swing.JInternalFrame {
         d.setVisible( true );
         
         if ( arestas.size() != grafoAnt.getArestas().size() ) {
-            for ( ArestaGrafo a : arestasRemovidas ) {
+            for ( ArestaGrafoAnotado a : arestasRemovidas ) {
                 grafoAnt.removerAresta( a.origem.v, a.destino.v );
             }
         }
@@ -643,7 +692,7 @@ public class IFGrafo extends javax.swing.JInternalFrame {
             boolean achou = false;
             
             // buscando a fonte
-            for ( Entry<Integer, VerticeGrafo> v : grafoAnt.getVertices().entrySet() ) {
+            for ( Entry<Integer, VerticeGrafoAnotado> v : grafoAnt.getVertices().entrySet() ) {
                 
                 if ( v.getValue().v == fonte ) {
                     achou = true;
@@ -664,7 +713,7 @@ public class IFGrafo extends javax.swing.JInternalFrame {
             }
             
         } catch ( NumberFormatException exc ) {
-            JOptionPane.showMessageDialog( this, "Entre com um número!", "ERRO", JOptionPane.ERROR_MESSAGE );
+            JOptionPane.showMessageDialog( this, "Entre com um número para o vértice fonte!", "ERRO", JOptionPane.ERROR_MESSAGE );
         }
         
     }//GEN-LAST:event_btnDFSActionPerformed
@@ -677,7 +726,7 @@ public class IFGrafo extends javax.swing.JInternalFrame {
             boolean achou = false;
             
             // buscando a fonte
-            for ( Entry<Integer, VerticeGrafo> v : grafoAnt.getVertices().entrySet() ) {
+            for ( Entry<Integer, VerticeGrafoAnotado> v : grafoAnt.getVertices().entrySet() ) {
                 
                 if ( v.getValue().v == fonte ) {
                     achou = true;
@@ -698,7 +747,7 @@ public class IFGrafo extends javax.swing.JInternalFrame {
             }
             
         } catch ( NumberFormatException exc ) {
-            JOptionPane.showMessageDialog( this, "Entre com um número!", "ERRO", JOptionPane.ERROR_MESSAGE );
+            JOptionPane.showMessageDialog( this, "Entre com um número para o vértice fonte!", "ERRO", JOptionPane.ERROR_MESSAGE );
         }
         
     }//GEN-LAST:event_btnBFSActionPerformed
@@ -734,23 +783,13 @@ public class IFGrafo extends javax.swing.JInternalFrame {
         try {
             
             int ate = Integer.parseInt( fieldCaminhoAte.getText() );
-            boolean achou = false;
+            Integer destino = grafoAnt.getTransicaoAnotadoParaGrafo().get( ate );
 
-            // buscando a fonte
-            for ( Entry<Integer, VerticeGrafo> v : grafoAnt.getVertices().entrySet() ) {
-
-                if ( v.getValue().v == ate ) {
-                    achou = true;
-                    break;
-                }
-
-            }
-
-            if ( achou ) {
+            if ( destino != null ) {
 
                 if ( dfs != null || bfs != null ) {
 
-                    grafoD.setCaminhoAte( ate );
+                    grafoD.setCaminhoAte( destino );
                     painelDesenho.repaint();
 
                 } else {
@@ -762,7 +801,7 @@ public class IFGrafo extends javax.swing.JInternalFrame {
             }
                         
         } catch ( NumberFormatException exc ) {
-            JOptionPane.showMessageDialog( this, "Entre com um número!", "ERRO", JOptionPane.ERROR_MESSAGE );
+            JOptionPane.showMessageDialog( this, "Entre com um número para o vértice de destino!", "ERRO", JOptionPane.ERROR_MESSAGE );
         }
         
     }//GEN-LAST:event_btnMostrarCaminhoActionPerformed
@@ -788,6 +827,154 @@ public class IFGrafo extends javax.swing.JInternalFrame {
         atualizarDadosGrafo();
         painelDesenho.repaint();
     }//GEN-LAST:event_btnRemoverTudoActionPerformed
+
+    private void btnSalvarImagemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnSalvarImagemActionPerformed
+        
+        if ( grafoAnt.getGrafo().v() != 0 ) {
+            
+            int minX = 0;
+            int maxX = 0;
+            int minY = 0;
+            int maxY = 0;
+            boolean primeiro = true;
+            VerticeGrafoAnotado v;
+            
+            for ( Entry<Integer, VerticeGrafoAnotado> e : grafoAnt.getVertices().entrySet() ) {
+                
+                v = e.getValue();
+                
+                if ( primeiro ) {
+                    minX = v.xCentro;
+                    maxX = v.xCentro;
+                    minY = v.yCentro;
+                    maxY = v.yCentro;
+                    primeiro = false;
+                } else {
+                    
+                    if ( minX > v.xCentro ) {
+                        minX = v.xCentro;
+                    }
+                    
+                    if ( maxX < v.xCentro ) {
+                        maxX = v.xCentro;
+                    }
+                    
+                    if ( minY > v.yCentro ) {
+                        minY = v.yCentro;
+                    }
+                    
+                    if ( maxY < v.yCentro ) {
+                        maxY = v.yCentro;
+                    }
+                    
+                }
+                
+            }
+            
+            BufferedImage img = new BufferedImage( painelDesenho.getWidth(), painelDesenho.getHeight(), BufferedImage.TYPE_INT_ARGB );
+            Graphics2D g2d = img.createGraphics();
+            g2d.setRenderingHint( RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON );
+            grafoD.desenhar( g2d );
+            
+            try {
+                
+                JFileChooser jfc = new JFileChooser();
+                FileNameExtensionFilter fnef = new FileNameExtensionFilter( "Portable Network Graphics (*.png)", "png" );
+                
+                for ( FileFilter f : jfc.getChoosableFileFilters() ) {
+                    jfc.removeChoosableFileFilter( f );
+                }
+                
+                jfc.setFileFilter( fnef );
+                jfc.setDialogTitle( "Salvar Imagem do Grafo" );
+                jfc.setMultiSelectionEnabled( false );
+                
+                if ( jfc.showSaveDialog( this ) == JFileChooser.APPROVE_OPTION ) {
+                    File f = jfc.getSelectedFile();
+                    if ( f.getName().lastIndexOf( ".png" ) == -1 ) {
+                        f = new File( f.getAbsolutePath() + ".png" );
+                    }
+                    ImageIO.write( img.getSubimage( minX - 30, minY - 30, maxX - minX + 60, maxY - minY + 60 ), "png", f );
+                }
+                
+            } catch ( IOException exc ) {
+                exc.printStackTrace();
+            }
+            
+        } else {
+            JOptionPane.showMessageDialog( this, "Não existe um grafo para salvar a imagem!", "ERRO", JOptionPane.ERROR_MESSAGE );
+        }
+        
+    }//GEN-LAST:event_btnSalvarImagemActionPerformed
+
+    private void btnSalvarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnSalvarActionPerformed
+        
+        try {
+            
+            JFileChooser jfc = new JFileChooser();
+            FileNameExtensionFilter fnef = new FileNameExtensionFilter( "Grafo (*.grafo)", "grafo" );
+
+            for ( FileFilter f : jfc.getChoosableFileFilters() ) {
+                jfc.removeChoosableFileFilter( f );
+            }
+
+            jfc.setFileFilter( fnef );
+            jfc.setDialogTitle( "Salvar Grafo" );
+            jfc.setMultiSelectionEnabled( false );
+
+            if ( jfc.showSaveDialog( this ) == JFileChooser.APPROVE_OPTION ) {
+                File f = jfc.getSelectedFile();
+                if ( f.getName().lastIndexOf( ".grafo" ) == -1 ) {
+                    f = new File( f.getAbsolutePath() + ".grafo" );
+                }
+                ObjectOutputStream oout = new ObjectOutputStream( new FileOutputStream( f ) );
+                oout.writeObject( grafoAnt );
+                oout.flush();
+                oout.close();
+            }
+            
+        } catch ( IOException exc ) {
+            exc.printStackTrace();
+        }
+        
+    }//GEN-LAST:event_btnSalvarActionPerformed
+
+    private void btnAbrirActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnAbrirActionPerformed
+        
+        try {
+            
+            JFileChooser jfc = new JFileChooser();
+            FileNameExtensionFilter fnef = new FileNameExtensionFilter( "Grafo (*.grafo)", "grafo" );
+
+            for ( FileFilter f : jfc.getChoosableFileFilters() ) {
+                jfc.removeChoosableFileFilter( f );
+            }
+
+            jfc.setFileFilter( fnef );
+            jfc.setDialogTitle( "ABrir Grafo" );
+            jfc.setMultiSelectionEnabled( false );
+
+            if ( jfc.showOpenDialog( this ) == JFileChooser.APPROVE_OPTION ) {
+                
+                File f = jfc.getSelectedFile();
+                ObjectInputStream oin = new ObjectInputStream( new FileInputStream( f ) );
+                grafoAnt = (GrafoAnotado) oin.readObject();
+                oin.close();
+                
+                grafoD = new GrafoDesenhavel( grafoAnt );
+                grafoD.setPainel( painelDesenho );
+                ((PainelDesenho) painelDesenho).setEstruturaDesenhavel( grafoD );
+                atualizarDadosGrafo();
+                
+                painelDesenho.repaint();
+                
+            }
+            
+        } catch ( ClassNotFoundException | IOException exc ) {
+            exc.printStackTrace();
+        }
+        
+    }//GEN-LAST:event_btnAbrirActionPerformed
         
     private void atualizarDadosGrafo() {
         
@@ -837,6 +1024,7 @@ public class IFGrafo extends javax.swing.JInternalFrame {
     }
     
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JButton btnAbrir;
     private javax.swing.JButton btnBFS;
     private javax.swing.JButton btnDFS;
     private javax.swing.JButton btnIdentificarCC;
@@ -844,6 +1032,8 @@ public class IFGrafo extends javax.swing.JInternalFrame {
     private javax.swing.JButton btnMostrarCaminho;
     private javax.swing.JButton btnRemoverArestas;
     private javax.swing.JButton btnRemoverTudo;
+    private javax.swing.JButton btnSalvar;
+    private javax.swing.JButton btnSalvarImagem;
     private javax.swing.JButton btnTabelaBFS;
     private javax.swing.JButton btnTabelaDFS;
     private javax.swing.JTextField fieldA;
