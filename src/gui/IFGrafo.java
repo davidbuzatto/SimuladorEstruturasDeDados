@@ -890,11 +890,21 @@ public class IFGrafo extends javax.swing.JInternalFrame {
                 jfc.setMultiSelectionEnabled( false );
                 
                 if ( jfc.showSaveDialog( this ) == JFileChooser.APPROVE_OPTION ) {
+                    
                     File f = jfc.getSelectedFile();
                     if ( f.getName().lastIndexOf( ".png" ) == -1 ) {
                         f = new File( f.getAbsolutePath() + ".png" );
                     }
-                    ImageIO.write( img.getSubimage( minX - 30, minY - 30, maxX - minX + 60, maxY - minY + 60 ), "png", f );
+                    
+                    if ( !f.exists() || 
+                        ( f.exists() && JOptionPane.showConfirmDialog( 
+                          this, "O arquivo já existe. Deseja sobrescrevê-lo?", "Aviso", 
+                          JOptionPane.OK_CANCEL_OPTION ) == JOptionPane.OK_OPTION ) ) {
+                        
+                        ImageIO.write( img.getSubimage( minX - 30, minY - 30, maxX - minX + 60, maxY - minY + 60 ), "png", f );
+                        
+                    }
+                    
                 }
                 
             } catch ( IOException exc ) {
@@ -923,14 +933,24 @@ public class IFGrafo extends javax.swing.JInternalFrame {
             jfc.setMultiSelectionEnabled( false );
 
             if ( jfc.showSaveDialog( this ) == JFileChooser.APPROVE_OPTION ) {
+                
                 File f = jfc.getSelectedFile();
                 if ( f.getName().lastIndexOf( ".grafo" ) == -1 ) {
                     f = new File( f.getAbsolutePath() + ".grafo" );
                 }
-                ObjectOutputStream oout = new ObjectOutputStream( new FileOutputStream( f ) );
-                oout.writeObject( grafoAnt );
-                oout.flush();
-                oout.close();
+                
+                if ( !f.exists() || 
+                        ( f.exists() && JOptionPane.showConfirmDialog( 
+                          this, "O arquivo já existe. Deseja sobrescrevê-lo?", "Aviso", 
+                          JOptionPane.OK_CANCEL_OPTION ) == JOptionPane.OK_OPTION ) ) {
+                    
+                    ObjectOutputStream oout = new ObjectOutputStream( new FileOutputStream( f ) );
+                    oout.writeObject( grafoAnt );
+                    oout.flush();
+                    oout.close();
+                    
+                }
+                
             }
             
         } catch ( IOException exc ) {

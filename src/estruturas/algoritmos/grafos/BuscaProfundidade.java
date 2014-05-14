@@ -10,7 +10,7 @@ import estruturas.Grafo;
 import estruturas.Pilha;
 
 /**
- * Algoritmo de busca em profunidade.
+ * Algoritmo de busca em profundidade.
  * 
  * @author David Buzatto
  */

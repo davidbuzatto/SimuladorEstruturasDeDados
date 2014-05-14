@@ -11,7 +11,7 @@ import estruturas.Grafo;
 import estruturas.Pilha;
 
 /**
- * Algoritmode busca em largura.
+ * Algoritmo de busca em largura.
  * 
  * @author David Buzatto
  */
