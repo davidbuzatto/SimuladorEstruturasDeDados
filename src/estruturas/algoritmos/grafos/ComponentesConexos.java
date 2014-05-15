@@ -35,12 +35,23 @@ public class ComponentesConexos {
     }
 
     /**
+     * Verifica se dois vértices estão conectados.
+     * 
+     * @param v Um dos vértices
+     * @param w Outro vértice
+     * @return Se os dois vértices estão conectados.
+     */
+    public boolean conectado( int v, int w ) {
+        return id[v] == id[w];
+    }
+    
+    /**
      * Retorna a quantidade de componentes conexos do grafo.
      * 
      * @return Quantidade de componentes conexos.
      */
     public int quantidade() {
-        return cont;
+        return cont + 1;
     }
     
     /**
