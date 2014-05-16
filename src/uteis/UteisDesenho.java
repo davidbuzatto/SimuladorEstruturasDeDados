@@ -6,6 +6,7 @@
 
 package uteis;
 
+import gui.desenho.estruturas.VerticeGrafoAnotado;
 import java.awt.Color;
 import java.awt.Font;
 import java.awt.FontMetrics;
@@ -302,6 +303,42 @@ public class UteisDesenho {
 
         return incr + ang;
 
+    }
+    
+    public static void desenharFlechaVertice( VerticeGrafoAnotado origem, VerticeGrafoAnotado destino, Graphics2D g2d ) {
+        
+        // gera a hipotenusa
+        double h = UteisDesenho.gerarHipotenusa(
+                origem.xCentro, origem.yCentro,
+                destino.xCentro, destino.yCentro );
+
+        // gera o grau relativo entre os estados
+        double gr = UteisDesenho.obtemGrauRelativoJava(
+                origem.xCentro, origem.yCentro,
+                destino.xCentro, destino.yCentro );
+
+        // calcula o x e y do início da flecha
+        // sendo que h deve ser dubtraido do raio do vértice que no caso
+        // é 20, pois a flecha deve ser desenhada na borda do vértice
+        double x = ( h - 22 ) * Math.cos( Math.toRadians( gr ) );
+        double y = ( h - 22 ) * Math.sin( Math.toRadians( gr ) );
+
+        // desenha a flecha
+        // cria um novo Graphics a partir do original
+        Graphics2D g2df = ( Graphics2D ) g2d.create();
+
+        // faz a translação para a coordenada que deve ser a origem
+        g2df.translate( x + origem.xCentro, y + origem.yCentro );
+
+        // rotaciona
+        g2df.rotate( Math.toRadians( gr ) );
+
+        // desenha a flecha
+        g2df.drawLine( 0, 0, -10, -7 );
+        g2df.drawLine( 0, 0, -10, 7 );
+
+        g2df.dispose();
+        
     }
     
 }
