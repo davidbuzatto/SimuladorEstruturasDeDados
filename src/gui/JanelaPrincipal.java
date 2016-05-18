@@ -47,6 +47,7 @@ public class JanelaPrincipal extends javax.swing.JFrame {
         btnLista = new javax.swing.JButton();
         btnTabelaSimbolos = new javax.swing.JButton();
         btnABB = new javax.swing.JButton();
+        btnArvoreAVL = new javax.swing.JButton();
         btnArvoreVP = new javax.swing.JButton();
         btnTabelaHash = new javax.swing.JButton();
         btnHeapMinimo = new javax.swing.JButton();
@@ -133,6 +134,18 @@ public class JanelaPrincipal extends javax.swing.JFrame {
             }
         });
         barraFerramentas.add(btnABB);
+
+        btnArvoreAVL.setIcon(new javax.swing.ImageIcon(getClass().getResource("/gui/imagens/avl.png"))); // NOI18N
+        btnArvoreAVL.setText("Árvore AVL");
+        btnArvoreAVL.setFocusable(false);
+        btnArvoreAVL.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
+        btnArvoreAVL.setVerticalTextPosition(javax.swing.SwingConstants.BOTTOM);
+        btnArvoreAVL.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnArvoreAVLActionPerformed(evt);
+            }
+        });
+        barraFerramentas.add(btnArvoreAVL);
 
         btnArvoreVP.setIcon(new javax.swing.ImageIcon(getClass().getResource("/gui/imagens/avp.png"))); // NOI18N
         btnArvoreVP.setText("Árvore Vermelho-Preto");
@@ -466,6 +479,11 @@ public class JanelaPrincipal extends javax.swing.JFrame {
                 "ERRO", JOptionPane.ERROR_MESSAGE );
     }//GEN-LAST:event_btnGrafoPonderadoActionPerformed
 
+    private void btnArvoreAVLActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnArvoreAVLActionPerformed
+        JOptionPane.showMessageDialog( this, "Não implementado!", 
+                "ERRO", JOptionPane.ERROR_MESSAGE );
+    }//GEN-LAST:event_btnArvoreAVLActionPerformed
+
     /**
      * @param args the command line arguments
      */
@@ -504,6 +522,7 @@ public class JanelaPrincipal extends javax.swing.JFrame {
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JToolBar barraFerramentas;
     private javax.swing.JButton btnABB;
+    private javax.swing.JButton btnArvoreAVL;
     private javax.swing.JButton btnArvoreVP;
     private javax.swing.JButton btnDeque;
     private javax.swing.JButton btnFila;

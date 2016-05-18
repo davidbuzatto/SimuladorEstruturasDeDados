@@ -133,6 +133,20 @@
             <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="btnABBActionPerformed"/>
           </Events>
         </Component>
+        <Component class="javax.swing.JButton" name="btnArvoreAVL">
+          <Properties>
+            <Property name="icon" type="javax.swing.Icon" editor="org.netbeans.modules.form.editors2.IconEditor">
+              <Image iconType="3" name="/gui/imagens/avl.png"/>
+            </Property>
+            <Property name="text" type="java.lang.String" value="&#xc1;rvore AVL"/>
+            <Property name="focusable" type="boolean" value="false"/>
+            <Property name="horizontalTextPosition" type="int" value="0"/>
+            <Property name="verticalTextPosition" type="int" value="3"/>
+          </Properties>
+          <Events>
+            <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="btnArvoreAVLActionPerformed"/>
+          </Events>
+        </Component>
         <Component class="javax.swing.JButton" name="btnArvoreVP">
           <Properties>
             <Property name="icon" type="javax.swing.Icon" editor="org.netbeans.modules.form.editors2.IconEditor">

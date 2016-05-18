@@ -53,7 +53,7 @@
     <DimensionLayout dim="0">
       <Group type="103" groupAlignment="0" attributes="0">
           <Group type="102" alignment="0" attributes="0">
-              <Component id="painelDesenho" max="32767" attributes="0"/>
+              <Component id="jScrollPane1" max="32767" attributes="0"/>
               <EmptySpace max="-2" attributes="0"/>
               <Component id="painelOperacoes" min="-2" max="-2" attributes="0"/>
           </Group>
@@ -62,32 +62,11 @@
     <DimensionLayout dim="1">
       <Group type="103" groupAlignment="0" attributes="0">
           <Component id="painelOperacoes" max="32767" attributes="0"/>
-          <Component id="painelDesenho" alignment="0" max="32767" attributes="0"/>
+          <Component id="jScrollPane1" alignment="0" max="32767" attributes="0"/>
       </Group>
     </DimensionLayout>
   </Layout>
   <SubComponents>
-    <Container class="javax.swing.JPanel" name="painelDesenho">
-      <Events>
-        <EventHandler event="mouseClicked" listener="java.awt.event.MouseListener" parameters="java.awt.event.MouseEvent" handler="painelDesenhoMouseClicked"/>
-      </Events>
-      <AuxValues>
-        <AuxValue name="JavaCodeGenerator_CreateCodeCustom" type="java.lang.String" value="new PainelDesenho( abbD );"/>
-      </AuxValues>
-
-      <Layout>
-        <DimensionLayout dim="0">
-          <Group type="103" groupAlignment="0" attributes="0">
-              <EmptySpace min="0" pref="460" max="32767" attributes="0"/>
-          </Group>
-        </DimensionLayout>
-        <DimensionLayout dim="1">
-          <Group type="103" groupAlignment="0" attributes="0">
-              <EmptySpace min="0" pref="0" max="32767" attributes="0"/>
-          </Group>
-        </DimensionLayout>
-      </Layout>
-    </Container>
     <Container class="javax.swing.JPanel" name="painelOperacoes">
       <Properties>
         <Property name="border" type="javax.swing.border.Border" editor="org.netbeans.modules.form.editors2.BorderEditor">
@@ -121,9 +100,9 @@
                                   <Component id="fieldValor" min="-2" pref="104" max="-2" attributes="0"/>
                               </Group>
                               <Group type="102" alignment="1" attributes="0">
-                                  <Component id="labelDiametro" min="-2" max="-2" attributes="0"/>
+                                  <Component id="labelZoom" min="-2" max="-2" attributes="0"/>
                                   <EmptySpace type="unrelated" max="-2" attributes="0"/>
-                                  <Component id="sliderDiametro" min="-2" pref="88" max="-2" attributes="0"/>
+                                  <Component id="sliderZoom" min="-2" pref="88" max="-2" attributes="0"/>
                               </Group>
                               <Component id="checkExibirAtributos" alignment="1" min="-2" max="-2" attributes="0"/>
                           </Group>
@@ -154,8 +133,8 @@
                   <Component id="checkExibirAtributos" min="-2" max="-2" attributes="0"/>
                   <EmptySpace type="unrelated" max="-2" attributes="0"/>
                   <Group type="103" groupAlignment="0" attributes="0">
-                      <Component id="sliderDiametro" alignment="0" min="-2" max="-2" attributes="0"/>
-                      <Component id="labelDiametro" alignment="0" min="-2" max="-2" attributes="0"/>
+                      <Component id="sliderZoom" alignment="0" min="-2" max="-2" attributes="0"/>
+                      <Component id="labelZoom" alignment="0" min="-2" max="-2" attributes="0"/>
                   </Group>
                   <EmptySpace max="-2" attributes="0"/>
                   <Component id="painelPercursos" min="-2" max="-2" attributes="0"/>
@@ -217,19 +196,17 @@
             <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="checkExibirAtributosActionPerformed"/>
           </Events>
         </Component>
-        <Component class="javax.swing.JLabel" name="labelDiametro">
+        <Component class="javax.swing.JLabel" name="labelZoom">
           <Properties>
-            <Property name="text" type="java.lang.String" value="Di&#xe2;metro dos N&#xf3;s:"/>
+            <Property name="text" type="java.lang.String" value="Zoom:"/>
           </Properties>
         </Component>
-        <Component class="javax.swing.JSlider" name="sliderDiametro">
+        <Component class="javax.swing.JSlider" name="sliderZoom">
           <Properties>
-            <Property name="maximum" type="int" value="50"/>
-            <Property name="minimum" type="int" value="5"/>
-            <Property name="value" type="int" value="30"/>
+            <Property name="value" type="int" value="0"/>
           </Properties>
           <Events>
-            <EventHandler event="stateChanged" listener="javax.swing.event.ChangeListener" parameters="javax.swing.event.ChangeEvent" handler="sliderDiametroStateChanged"/>
+            <EventHandler event="stateChanged" listener="javax.swing.event.ChangeListener" parameters="javax.swing.event.ChangeEvent" handler="sliderZoomStateChanged"/>
           </Events>
         </Component>
         <Container class="javax.swing.JPanel" name="painelPercursos">
@@ -435,7 +412,7 @@
                           <Component id="labelGrau" alignment="3" min="-2" max="-2" attributes="0"/>
                           <Component id="fieldGrau" alignment="3" min="-2" max="-2" attributes="0"/>
                       </Group>
-                      <EmptySpace pref="59" max="32767" attributes="0"/>
+                      <EmptySpace max="32767" attributes="0"/>
                   </Group>
               </Group>
             </DimensionLayout>
@@ -472,6 +449,33 @@
               </Properties>
             </Component>
           </SubComponents>
+        </Container>
+      </SubComponents>
+    </Container>
+    <Container class="javax.swing.JScrollPane" name="jScrollPane1">
+
+      <Layout class="org.netbeans.modules.form.compat2.layouts.support.JScrollPaneSupportLayout"/>
+      <SubComponents>
+        <Container class="javax.swing.JPanel" name="painelDesenho">
+          <Events>
+            <EventHandler event="mouseClicked" listener="java.awt.event.MouseListener" parameters="java.awt.event.MouseEvent" handler="painelDesenhoMouseClicked"/>
+          </Events>
+          <AuxValues>
+            <AuxValue name="JavaCodeGenerator_CreateCodeCustom" type="java.lang.String" value="new PainelDesenho( abbD );"/>
+          </AuxValues>
+
+          <Layout>
+            <DimensionLayout dim="0">
+              <Group type="103" groupAlignment="0" attributes="0">
+                  <EmptySpace min="0" pref="475" max="32767" attributes="0"/>
+              </Group>
+            </DimensionLayout>
+            <DimensionLayout dim="1">
+              <Group type="103" groupAlignment="0" attributes="0">
+                  <EmptySpace min="0" pref="570" max="32767" attributes="0"/>
+              </Group>
+            </DimensionLayout>
+          </Layout>
         </Container>
       </SubComponents>
     </Container>

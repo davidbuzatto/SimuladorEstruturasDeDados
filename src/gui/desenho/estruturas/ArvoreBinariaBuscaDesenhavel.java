@@ -8,14 +8,16 @@ package gui.desenho.estruturas;
 
 import estruturas.ArvoreBinariaBusca;
 import estruturas.algoritmos.arvores.TipoPercursoArvores;
+import gui.desenho.PainelDesenho;
 import java.awt.BasicStroke;
 import java.awt.Color;
+import java.awt.Dimension;
 import java.awt.Font;
 import java.awt.FontMetrics;
 import java.awt.Graphics2D;
 import java.util.ArrayList;
 import java.util.List;
-import javax.swing.JPanel;
+import javax.swing.JViewport;
 import uteis.UteisDesenho;
 
 /**
@@ -26,13 +28,18 @@ import uteis.UteisDesenho;
 public class ArvoreBinariaBuscaDesenhavel implements Desenhavel {
     
     private ArvoreBinariaBusca<Integer> abb;
-    private JPanel painel;
+    private PainelDesenho painel;
     private ArvoreBinariaBuscaAnotada<Integer> abbAnt;
     private boolean mostrarAtributosNos;
     private int diametroNos;
     
     private int atual;
     private int maximo;
+    
+    private int menorX;
+    private int maiorX;
+    private int menorY;
+    private int maiorY;
     
     // lista de itens do percurso executado
     private List<ArvoreBinariaBuscaAnotada<Integer>.NoAnotado<Integer>> listaPercurso;
@@ -45,20 +52,107 @@ public class ArvoreBinariaBuscaDesenhavel implements Desenhavel {
         maximo = -1;
     }
     
-    public void setPainel( JPanel painel ) {
+    public void setPainel( PainelDesenho painel ) {
         this.painel = painel;
     }
 
+    public void mudarTamanhoPainel( int larg, int alt ) {
+        
+        int largP = painel.getParent().getWidth();
+        int altP = painel.getParent().getHeight();
+        
+        if ( larg < largP ) {
+            larg = largP;
+        }
+        
+        if ( alt < altP ) {
+            alt = altP;
+        }
+        
+        Dimension dim = new Dimension( larg, alt );
+        painel.setMinimumSize( dim );
+        painel.setMaximumSize( dim );
+        painel.setPreferredSize( dim );
+        
+        ( ( JViewport ) painel.getParent() ).updateUI();
+        
+    }
+    
+    private void calcularNovoTamanoPainelEPosicaoNos() {
+        
+        if ( abbAnt != null && abbAnt.getRaiz() != null ) {
+            
+            menorX = Integer.MAX_VALUE;
+            maiorX = Integer.MIN_VALUE;
+            menorY = Integer.MAX_VALUE;
+            maiorY = Integer.MIN_VALUE;
+        
+            int rankRaiz = abbAnt.getRaiz().rank + 1;
+            int espV = diametroNos + diametroNos / 3;
+            int espH = diametroNos + diametroNos / 3;
+            int margemSuperior = 40;
+
+            for ( ArvoreBinariaBuscaAnotada<Integer>.NoAnotado<Integer> no : abbAnt.percorrer( TipoPercursoArvores.EM_ORDEM ) ) {
+
+                no.xIni = ( ( ( no.rank + 1 ) - rankRaiz ) * espH - diametroNos / 2 ) * diametroNos / 30;
+                no.yIni = margemSuperior + ( no.nivel + 1 ) * espV - diametroNos / 2;
+                no.xFim = no.xIni + diametroNos;
+                no.yFim = no.yIni + diametroNos;
+                no.xCentro = no.xFim - diametroNos / 2;
+                no.yCentro = no.yFim - diametroNos / 2;
+
+                if ( menorX > no.xIni ) {
+                    menorX = no.xIni;
+                }
+                if ( maiorX < no.xFim ) {
+                    maiorX = no.xFim;
+                }
+
+                if ( menorY > no.yIni ) {
+                    menorY = no.yIni;
+                }
+                if ( maiorY < no.yFim ) {
+                    maiorY = no.yFim;
+                }
+
+            }
+            
+            maiorY += 30;
+            menorX -= 30;
+            
+            if ( menorX < 0 ) {
+                
+                maiorX += -menorX;
+                maiorX += 30;
+                
+                for ( ArvoreBinariaBuscaAnotada<Integer>.NoAnotado<Integer> no : abbAnt.percorrer( TipoPercursoArvores.EM_ORDEM ) ) {
+
+                    no.xIni += -menorX;
+                    no.xFim += -menorX;
+                    no.xCentro += -menorX;
+
+                }
+                
+                menorX = 0;
+            
+            }
+            
+            mudarTamanhoPainel( (int) ( maiorX * painel.getZoom() ), (int) ( maiorY * painel.getZoom() ) );
+            
+        } else {
+            
+            mudarTamanhoPainel( 0, 0 );
+            
+        }
+        
+    }
+    
     @Override
     public void desenhar( Graphics2D g2d ) {
         
-        int centroH = painel.getWidth()/ 2;
-        int centroV = painel.getHeight()/ 2;
-        int margemSuperior = 40;
+        calcularNovoTamanoPainelEPosicaoNos();
         
-        //int diametroNos = 40;
-        int espV = diametroNos + diametroNos / 3;
-        int espH = diametroNos + diametroNos / 3;
+        int margemSuperior = 40;
         
         Color azul = new Color( 154, 177, 209 );
         
@@ -74,24 +168,11 @@ public class ArvoreBinariaBuscaDesenhavel implements Desenhavel {
         
         if ( abbAnt == null || abbAnt.estaVazia() ) {
             
-            UteisDesenho.desenharPonteiro( g2d, centroH - 10, margemSuperior - 25, 20, 20, true, "raiz", 
+            UteisDesenho.desenharPonteiro( g2d, 35, margemSuperior - 25, 20, 20, true, "raiz", 
                     UteisDesenho.PosicaoLabel.DIREITA,
                     UteisDesenho.DirecaoSeta.BAIXO, Color.BLACK );
             
         } else {
-            
-            int rankRaiz = abbAnt.getRaiz().rank + 1;
-            
-            for ( ArvoreBinariaBuscaAnotada<Integer>.NoAnotado<Integer> no : abbAnt.percorrer( TipoPercursoArvores.EM_ORDEM ) ) {
-                
-                no.xIni = centroH + ( ( ( no.rank + 1 ) - rankRaiz ) * espH - diametroNos / 2 ) * diametroNos / 30;
-                no.yIni = margemSuperior + ( no.nivel + 1 ) * espV - diametroNos / 2;
-                no.xFim = no.xIni + diametroNos;
-                no.yFim = no.yIni + diametroNos;
-                no.xCentro = no.xFim - diametroNos / 2;
-                no.yCentro = no.yFim - diametroNos / 2;
-                
-            }
             
             for ( ArvoreBinariaBuscaAnotada<Integer>.NoAnotado<Integer> no : abbAnt.percorrer( TipoPercursoArvores.EM_ORDEM ) ) {
                 

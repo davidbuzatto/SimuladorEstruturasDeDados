@@ -31,6 +31,7 @@ public class IFArvoreBinariaBusca extends javax.swing.JInternalFrame {
     private ArvoreBinariaBuscaAnotada<Integer> abbAnt;
     private ArvoreBinariaBuscaAnotada<Integer>.NoAnotado<Integer> noRemocao;
     private DefaultListModel dlm;
+    private PainelDesenho painelD;
     
     /**
      * Creates new form IFArvoreBinariaBusca
@@ -47,10 +48,12 @@ public class IFArvoreBinariaBusca extends javax.swing.JInternalFrame {
         dlm = new DefaultListModel();
         listResPercurso.setModel( dlm );
         
-        abbD.setPainel( painelDesenho );
+        painelD = (PainelDesenho) painelDesenho;
+        
+        abbD.setPainel( painelD );
         
         fieldRaiz.setText( "vazio" );
-        painelDesenho.repaint();
+        painelD.repaint();
         
     }
 
@@ -66,7 +69,6 @@ public class IFArvoreBinariaBusca extends javax.swing.JInternalFrame {
         btnGroup = new javax.swing.ButtonGroup();
         menuPopUp = new javax.swing.JPopupMenu();
         itemMenuRemover = new javax.swing.JMenuItem();
-        painelDesenho = new PainelDesenho( abbD );
         painelOperacoes = new javax.swing.JPanel();
         labelValor = new javax.swing.JLabel();
         fieldValor = new javax.swing.JTextField();
@@ -75,8 +77,8 @@ public class IFArvoreBinariaBusca extends javax.swing.JInternalFrame {
         btnInserirAleatorio = new javax.swing.JButton();
         btnEsvaziar = new javax.swing.JButton();
         checkExibirAtributos = new javax.swing.JCheckBox();
-        labelDiametro = new javax.swing.JLabel();
-        sliderDiametro = new javax.swing.JSlider();
+        labelZoom = new javax.swing.JLabel();
+        sliderZoom = new javax.swing.JSlider();
         painelPercursos = new javax.swing.JPanel();
         radioPre = new javax.swing.JRadioButton();
         radioEm = new javax.swing.JRadioButton();
@@ -95,6 +97,8 @@ public class IFArvoreBinariaBusca extends javax.swing.JInternalFrame {
         fieldRaiz = new javax.swing.JTextField();
         fieldAltura = new javax.swing.JTextField();
         fieldGrau = new javax.swing.JTextField();
+        jScrollPane1 = new javax.swing.JScrollPane();
+        painelDesenho = new PainelDesenho( abbD );
 
         itemMenuRemover.setIcon(new javax.swing.ImageIcon(getClass().getResource("/gui/imagens/delete.png"))); // NOI18N
         itemMenuRemover.setText("remover");
@@ -111,23 +115,6 @@ public class IFArvoreBinariaBusca extends javax.swing.JInternalFrame {
         setResizable(true);
         setTitle("Árvore Binária de Busca");
         setFrameIcon(new javax.swing.ImageIcon(getClass().getResource("/gui/imagens/abbP.png"))); // NOI18N
-
-        painelDesenho.addMouseListener(new java.awt.event.MouseAdapter() {
-            public void mouseClicked(java.awt.event.MouseEvent evt) {
-                painelDesenhoMouseClicked(evt);
-            }
-        });
-
-        javax.swing.GroupLayout painelDesenhoLayout = new javax.swing.GroupLayout(painelDesenho);
-        painelDesenho.setLayout(painelDesenhoLayout);
-        painelDesenhoLayout.setHorizontalGroup(
-            painelDesenhoLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 460, Short.MAX_VALUE)
-        );
-        painelDesenhoLayout.setVerticalGroup(
-            painelDesenhoLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 0, Short.MAX_VALUE)
-        );
 
         painelOperacoes.setBorder(javax.swing.BorderFactory.createTitledBorder("Operações"));
 
@@ -174,14 +161,12 @@ public class IFArvoreBinariaBusca extends javax.swing.JInternalFrame {
             }
         });
 
-        labelDiametro.setText("Diâmetro dos Nós:");
+        labelZoom.setText("Zoom:");
 
-        sliderDiametro.setMaximum(50);
-        sliderDiametro.setMinimum(5);
-        sliderDiametro.setValue(30);
-        sliderDiametro.addChangeListener(new javax.swing.event.ChangeListener() {
+        sliderZoom.setValue(0);
+        sliderZoom.addChangeListener(new javax.swing.event.ChangeListener() {
             public void stateChanged(javax.swing.event.ChangeEvent evt) {
-                sliderDiametroStateChanged(evt);
+                sliderZoomStateChanged(evt);
             }
         });
 
@@ -324,7 +309,7 @@ public class IFArvoreBinariaBusca extends javax.swing.JInternalFrame {
                 .addGroup(painelDadosLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(labelGrau)
                     .addComponent(fieldGrau, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addContainerGap(59, Short.MAX_VALUE))
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
         javax.swing.GroupLayout painelOperacoesLayout = new javax.swing.GroupLayout(painelOperacoes);
@@ -350,9 +335,9 @@ public class IFArvoreBinariaBusca extends javax.swing.JInternalFrame {
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                                 .addComponent(fieldValor, javax.swing.GroupLayout.PREFERRED_SIZE, 104, javax.swing.GroupLayout.PREFERRED_SIZE))
                             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, painelOperacoesLayout.createSequentialGroup()
-                                .addComponent(labelDiametro)
+                                .addComponent(labelZoom)
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                                .addComponent(sliderDiametro, javax.swing.GroupLayout.PREFERRED_SIZE, 88, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                .addComponent(sliderZoom, javax.swing.GroupLayout.PREFERRED_SIZE, 88, javax.swing.GroupLayout.PREFERRED_SIZE))
                             .addComponent(checkExibirAtributos, javax.swing.GroupLayout.Alignment.TRAILING))))
                 .addContainerGap())
         );
@@ -375,8 +360,8 @@ public class IFArvoreBinariaBusca extends javax.swing.JInternalFrame {
                 .addComponent(checkExibirAtributos)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addGroup(painelOperacoesLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(sliderDiametro, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(labelDiametro))
+                    .addComponent(sliderZoom, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(labelZoom))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(painelPercursos, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
@@ -384,19 +369,38 @@ public class IFArvoreBinariaBusca extends javax.swing.JInternalFrame {
                 .addContainerGap())
         );
 
+        painelDesenho.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                painelDesenhoMouseClicked(evt);
+            }
+        });
+
+        javax.swing.GroupLayout painelDesenhoLayout = new javax.swing.GroupLayout(painelDesenho);
+        painelDesenho.setLayout(painelDesenhoLayout);
+        painelDesenhoLayout.setHorizontalGroup(
+            painelDesenhoLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGap(0, 475, Short.MAX_VALUE)
+        );
+        painelDesenhoLayout.setVerticalGroup(
+            painelDesenhoLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGap(0, 570, Short.MAX_VALUE)
+        );
+
+        jScrollPane1.setViewportView(painelDesenho);
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
-                .addComponent(painelDesenho, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addComponent(jScrollPane1)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(painelOperacoes, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addComponent(painelOperacoes, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-            .addComponent(painelDesenho, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+            .addComponent(jScrollPane1)
         );
 
         pack();
@@ -420,7 +424,8 @@ public class IFArvoreBinariaBusca extends javax.swing.JInternalFrame {
         fieldAltura.setText( "" );
         fieldGrau.setText( "" );
         
-        painelDesenho.repaint();
+        sliderZoom.setValue( 0 );
+        //painelD.repaint();
         
     }//GEN-LAST:event_btnEsvaziarActionPerformed
 
@@ -430,7 +435,7 @@ public class IFArvoreBinariaBusca extends javax.swing.JInternalFrame {
 
     private void checkExibirAtributosActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_checkExibirAtributosActionPerformed
         abbD.setMostrarAtributosNos( checkExibirAtributos.isSelected() );
-        painelDesenho.repaint();
+        painelD.repaint();
     }//GEN-LAST:event_checkExibirAtributosActionPerformed
 
     private void btnInserirAleatorioActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnInserirAleatorioActionPerformed
@@ -493,7 +498,7 @@ public class IFArvoreBinariaBusca extends javax.swing.JInternalFrame {
                     
                     abbAnt = new ArvoreBinariaBuscaAnotada<>( this.abb );
                     abbD.setAbbAnt( abbAnt );
-                    painelDesenho.repaint();
+                    painelD.repaint();
 
                     fieldRaiz.setText( abbAnt.getRaiz().valor.toString() );
                     fieldAltura.setText( String.valueOf( abbAnt.getAltura() ) );
@@ -511,10 +516,11 @@ public class IFArvoreBinariaBusca extends javax.swing.JInternalFrame {
         
     }//GEN-LAST:event_btnInserirAleatorioActionPerformed
 
-    private void sliderDiametroStateChanged(javax.swing.event.ChangeEvent evt) {//GEN-FIRST:event_sliderDiametroStateChanged
-        abbD.setDiametroNos( sliderDiametro.getValue() );
-        painelDesenho.repaint();
-    }//GEN-LAST:event_sliderDiametroStateChanged
+    private void sliderZoomStateChanged(javax.swing.event.ChangeEvent evt) {//GEN-FIRST:event_sliderZoomStateChanged
+        //abbD.setDiametroNos( sliderZoom.getValue() );
+        painelD.setZoom( 1 + 0.02 * sliderZoom.getValue() );
+        painelD.repaint();
+    }//GEN-LAST:event_sliderZoomStateChanged
 
     private void painelDesenhoMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_painelDesenhoMouseClicked
         
@@ -531,7 +537,7 @@ public class IFArvoreBinariaBusca extends javax.swing.JInternalFrame {
                     
                     noRemocao = no;
                     itemMenuRemover.setText( String.format( "Remover elemento \"%d\"", no.valor ) );
-                    menuPopUp.show( painelDesenho, p.x, p.y );
+                    menuPopUp.show( painelD, p.x, p.y );
                     
                     break;
                 }
@@ -540,7 +546,7 @@ public class IFArvoreBinariaBusca extends javax.swing.JInternalFrame {
             
         }
         
-        painelDesenho.repaint();
+        painelD.repaint();
         
     }//GEN-LAST:event_painelDesenhoMouseClicked
 
@@ -558,9 +564,9 @@ public class IFArvoreBinariaBusca extends javax.swing.JInternalFrame {
         
         fieldValor.requestFocus();
         
-        painelDesenho.repaint();
+        painelD.repaint();
             
-        JOptionPane.showMessageDialog( painelDesenho,
+        JOptionPane.showMessageDialog( painelD,
             String.format( "O elemento \"%d\" foi removido.",
                 noRemocao.valor ), "Removido", JOptionPane.INFORMATION_MESSAGE );
         
@@ -623,20 +629,20 @@ public class IFArvoreBinariaBusca extends javax.swing.JInternalFrame {
             btnAvancar.setEnabled( true );
         }
         
-        painelDesenho.repaint();
+        painelD.repaint();
         
     }//GEN-LAST:event_btnExecutarActionPerformed
 
     private void btnRetrocederActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnRetrocederActionPerformed
         abbD.anterior();
         listResPercurso.setSelectedIndex( abbD.getAtual() );
-        painelDesenho.repaint();
+        painelD.repaint();
     }//GEN-LAST:event_btnRetrocederActionPerformed
 
     private void btnAvancarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnAvancarActionPerformed
         abbD.proximo();
         listResPercurso.setSelectedIndex( abbD.getAtual() );
-        painelDesenho.repaint();
+        painelD.repaint();
     }//GEN-LAST:event_btnAvancarActionPerformed
 
     private void btnInserirN1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnInserirN1ActionPerformed
@@ -691,7 +697,7 @@ public class IFArvoreBinariaBusca extends javax.swing.JInternalFrame {
                     
                     abbAnt = new ArvoreBinariaBuscaAnotada<>( this.abb );
                     abbD.setAbbAnt( abbAnt );
-                    painelDesenho.repaint();
+                    painelD.repaint();
 
                     fieldRaiz.setText( abbAnt.getRaiz().valor.toString() );
                     fieldAltura.setText( String.valueOf( abbAnt.getAltura() ) );
@@ -735,7 +741,7 @@ public class IFArvoreBinariaBusca extends javax.swing.JInternalFrame {
         
         fieldValor.requestFocus();
         
-        painelDesenho.repaint();
+        painelD.repaint();
         
     }
 
@@ -744,7 +750,7 @@ public class IFArvoreBinariaBusca extends javax.swing.JInternalFrame {
         dlm.clear();
         abbD.getListaPercurso().clear();
         abbD.reiniciar();
-        painelDesenho.repaint();
+        painelD.repaint();
         
         btnRetroceder.setEnabled( false );
         btnAvancar.setEnabled( false );
@@ -767,11 +773,12 @@ public class IFArvoreBinariaBusca extends javax.swing.JInternalFrame {
     private javax.swing.JTextField fieldRaiz;
     private javax.swing.JTextField fieldValor;
     private javax.swing.JMenuItem itemMenuRemover;
+    private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JLabel labelAltura;
-    private javax.swing.JLabel labelDiametro;
     private javax.swing.JLabel labelGrau;
     private javax.swing.JLabel labelRaiz;
     private javax.swing.JLabel labelValor;
+    private javax.swing.JLabel labelZoom;
     private javax.swing.JList listResPercurso;
     private javax.swing.JPopupMenu menuPopUp;
     private javax.swing.JPanel painelDados;
@@ -782,7 +789,7 @@ public class IFArvoreBinariaBusca extends javax.swing.JInternalFrame {
     private javax.swing.JRadioButton radioNivel;
     private javax.swing.JRadioButton radioPos;
     private javax.swing.JRadioButton radioPre;
-    private javax.swing.JSlider sliderDiametro;
+    private javax.swing.JSlider sliderZoom;
     private javax.swing.JScrollPane spResPercurso;
     // End of variables declaration//GEN-END:variables
 }
