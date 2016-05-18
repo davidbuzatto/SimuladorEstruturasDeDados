@@ -354,12 +354,17 @@ public class Lista<Tipo> implements Iterable<Tipo> {
      */
     public void esvaziar() {
         
-        try {
+        while ( !estaVazia() ) {
+            removerInicio();
+        }
+        
+        // ou
+        /*try {
             while ( true ) {
                 removerInicio();
             }
         } catch ( EmptyListException exc ) {
-        }
+        }*/
         
     }
     

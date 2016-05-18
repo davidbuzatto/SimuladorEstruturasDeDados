@@ -67,10 +67,17 @@ public class Pilha<Tipo> implements Iterable<Tipo> {
     public Tipo desempilhar() throws EmptyStackException {
         
         if ( !estaVazia() ) {
+            
             Tipo valor = topo.valor;
+            
+            No<Tipo> temp = topo;
             topo = topo.anterior;
+            
+            temp.anterior = null;
             tamanho--;
+            
             return valor;
+            
         } else {
             throw new EmptyStackException();
         }
@@ -98,12 +105,17 @@ public class Pilha<Tipo> implements Iterable<Tipo> {
      */
     public void esvaziar() {
         
-        try {
+        while ( !estaVazia() ) {
+            desempilhar();
+        }
+        
+        // ou
+        /*try {
             while ( true ) {
                 desempilhar();
             }
         } catch ( EmptyStackException exc ) {
-        }
+        }*/
         
     }
     

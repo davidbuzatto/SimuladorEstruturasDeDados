@@ -190,12 +190,17 @@ public class Deque<Tipo> implements Iterable<Tipo> {
      */
     public void esvaziar() {
         
-        try {
+        while ( !estaVazia() ) {
+            removerInicio();
+        }
+        
+        // ou
+        /*try {
             while ( true ) {
                 removerInicio();
             }
         } catch ( EmptyDequeException exc ) {
-        }
+        }*/
         
     }
     

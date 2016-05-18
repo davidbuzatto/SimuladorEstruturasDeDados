@@ -25,6 +25,8 @@ import java.util.List;
  * pela classe ArvoreBuscaBinariaAnotada e pela classe com os algoritmos de 
  * percursos.
  * 
+ * @param <Tipo> Tipo dos elementos armazenados na árvore.
+ * 
  * @author David Buzatto
  */
 public class ArvoreBinariaBusca<Tipo extends Comparable> implements Iterable<Tipo> {
@@ -114,7 +116,7 @@ public class ArvoreBinariaBusca<Tipo extends Comparable> implements Iterable<Tip
      * Método privado para a inserção recursiva.
      */
     private No<Tipo> inserir( No<Tipo> no, Tipo valor ) {
-
+        
         if ( no == null ) {
 
             no = new No<>();
@@ -122,10 +124,16 @@ public class ArvoreBinariaBusca<Tipo extends Comparable> implements Iterable<Tip
             no.esquerda = null;
             no.direita = null;
 
-        } else if ( valor.compareTo( no.valor ) < 0 ) {
-            no.esquerda = inserir( no.esquerda, valor );
-        } else if ( valor.compareTo( no.valor ) > 0 ) {
-            no.direita = inserir( no.direita, valor );
+        } else {
+            
+            int comparacao = valor.compareTo( no.valor );
+            
+            if ( comparacao < 0 ) {
+                no.esquerda = inserir( no.esquerda, valor );
+            } else if ( comparacao > 0 ) {
+                no.direita = inserir( no.direita, valor );
+            }
+            
         }
 
         return no;
@@ -225,8 +233,128 @@ public class ArvoreBinariaBusca<Tipo extends Comparable> implements Iterable<Tip
 
         /*
          * Algoritmo iterativo.
-         * Não estudaremos! É um pouco mais complicado que os outros.
          */
+        /*if ( !estaVazia() ) {
+
+            No<Tipo> atual = raiz;
+            No<Tipo> anterior = null;
+            char caminho = '\0';
+            int comparacao = 0;
+
+            while ( true ) {
+                
+                comparacao = valor.compareTo( atual.valor );
+                
+                if ( comparacao == 0 ) {
+                    
+                    // o nó não tem filhos
+                    if ( atual.esquerda == atual.direita ) {
+
+                        // está na raiz
+                        if ( anterior == null ) {
+                            raiz = null;
+                        } else {
+                            if ( caminho == 'e' ) {
+                                anterior.esquerda = null;
+                            } else if ( caminho == 'd' ) {
+                                anterior.direita = null;
+                            }
+                        }
+
+                    // o nó a ser removido não tem filho à esquerda, só à direita
+                    // a primeira condição garante que se os dois nós não são o mesmo,
+                    // um deles pode ser null.
+                    } else if ( atual.esquerda == null ) {
+                        
+                        // está na raiz
+                        if ( anterior == null ) {
+                            raiz = atual.direita;
+                        } else {
+                            if ( caminho == 'e' ) {
+                                anterior.esquerda = atual.direita;
+                            } else if ( caminho == 'd' ) {
+                                anterior.direita = atual.direita;
+                            }
+                        }
+                        
+                        atual.direita = null;
+
+                    // o nó a ser removido não tem filho à direita, só à esquerda
+                    // a primeira condição garante que se os dois nós não são o mesmo,
+                    // um deles pode ser null.
+                    } else if ( atual.direita == null ) {
+
+                        // está na raiz
+                        if ( anterior == null ) {
+                            raiz = atual.esquerda;
+                        } else {
+                            if ( caminho == 'e' ) {
+                                anterior.esquerda = atual.esquerda;
+                            } else if ( caminho == 'd' ) {
+                                anterior.direita = atual.esquerda;
+                            }
+                        }
+                        
+                        atual.esquerda = null;
+
+                    // o nó a ser removido tem filhos em ambos os lados
+                    } else {
+
+                        // busca pelo menor nó, onde a subárvore esquerda
+                        // será inserida
+                        No<Tipo> menor = atual.direita;
+
+                        while ( menor.esquerda != null ) {
+                            menor = menor.esquerda;
+                        }
+
+                        // reaponta a subárvore esquerda do nó removido
+                        // no menor item encontrado
+                        menor.esquerda = atual.esquerda;
+                        
+                        // está na raiz
+                        if ( anterior == null ) {
+                            raiz = atual.direita;
+                        } else {
+                            if ( caminho == 'e' ) {
+                                anterior.esquerda = atual.direita;
+                            } else if ( caminho == 'd' ) {
+                                anterior.direita = atual.direita;
+                            }
+                        }
+                        
+                        atual.esquerda = null;
+                        atual.direita = null;
+
+                    }
+                    
+                    break;
+                    
+                } else if ( comparacao < 0 ) {
+
+                    if ( atual.esquerda == null ) {
+                        break;
+                    } else {
+                        anterior = atual;
+                        caminho = 'e';
+                        atual = atual.esquerda;
+                    }
+
+                } else { // comparacao > 0
+
+                    if ( atual.direita == null ) {
+                        break;
+                    } else {
+                        anterior = atual;
+                        caminho = 'd';
+                        atual = atual.direita;
+                    }
+
+                }
+
+            }
+
+        }*/
 
         /*
          * Algoritmo recursivo.
@@ -357,7 +485,7 @@ public class ArvoreBinariaBusca<Tipo extends Comparable> implements Iterable<Tip
             }
             
         } else {
-            sb.append( "deque vazia!\n" );
+            sb.append( "árvore vazia!\n" );
         }
         
         return sb.toString();
@@ -392,6 +520,7 @@ public class ArvoreBinariaBusca<Tipo extends Comparable> implements Iterable<Tip
     public static void main( String[] args ) {
         
         ArvoreBinariaBusca<Integer> abb = new ArvoreBinariaBusca<>();
+        ArvoreBinariaBusca<Integer> abb2 = new ArvoreBinariaBusca<>();
         
         abb.inserir( 6 );
         System.out.println( abb );

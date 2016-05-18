@@ -118,12 +118,17 @@ public class Fila<Tipo> implements Iterable<Tipo> {
      */
     public void esvaziar() {
         
-        try {
+        while ( !estaVazia() ) {
+            desenfileirar();
+        }
+        
+        // ou
+        /*try {
             while ( true ) {
                 desenfileirar();
             }
         } catch ( EmptyQueueException exc ) {
-        }
+        }*/
         
     }
     
