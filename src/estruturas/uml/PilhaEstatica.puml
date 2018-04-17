@@ -1,0 +1,24 @@
+@startuml
+
+skinparam classAttributeIconSize 0
+
+class PilhaEstatica<Tipo> {
+    
+    - valores: Tipo[]
+    - topo: int
+    - tamanho: int
+    - tamanhoMaximo: int
+
+    + PilhaEstatica()
+    + PilhaEstatica( maximo: int )
+
+    + empilhar( valor: Tipo ): void
+    + desempilhar(): Tipo
+    + consultarTopo(): Tipo
+    + esvaziar(): void
+    + estaVazia(): boolean
+    + getTamanho(): int
+
+}
+
+@enduml

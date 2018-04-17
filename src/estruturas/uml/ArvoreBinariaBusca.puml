@@ -1,0 +1,33 @@
+@startuml
+
+skinparam classAttributeIconSize 0
+
+class No<Tipo> {
+    - valor: Tipo
+}
+
+class ArvoreBinariaBusca<Tipo extends Comparable> {
+
+    + ArvoreBinariaBusca()
+
+    + inserir( valor: Tipo ): void
+    + contem( valor: Tipo ): boolean
+    + remover( valor: Tipo ): void
+
+    + esvaziar(): void
+    + estaVazia(): boolean
+    + getRaiz(): No<Tipo>
+
+    - inserir( no: No<Tipo>, valor: Tipo ): No<Tipo>
+    - contem( no: No<Tipo>, valor: Tipo ): boolean
+    - remover( no: No<Tipo>, valor: Tipo ): No<Tipo>
+    - desalocar( no: No<Tipo> ): No<Tipo>
+
+}
+
+ArvoreBinariaBusca -> No: -raiz
+
+No -> No: -esquerda
+No -> No: -direita
+
+@enduml

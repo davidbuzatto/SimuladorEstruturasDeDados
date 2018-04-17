@@ -1,0 +1,32 @@
+@startuml
+
+skinparam classAttributeIconSize 0
+
+class No<Chave, Valor> {
+    - chave: Chave
+    - valor: Valor
+}
+
+class TabelaSimbolos<Chave, Valor> {
+
+    - tamanho: int
+
+    + TabelaSimbolos()
+
+    + inserir( chave: Chave, valor: Valor ): void
+    + obter( chave: Chave ): Valor
+    + remover( chave: Chave ): void
+    + contem( chave: Chave ): boolean
+
+    + esvaziar(): void
+    + estaVazia(): boolean
+    + getTamanho(): int
+    + chaves(): Iterable<Chave>
+
+}
+
+TabelaSimbolos -> No: -primeiro
+
+No -> No: -anterior
+
+@enduml

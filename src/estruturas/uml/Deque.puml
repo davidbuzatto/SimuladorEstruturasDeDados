@@ -1,0 +1,33 @@
+@startuml
+
+skinparam classAttributeIconSize 0
+
+class No<Tipo> {
+    - valor: Tipo
+}
+
+class Deque<Tipo> {
+
+    - tamanho: int
+
+    + Deque()
+
+    + inserirInicio( valor: Tipo ): void
+    + inserirFim( valor: Tipo ): void
+    + removerInicio(): Tipo
+    + removerFim(): Tipo
+    + consultarInicio(): Tipo
+    + consultarFim(): Tipo
+    + esvaziar(): void
+    + estaVazia(): boolean
+    + getTamanho(): int
+
+}
+
+Deque -> No: -cabeca
+Deque -> No: -cauda
+
+No -> No: -anterior
+No -> No: -proximo
+
+@enduml

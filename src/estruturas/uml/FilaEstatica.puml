@@ -1,0 +1,24 @@
+@startuml
+
+skinparam classAttributeIconSize 0
+
+class FilaEstatica<Tipo> {
+    
+    - valores: Tipo[]
+    - cabeca: int
+    - tamanho: int
+    - tamanhoMaximo: int
+
+    + FilaEstatica()
+    + FilaEstatica( maximo: int )
+
+    + enfileirar( valor: Tipo ): void
+    + desenfileirar(): Tipo
+    + consultarCabeca(): Tipo
+    + esvaziar(): void
+    + estaVazia(): boolean
+    + getTamanho(): int
+
+}
+
+@enduml

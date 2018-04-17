@@ -1,0 +1,29 @@
+@startuml
+
+skinparam classAttributeIconSize 0
+
+class No<Tipo> {
+    - valor: Tipo
+}
+
+class Fila<Tipo> {
+
+    - tamanho: int
+
+    + Fila()
+
+    + enfileirar( valor: Tipo ): void
+    + desenfileirar(): Tipo
+    + consultarCabeca(): Tipo
+    + esvaziar(): void
+    + estaVazia(): boolean
+    + getTamanho(): int
+
+}
+
+Fila -> No: -cabeca
+Fila -> No: -cauda
+
+No -> No: -anterior
+
+@enduml

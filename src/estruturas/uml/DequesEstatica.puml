@@ -1,0 +1,27 @@
+@startuml
+
+skinparam classAttributeIconSize 0
+
+class DequeEstatica<Tipo> {
+    
+    - valores: Tipo[]
+    - cabeca: int
+    - tamanho: int
+    - tamanhoMaximo: int
+
+    + DequeEstatica()
+    + DequeEstatica( maximo: int )
+
+    + inserirInicio( valor: Tipo ): void
+    + inserirFim( valor: Tipo ): void
+    + removerInicio(): Tipo
+    + removerFim(): Tipo
+    + consultarInicio(): Tipo
+    + consultarFim(): Tipo
+    + esvaziar(): void
+    + estaVazia(): boolean
+    + getTamanho(): int
+
+}
+
+@enduml

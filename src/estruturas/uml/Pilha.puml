@@ -1,0 +1,28 @@
+@startuml
+
+skinparam classAttributeIconSize 0
+
+class No<Tipo> {
+    - valor: Tipo
+}
+
+class Pilha<Tipo> {
+
+    - tamanho: int
+
+    + Pilha()
+
+    + empilhar( valor: Tipo ): void
+    + desempilhar(): Tipo
+    + consultarTopo(): Tipo
+    + esvaziar(): void
+    + estaVazia(): boolean
+    + getTamanho(): int
+
+}
+
+Pilha -> No: -topo
+
+No -> No: -anterior
+
+@enduml

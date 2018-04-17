@@ -1,0 +1,20 @@
+@startuml
+
+skinparam classAttributeIconSize 0
+
+class Grafo {
+
+    - v: int
+    - e: int
+    - adj: Lista<Integer>
+
+    + Grafo( v: int )
+
+    + adicionarAresta( v: int, w: int ): void
+    + adj( v: int ): Iterable<Integer>
+    + v(): int
+    + e(): int
+
+}
+
+@enduml

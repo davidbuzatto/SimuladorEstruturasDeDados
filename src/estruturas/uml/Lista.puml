@@ -1,0 +1,43 @@
+@startuml
+
+skinparam classAttributeIconSize 0
+
+class No<Tipo> {
+    - valor: Tipo
+}
+
+class Lista<Tipo> {
+
+    - tamanho: int
+
+    + Lista()
+
+    + inserirInicio( valor: Tipo ): void
+    + inserirFim( valor: Tipo ): void
+    + inserir( valor: Tipo, posicao: int ): void
+
+    + alterarInicio( valor: Tipo ): void
+    + alterarFim( valor: Tipo ): void
+    + alterar( valor: Tipo, posicao: int ): void
+
+    + removerInicio(): Tipo
+    + removerFim(): Tipo
+    + remover( posicao: int ): void
+
+    + consultarInicio(): Tipo
+    + consultarFim(): Tipo
+    + consultar( posicao: int ): Tipo
+
+    + esvaziar(): void
+    + estaVazia(): boolean
+    + getTamanho(): int
+
+}
+
+Lista -> No: -inicio
+Lista -> No: -fim
+
+No -> No: -anterior
+No -> No: -proximo
+
+@enduml
