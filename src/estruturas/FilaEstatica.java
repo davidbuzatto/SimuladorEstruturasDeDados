@@ -117,12 +117,9 @@ public class FilaEstatica<Tipo> implements Iterable<Tipo> {
      */
     public void esvaziar() {
         
-        for ( int i = 0; i <= cabeca; i++ ) {
-            valores[i] = null;      // marca como null para coleta de lixo
+        while ( !estaVazia() ) {
+            desenfileirar();
         }
-        
-        tamanho = 0;
-        cabeca = -1;
         
     }
     

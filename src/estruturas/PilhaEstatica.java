@@ -110,12 +110,9 @@ public class PilhaEstatica<Tipo> implements Iterable<Tipo> {
      */
     public void esvaziar() {
         
-        for ( int i = 0; i <= topo; i++ ) {
-            valores[i] = null;      // marca como null para coleta de lixo
+        while ( !estaVazia() ) {
+            desempilhar();
         }
-        
-        tamanho = 0;
-        topo = -1;
         
     }
     
