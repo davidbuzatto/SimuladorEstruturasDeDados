@@ -70,6 +70,8 @@ public class FilaEstatica<Tipo> implements Iterable<Tipo> {
             cabeca++;
             tamanho++;
             
+            // essa abordagem pode ser melhorada?
+            
         } else {
             throw new QueueOverflowException();
         }
