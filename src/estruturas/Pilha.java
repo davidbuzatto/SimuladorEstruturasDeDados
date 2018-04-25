@@ -125,7 +125,7 @@ public class Pilha<Tipo> implements Iterable<Tipo> {
      * @return true se a pilha estiver vazia, false caso contrário.
      */
     public boolean estaVazia() {
-        return topo == null;
+        return tamanho == 0; // ou topo == null;
     }
     
     /**

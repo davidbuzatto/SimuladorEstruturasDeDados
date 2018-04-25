@@ -7,42 +7,59 @@
 package estruturas;
 
 import estruturas.excecoes.EmptyQueueException;
+import estruturas.excecoes.QueueOverflowException;
 import java.util.Iterator;
 
 /**
- * Implementação de uma fila dinâmica genérica, usando encadeamento simples.
+ * Implementação de uma fila estática genérica.
  * 
- * Obs: Implementação com a marcação da cabeça para a direita e da cauda para a
- * esquerda.
+ * Obs: implementação com a marcação da cabeça para a esquerda e da
+ * cauda para a direita. Utiliza também o operador de módulo para o mapeamento
+ * dos endereços. Essa abordagem facilita o enfileiramento constante.
+ * 
+ * Tanto a cabeça no desenfileiramento quanto a cauda no enfileiramento andam 
+ * para a direita.
  * 
  * @param <Tipo> Tipo dos elementos armazenados na fila.
  * 
  * @author David Buzatto
  */
-public class Fila<Tipo> implements Iterable<Tipo> {
+public class FilaEstaticaModulo<Tipo> implements Iterable<Tipo> {
     
-    /*
-     * Classe privada que define os nós da fila.
-     */
-    private class No<Tipo> {
-        Tipo valor;
-        No<Tipo> anterior;
-    }
+    // itens armazenados na fila
+    private Tipo[] valores;
     
-    // cabeça a cauda da fila - em inglês head e tail respectivamente
-    private No<Tipo> cabeca;
-    private No<Tipo> cauda;
+    // cabeça da fila (início) - em inglês, head
+    private int cabeca;
+    
+    // cabeça da fila (fim) - em inglês, tail
+    private int cauda;
     
     // tamanho da fila
     private int tamanho;
     
+    // tamanho máximo suportado pela fila
+    private int tamanhoMaximo;
+    
     /**
-     * Constrói uma fila vazia.
+     * Constrói uma fila vazia que suporta dez itens.
      */
-    public Fila() {
-        cauda = null;
-        cabeca = null;
-        tamanho = 0;
+    public FilaEstaticaModulo() {
+        this( 10 );
+    }
+    
+    /**
+     * Constrói uma fila vazia de tamanho especificado.
+     * 
+     * @param maximo Tamanho máximo da fila.
+     */
+    public FilaEstaticaModulo( int maximo ) {
+        
+        tamanhoMaximo = maximo;
+        valores = (Tipo[]) new Object[tamanhoMaximo];
+        cabeca = -1;
+        cauda = -1;
+        
     }
     
     /**
@@ -51,21 +68,21 @@ public class Fila<Tipo> implements Iterable<Tipo> {
      * 
      * @param valor Elemento a ser enfileirado.
      */
-    public void enfileirar( Tipo valor ) {
+    public void enfileirar( Tipo valor ) throws QueueOverflowException {
         
-        No<Tipo> novoNo = new No<>();
-        novoNo.valor = valor;
-        novoNo.anterior = null;
-        
-        if ( estaVazia() ) {
-            cabeca = novoNo;
-            cauda = novoNo;
+        if ( tamanho < tamanhoMaximo ) {
+            
+            if ( estaVazia() ) {
+                cabeca++; // cabeca = 0
+            }
+            
+            cauda++;
+            valores[ cauda % tamanhoMaximo ] = valor;
+            tamanho++;
+            
         } else {
-            cauda.anterior = novoNo;
-            cauda = novoNo;
+            throw new QueueOverflowException();
         }
-        
-        tamanho++;
         
     }
     
@@ -79,19 +96,17 @@ public class Fila<Tipo> implements Iterable<Tipo> {
         
         if ( !estaVazia() ) {
             
-            Tipo valor = cabeca.valor;
+            Tipo valor = valores[ cabeca % tamanhoMaximo ];
+            valores[ cabeca % tamanhoMaximo ] = null;      // marca como null para coleta de lixo
             
-            // cabeça e cauda apontam para o mesmo objeto
-            if ( cabeca == cauda ) {
-                cabeca = null;
-                cauda = null;
-            } else {
-                No<Tipo> temp = cabeca;
-                cabeca = cabeca.anterior;
-                temp.anterior = null;
+            cabeca++;   // avança sempre para a direita
+            tamanho--;
+            
+            if ( estaVazia() ) {
+                cabeca = -1;
+                cauda = -1;
             }
             
-            tamanho--;
             return valor;
             
         } else {
@@ -99,7 +114,7 @@ public class Fila<Tipo> implements Iterable<Tipo> {
         }
         
     }
-    
+     
     /**
      * Retorna o elemento que está na cabeca fila, sem desenfileirá-lo.
      * Esta operação é conhecida como "peek" ou "element".
@@ -109,7 +124,7 @@ public class Fila<Tipo> implements Iterable<Tipo> {
     public Tipo consultarCabeca() throws EmptyQueueException {
         
         if ( !estaVazia() ) {
-            return cabeca.valor;
+            return valores[ cabeca % tamanhoMaximo ];
         } else {
             throw new EmptyQueueException();
         }
@@ -125,14 +140,6 @@ public class Fila<Tipo> implements Iterable<Tipo> {
             desenfileirar();
         }
         
-        // ou
-        /*try {
-            while ( true ) {
-                desenfileirar();
-            }
-        } catch ( EmptyQueueException exc ) {
-        }*/
-        
     }
     
     /**
@@ -141,7 +148,7 @@ public class Fila<Tipo> implements Iterable<Tipo> {
      * @return true se a fila estiver vazia, false caso contrário.
      */
     public boolean estaVazia() {
-        return tamanho == 0; // ou cabeca == null;
+        return tamanho == 0; // cuidado, dependendo de como implementar pode atrapalhar a execução
     }
     
     /**
@@ -164,42 +171,40 @@ public class Fila<Tipo> implements Iterable<Tipo> {
         
         if ( !estaVazia() ) {
             
-            // percorrendo a estrutura encadeada
-            No<Tipo> atual = cabeca;
-
-            while ( atual != null ) {
-
+            // percorrendo o array de valores
+            for ( int i = cabeca; i <= cauda; i++ ) {
+                
+                int mapeamento = i % tamanhoMaximo;
+                
                 if ( tamanho == 1 ) {
-                    sb.append( atual.valor ).append( " <- cabeça/cauda\n" );
-                } else if ( atual == cabeca ) {
-                    sb.append( atual.valor ).append( " <- cabeça\n" );
-                } else if ( atual == cauda ) {
-                    sb.append( atual.valor ).append( " <- cauda\n" );
+                    sb.append( valores[ mapeamento ] ).append( " <- cabeça/cauda\n" );
+                } else if ( i == cabeca ) {
+                    sb.append( valores[ mapeamento ] ).append( " <- cabeça\n" );
+                } else if ( i == cauda ) {
+                    sb.append( valores[ mapeamento ] ).append( " <- cauda\n" );
                 } else {
-                    sb.append( atual.valor ).append( "\n" );
+                    sb.append( valores[ mapeamento ] ).append( "\n" );
                 }
-
-                atual = atual.anterior;
 
             }
 
             
             // ou usando o iterador
-            /*int i = tamanho - 1;
+            /*int i = cabeca;
             
             for ( Tipo atual : this ) {
 
                 if ( tamanho == 1 ) {
                     sb.append( atual ).append( " <- cabeça/cauda\n" );
-                } else if ( i == tamanho - 1 ) {
+                } else if ( i == cabeca ) {
                     sb.append( atual ).append( " <- cabeça\n" );
-                } else if ( i == 0 ) {
+                } else if ( i == cauda ) {
                     sb.append( atual ).append( " <- cauda\n" );
                 } else {
                     sb.append( atual ).append( "\n" );
                 }
                 
-                i--;
+                i++;
 
             }*/
             
@@ -221,18 +226,16 @@ public class Fila<Tipo> implements Iterable<Tipo> {
         
         return new Iterator<Tipo>() {
             
-            private No<Tipo> atual = cabeca;
+            private int atual = cabeca;
             
             @Override
             public boolean hasNext() {
-                return atual != null;
+                return atual <= cauda;
             }
 
             @Override
             public Tipo next() {
-                Tipo item = atual.valor;
-                atual = atual.anterior;
-                return item;
+                return valores[ atual++ % tamanhoMaximo ];
             }
             
             @Override
@@ -251,7 +254,7 @@ public class Fila<Tipo> implements Iterable<Tipo> {
      */
     public static void main( String[] args ) {
         
-        Fila<Integer> fila = new Fila<>();
+        FilaEstaticaModulo<Integer> fila = new FilaEstaticaModulo<>(5);
         
         fila.enfileirar( 10 );
         System.out.println( fila );
@@ -263,6 +266,7 @@ public class Fila<Tipo> implements Iterable<Tipo> {
         System.out.println( fila );
         fila.enfileirar( 7 );
         System.out.println( fila );
+        //fila.enfileirar( 15 ); // <- estouro da fila!
         
         // usando o iterador
         for ( int v : fila ) {
@@ -270,7 +274,7 @@ public class Fila<Tipo> implements Iterable<Tipo> {
         }
         System.out.println();
         
-        System.out.println( "Desenfileirou: " + fila.desenfileirar() );
+        /*System.out.println( "Desenfileirou: " + fila.desenfileirar() );
         System.out.println( fila );
         System.out.println( "Desenfileirou: " + fila.desenfileirar() );
         System.out.println( fila );
@@ -279,7 +283,7 @@ public class Fila<Tipo> implements Iterable<Tipo> {
         System.out.println( "Desenfileirou: " + fila.desenfileirar() );
         System.out.println( fila );
         System.out.println( "Desenfileirou: " + fila.desenfileirar() );
-        System.out.println( fila );
+        System.out.println( fila );*/
         //System.out.println( "Desenfileirou: " + fila.desenfileirar() ); // <- fila vazia!
         
     }

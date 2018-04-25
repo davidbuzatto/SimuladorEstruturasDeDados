@@ -13,6 +13,8 @@ import java.util.Iterator;
 /**
  * Implementação de uma fila estática genérica.
  * 
+ * Obs: Implementação com a marcação da cabeça para a direita.
+ * 
  * @param <Tipo> Tipo dos elementos armazenados na fila.
  * 
  * @author David Buzatto
@@ -22,7 +24,7 @@ public class FilaEstatica<Tipo> implements Iterable<Tipo> {
     // itens armazenados na fila
     private Tipo[] valores;
     
-    // cabeça da fila (início)
+    // cabeça da fila (início) - em inglês, head
     private int cabeca;
     
     // tamanho da fila
@@ -70,7 +72,7 @@ public class FilaEstatica<Tipo> implements Iterable<Tipo> {
             cabeca++;
             tamanho++;
             
-            // essa abordagem pode ser melhorada?
+            // essa abordagem pode ser melhorada? sim, verificar a classe FilaEstaticaModulo
             
         } else {
             throw new QueueOverflowException();
@@ -131,7 +133,7 @@ public class FilaEstatica<Tipo> implements Iterable<Tipo> {
      * @return true se a fila estiver vazia, false caso contrário.
      */
     public boolean estaVazia() {
-        return cabeca == -1;
+        return tamanho == 0; // ou cabeca == -1;
     }
     
     /**

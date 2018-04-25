@@ -13,19 +13,32 @@ import java.util.Iterator;
 /**
  * Implementação de uma deque estática genérica.
  * 
- * Obs: Implementação com a marcação da cabeça para a direita.
+ * Obs: implementação com a marcação da cabeça para a direita e da
+ * cauda para a esquerda. Utiliza também o operador de módulo para o mapeamento
+ * dos endereços, sendo que as mudanças de posições dos índices deve ser feita
+ * utilizando os métodos incrementarCabeca/Cauda ou decrementarCabeca/Cauda. 
+ * Dependendo do lado da cabeça/cauda é necessário mudar as operações de 
+ * incremento e decremento. Essa implementação está ao contrário da 
+ * FilaEstaticaModulo.
+ * 
+ * A cabeça anda para a direita na inserção no ínicio e para a esquerda na 
+ * remoção do início. A cauda anda para a esquera na inserção no fim e para a 
+ * direita na remoção do fim.
  * 
  * @param <Tipo> Tipo dos elementos armazenados na deque.
  * 
  * @author David Buzatto
  */
-public class DequeEstatica<Tipo> implements Iterable<Tipo> {
+public class DequeEstaticaModulo<Tipo> implements Iterable<Tipo> {
     
     // itens armazenados na deque
     private Tipo[] valores;
     
-    // cabeça da deque (início) - em inglês, head
+    // cabeça da fila (início) - em inglês, head
     private int cabeca;
+    
+    // cabeça da fila (fim) - em inglês, tail
+    private int cauda;
     
     // tamanho da deque
     private int tamanho;
@@ -36,7 +49,7 @@ public class DequeEstatica<Tipo> implements Iterable<Tipo> {
     /**
      * Constrói uma deque vazia que suporta dez itens.
      */
-    public DequeEstatica() {
+    public DequeEstaticaModulo() {
         this( 10 );
     }
     
@@ -45,25 +58,34 @@ public class DequeEstatica<Tipo> implements Iterable<Tipo> {
      * 
      * @param maximo Tamanho máximo da deque.
      */
-    public DequeEstatica( int maximo ) {
+    public DequeEstaticaModulo( int maximo ) {
         
         tamanhoMaximo = maximo;
         valores = (Tipo[]) new Object[tamanhoMaximo];
-        cabeca = -1;
+        cabeca = Integer.MIN_VALUE;
+        cauda = Integer.MIN_VALUE;
         
     }
     
     /**
-     * Insere um elemento no início da deque.
+     * Insere um elemento no início (cabeça) da deque.
      * 
      * @param valor Elemento a ser inserido no início.
      */
     public void inserirInicio( Tipo valor ) throws DequeOverflowException {
         
-        if ( cabeca < tamanhoMaximo - 1 ) {
-            cabeca++;
+        if ( tamanho < tamanhoMaximo ) {
+            
+            if ( estaVazia() ) {
+                cabeca = 0;
+                cauda = 0;
+            } else {
+                incrementarCabeca();
+            }
+            
             valores[cabeca] = valor;
             tamanho++;
+            
         } else {
             throw new DequeOverflowException();
         }
@@ -71,24 +93,23 @@ public class DequeEstatica<Tipo> implements Iterable<Tipo> {
     }
     
     /**
-     * Insere um elemento no final da deque.
+     * Insere um elemento no final (cauda) da deque.
      * 
      * @param valor Elemento a ser inserido no final.
      */
     public void inserirFim( Tipo valor ) throws DequeOverflowException {
         
-        if ( cabeca < tamanhoMaximo - 1 ) {
+        if ( tamanho < tamanhoMaximo ) {
             
-            // realoca os valores (faz a deque andar para frente)
-            for ( int i = cabeca; i >= 0; i-- ) {
-                valores[i+1] = valores[i];
+            if ( estaVazia() ) {
+                cabeca = 0;
+                cauda = 0;
+            } else {
+                decrementarCauda();
             }
             
-            valores[0] = valor;
-            cabeca++;
+            valores[cauda] = valor;
             tamanho++;
-            
-            // essa abordagem pode ser melhorada? sim, verificar a classe DequeEstaticaModulo
             
         } else {
             throw new DequeOverflowException();
@@ -97,18 +118,27 @@ public class DequeEstatica<Tipo> implements Iterable<Tipo> {
     }
     
     /**
-     * Remove um elemento do início da deque.
+     * Remove um elemento do início (cabeça) da deque.
      * 
      * @return O elemento removido do início.
      */
     public Tipo removerInicio() throws EmptyDequeException {
         
         if ( !estaVazia() ) {
+            
             Tipo valor = valores[cabeca];
             valores[cabeca] = null;      // marca como null para coleta de lixo
-            cabeca--;
+            
+            decrementarCabeca();
             tamanho--;
+            
+            if ( estaVazia() ) {
+                cabeca = Integer.MIN_VALUE;
+                cauda = Integer.MIN_VALUE;
+            }
+            
             return valor;
+            
         } else {
             throw new EmptyDequeException();
         }
@@ -116,7 +146,7 @@ public class DequeEstatica<Tipo> implements Iterable<Tipo> {
     }
     
     /**
-     * Remove um elemento do fim da deque.
+     * Remove um elemento do fim (cauda) da deque.
      * 
      * @return O elemento removido do fim.
      */
@@ -124,19 +154,18 @@ public class DequeEstatica<Tipo> implements Iterable<Tipo> {
         
         if ( !estaVazia() ) {
             
-            Tipo valor = valores[0];
+            Tipo valor = valores[cauda];
+            valores[cauda] = null;      // marca como null para coleta de lixo
             
-            // realoca os valores (faz a deque andar para trás)
-            for ( int i = 1; i <= cabeca; i++ ) {
-                valores[i-1] = valores[i];
+            incrementarCauda();
+            tamanho--;
+            
+            if ( estaVazia() ) {
+                cabeca = Integer.MIN_VALUE;
+                cauda = Integer.MIN_VALUE;
             }
             
-            valores[cabeca] = null;      // marca como null para coleta de lixo
-            cabeca--;
-            tamanho--;
             return valor;
-            
-            // essa abordagem pode ser melhorada? sim, verificar a classe FilaEstaticaModulo
             
         } else {
             throw new EmptyDequeException();
@@ -145,7 +174,7 @@ public class DequeEstatica<Tipo> implements Iterable<Tipo> {
     }
     
     /**
-     * Retorna o elemento que está no início da deque, sem removê-lo.
+     * Retorna o elemento que está no início (cabeça) da deque, sem removê-lo.
      * 
      * @return O elemento no início da deque.
      */
@@ -160,14 +189,14 @@ public class DequeEstatica<Tipo> implements Iterable<Tipo> {
     }
     
     /**
-     * Retorna o elemento que está no fim da deque, sem removê-lo.
+     * Retorna o elemento que está no fim (cauda) da deque, sem removê-lo.
      * 
      * @return O elemento no fim da deque.
      */
     public Tipo consultarFim() throws EmptyDequeException {
         
         if ( !estaVazia() ) {
-            return valores[0];
+            return valores[cauda];
         } else {
             throw new EmptyDequeException();
         }
@@ -191,7 +220,7 @@ public class DequeEstatica<Tipo> implements Iterable<Tipo> {
      * @return true se a deque estiver vazia, false caso contrário.
      */
     public boolean estaVazia() {
-        return tamanho == 0; // ou cabeca == -1;
+        return tamanho == 0;
     }
     
     /**
@@ -215,37 +244,65 @@ public class DequeEstatica<Tipo> implements Iterable<Tipo> {
         if ( !estaVazia() ) {
             
             // percorrendo o array de valores
-            for ( int i = cabeca; i >= 0; i-- ) {
+            for ( int i = 0; i < tamanho; i++ ) {
+                
+                int mapeamento = cabeca - i;
+                
+                if ( mapeamento < 0 ) {
+                    if ( -mapeamento > tamanhoMaximo ) {
+                        mapeamento = tamanhoMaximo + 
+                                ( mapeamento % tamanhoMaximo ) - 
+                                ( mapeamento % tamanhoMaximo == 0 ? tamanhoMaximo : 0 );
+                    } else {
+                        mapeamento = tamanhoMaximo + mapeamento;
+                    }
+                } else {
+                    mapeamento = mapeamento % tamanhoMaximo;
+                }
                 
                 if ( tamanho == 1 ) {
-                    sb.append( valores[i] ).append( " <- cabeça/cauda\n" );
-                } else if ( i == cabeca ) {
-                    sb.append( valores[i] ).append( " <- cabeça\n" );
-                } else if ( i == 0 ) {
-                    sb.append( valores[i] ).append( " <- cauda\n" );
+                    sb.append( valores[mapeamento] ).append( " <- cabeça/cauda\n" );
+                } else if ( mapeamento == cabeca ) {
+                    sb.append( valores[mapeamento] ).append( " <- cabeça\n" );
+                } else if ( mapeamento == cauda ) {
+                    sb.append( valores[mapeamento] ).append( " <- cauda\n" );
                 } else {
-                    sb.append( valores[i] ).append( "\n" );
+                    sb.append( valores[mapeamento] ).append( "\n" );
                 }
 
             }
 
             
             // ou usando o iterador
-            /*int i = cabeca;
+            /*int i = 0;
             
             for ( Tipo atual : this ) {
 
+                int mapeamento = cabeca - i;
+                
+                if ( mapeamento < 0 ) {
+                    if ( -mapeamento > tamanhoMaximo ) {
+                        mapeamento = tamanhoMaximo + 
+                                ( mapeamento % tamanhoMaximo ) - 
+                                ( mapeamento % tamanhoMaximo == 0 ? tamanhoMaximo : 0 );
+                    } else {
+                        mapeamento = tamanhoMaximo + mapeamento;
+                    }
+                } else {
+                    mapeamento = mapeamento % tamanhoMaximo;
+                }
+                
                 if ( tamanho == 1 ) {
                     sb.append( atual ).append( " <- cabeça/cauda\n" );
-                } else if ( i == cabeca ) {
+                } else if ( mapeamento == cabeca ) {
                     sb.append( atual ).append( " <- cabeça\n" );
-                } else if ( i == 0 ) {
+                } else if ( mapeamento == cauda ) {
                     sb.append( atual ).append( " <- cauda\n" );
                 } else {
                     sb.append( atual ).append( "\n" );
                 }
                 
-                i--;
+                i++;
                 
             }*/
             
@@ -267,16 +324,33 @@ public class DequeEstatica<Tipo> implements Iterable<Tipo> {
         
         return new Iterator<Tipo>() {
             
-            private int atual = cabeca;
+            private int atual = 0;
             
             @Override
             public boolean hasNext() {
-                return atual >= 0;
+                return atual < tamanho;
             }
 
             @Override
             public Tipo next() {
-                return valores[atual--];
+                
+                int mapeamento = cabeca - atual;
+                
+                if ( mapeamento < 0 ) {
+                    if ( -mapeamento > tamanhoMaximo ) {
+                        mapeamento = tamanhoMaximo + 
+                                ( mapeamento % tamanhoMaximo ) - 
+                                ( mapeamento % tamanhoMaximo == 0 ? tamanhoMaximo : 0 );
+                    } else {
+                        mapeamento = tamanhoMaximo + mapeamento;
+                    }
+                } else {
+                    mapeamento = mapeamento % tamanhoMaximo;
+                }
+                
+                atual++;
+                return valores[mapeamento];
+                
             }
             
             @Override
@@ -288,6 +362,26 @@ public class DequeEstatica<Tipo> implements Iterable<Tipo> {
         
     }
     
+    private void incrementarCabeca() {
+        cabeca++;
+        cabeca %= tamanhoMaximo;
+    }
+    
+    private void decrementarCabeca() {
+        cabeca--;
+        cabeca = cabeca < 0 ? tamanhoMaximo - 1 : cabeca % tamanhoMaximo;
+    }
+    
+    private void incrementarCauda() {
+        cauda++;
+        cauda %= tamanhoMaximo;
+    }
+    
+    private void decrementarCauda() {
+        cauda--;
+        cauda = cauda < 0 ? tamanhoMaximo - 1 : cauda % tamanhoMaximo;
+    }
+    
     /**
      * Testes da deque.
      * 
@@ -295,7 +389,7 @@ public class DequeEstatica<Tipo> implements Iterable<Tipo> {
      */
     public static void main( String[] args ) {
         
-        DequeEstatica<Integer> deque = new DequeEstatica<>(5);
+        DequeEstaticaModulo<Integer> deque = new DequeEstaticaModulo<>(5);
         
         deque.inserirInicio( 10 );
         System.out.println( deque );
@@ -328,6 +422,7 @@ public class DequeEstatica<Tipo> implements Iterable<Tipo> {
         System.out.println( deque );
         //System.out.println( "Removeu do Fim: " + deque.removerFim() ); // <- deque vazia!
         //System.out.println( "Removeu do Inicio: " + deque.removerInicio() ); // <- deque vazia!
+        
         
     }
     

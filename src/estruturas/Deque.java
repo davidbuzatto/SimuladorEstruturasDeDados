@@ -12,6 +12,9 @@ import java.util.Iterator;
 /**
  * Implementação de uma deque dinâmica genérica, usando encadeamento duplo.
  * 
+ * Obs: Implementação com a marcação da cabeça para a direita e da cauda para a
+ * esquerda.
+ * 
  * @param <Tipo> Tipo dos elementos armazenados na deque.
  * 
  * @author David Buzatto
@@ -210,7 +213,7 @@ public class Deque<Tipo> implements Iterable<Tipo> {
      * @return true se a deque estiver vazia, false caso contrário.
      */
     public boolean estaVazia() {
-        return cabeca == null;
+        return tamanho == 0; // ou cabeca == null;
     }
     
     /**
