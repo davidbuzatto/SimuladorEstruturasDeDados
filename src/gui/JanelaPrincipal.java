@@ -27,8 +27,17 @@ public class JanelaPrincipal extends javax.swing.JFrame {
      * Creates new form JanelaPrincipal
      */
     public JanelaPrincipal() {
+        
         initComponents();
+        
+        btnArvoreVP.setVisible( false );
+        btnHeapMinimo.setVisible( false );
+        btnHeapMaximo.setVisible( false );
+        btnTabelaHash.setVisible( false );
+        btnGrafoPonderado.setVisible( false );
+        
         setExtendedState( MAXIMIZED_BOTH );
+        
     }
 
     /**
