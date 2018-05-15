@@ -6,7 +6,7 @@
 
 package gui.desenho.estruturas;
 
-import estruturas.ArvoreBinariaBusca;
+import estruturas.ArvoreAVL;
 import estruturas.Fila;
 import estruturas.algoritmos.arvores.TipoPercursoArvores;
 import estruturas.Pilha;
@@ -14,15 +14,15 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * Classe utilizada no simulador de árvores binárias de busca.
+ * Classe utilizada no simulador de árvores AVL.
  * 
- * Esta classe processa uma árvore binária de busca, gerando os dados
+ * Esta classe processa uma árvore AVL, gerando os dados
  * necessários ao simulador em cada nó. Esta classe gera um clone da árvore
  * original.
  * 
  * @author David Buzatto
  */
-public class ArvoreBinariaBuscaAnotada<Tipo extends Comparable> {
+public class ArvoreAVLAnotada<Tipo extends Comparable> {
         
     /*
      * Classe interna que representa os nós da árvore anotada.
@@ -39,6 +39,7 @@ public class ArvoreBinariaBuscaAnotada<Tipo extends Comparable> {
         public NoAnotado<Tipo> pai;
 
         // atributos dos nós
+        public int altura;
         public boolean folha;
         public int nivel;
         public int rank;
@@ -55,7 +56,7 @@ public class ArvoreBinariaBuscaAnotada<Tipo extends Comparable> {
 
         @Override
         public String toString() {
-            return "NoAnotado{" + "valor=" + valor + ", folha=" + folha + ", nivel=" + nivel + ", rank=" + rank + ", grau=" + grau + ", ehRaiz=" + ehRaiz + ", pai=" + (pai != null ? pai.valor : pai) + '}';
+            return "NoAnotado{" + "valor=" + valor + ", altura=" + altura + ", folha=" + folha + ", nivel=" + nivel + ", rank=" + rank + ", grau=" + grau + ", ehRaiz=" + ehRaiz + ", pai=" + (pai != null ? pai.valor : pai) + '}';
         }
 
     }
@@ -72,23 +73,23 @@ public class ArvoreBinariaBuscaAnotada<Tipo extends Comparable> {
     private int contadorNivel = -1;
 
     /**
-     * Cria uma árvore anotada com base em uma árvore binária de busca passada.
-     * @param abb Árvore binária de busca que será usada como base.
+     * Cria uma árvore anotada com base em uma árvore AVL passada.
+     * @param aavl Árvore AVL que será usada como base.
      */
-    public ArvoreBinariaBuscaAnotada( ArvoreBinariaBusca<Tipo> abb ) {
-        copiar( abb, abb.getRaiz() );
+    public ArvoreAVLAnotada( ArvoreAVL<Tipo> aavl ) {
+        copiar( aavl, aavl.getRaiz() );
         processar( raiz, null );
     }
 
     /**
-     * Copia os dados da árvore binária de busca, criando uma outra árvore
+     * Copia os dados da árvore AVL, criando uma outra árvore
      * com os mesmos dados. É o primeiro passo da construção.
      * 
-     * @param abb Árvore binária de busca original.
+     * @param aavl Árvore AVL original.
      * @param no Nó que se quer iniciar a cópia (nó da árvore original).
      * @return Um nó anotado para a construção recursiva.
      */
-    private NoAnotado<Tipo> copiar( ArvoreBinariaBusca<Tipo> abb, ArvoreBinariaBusca<Tipo>.No<Tipo> no ) {
+    private NoAnotado<Tipo> copiar( ArvoreAVL<Tipo> aavl, ArvoreAVL<Tipo>.No<Tipo> no ) {
 
         NoAnotado<Tipo> novoNo = null;
 
@@ -96,13 +97,14 @@ public class ArvoreBinariaBuscaAnotada<Tipo extends Comparable> {
 
             novoNo = new NoAnotado<>();
             novoNo.valor = no.valor;
+            novoNo.altura = no.altura;
 
-            if ( no == abb.getRaiz() ) {
+            if ( no == aavl.getRaiz() ) {
                 raiz = novoNo;
             }
 
-            novoNo.esquerda = copiar( abb, no.esquerda );
-            novoNo.direita = copiar( abb, no.direita );
+            novoNo.esquerda = copiar( aavl, no.esquerda );
+            novoNo.direita = copiar( aavl, no.direita );
 
         }
 

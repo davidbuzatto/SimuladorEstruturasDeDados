@@ -6,7 +6,7 @@
 
 package gui.desenho.estruturas;
 
-import estruturas.ArvoreBinariaBusca;
+import estruturas.ArvoreAVL;
 import estruturas.algoritmos.arvores.TipoPercursoArvores;
 import gui.desenho.PainelDesenho;
 import java.awt.BasicStroke;
@@ -21,15 +21,15 @@ import javax.swing.JViewport;
 import uteis.UteisDesenho;
 
 /**
- * Árvore binária de busca desenhável.
+ * Árvore AVL desenhável.
  * 
  * @author David Buzatto
  */
-public class ArvoreBinariaBuscaDesenhavel implements Desenhavel {
+public class ArvoreAVLDesenhavel implements Desenhavel {
     
-    private ArvoreBinariaBusca<Integer> abb;
+    private ArvoreAVL<Integer> aavl;
     private PainelDesenho painel;
-    private ArvoreBinariaBuscaAnotada<Integer> abbAnt;
+    private ArvoreAVLAnotada<Integer> aavlAnt;
     private boolean mostrarAtributosNos;
     private int diametroNos;
     
@@ -42,10 +42,10 @@ public class ArvoreBinariaBuscaDesenhavel implements Desenhavel {
     private int maiorY;
     
     // lista de itens do percurso executado
-    private List<ArvoreBinariaBuscaAnotada<Integer>.NoAnotado<Integer>> listaPercurso;
+    private List<ArvoreAVLAnotada<Integer>.NoAnotado<Integer>> listaPercurso;
     
-    public ArvoreBinariaBuscaDesenhavel( ArvoreBinariaBusca<Integer> abb ) {
-        this.abb = abb;
+    public ArvoreAVLDesenhavel( ArvoreAVL<Integer> abb ) {
+        this.aavl = abb;
         diametroNos = 30;
         listaPercurso = new ArrayList<>();
         atual = -1;
@@ -80,19 +80,19 @@ public class ArvoreBinariaBuscaDesenhavel implements Desenhavel {
     
     private void calcularNovoTamanoPainelEPosicaoNos() {
         
-        if ( abbAnt != null && abbAnt.getRaiz() != null ) {
+        if ( aavlAnt != null && aavlAnt.getRaiz() != null ) {
             
             menorX = Integer.MAX_VALUE;
             maiorX = Integer.MIN_VALUE;
             menorY = Integer.MAX_VALUE;
             maiorY = Integer.MIN_VALUE;
         
-            int rankRaiz = abbAnt.getRaiz().rank + 1;
+            int rankRaiz = aavlAnt.getRaiz().rank + 1;
             int espV = diametroNos + diametroNos / 3;
             int espH = diametroNos + diametroNos / 3;
             int margemSuperior = 40;
 
-            for ( ArvoreBinariaBuscaAnotada<Integer>.NoAnotado<Integer> no : abbAnt.percorrer( TipoPercursoArvores.EM_ORDEM ) ) {
+            for ( ArvoreAVLAnotada<Integer>.NoAnotado<Integer> no : aavlAnt.percorrer( TipoPercursoArvores.EM_ORDEM ) ) {
 
                 no.xIni = ( ( ( no.rank + 1 ) - rankRaiz ) * espH - diametroNos / 2 ) * diametroNos / 30;
                 no.yIni = margemSuperior + ( no.nivel + 1 ) * espV - diametroNos / 2;
@@ -125,7 +125,7 @@ public class ArvoreBinariaBuscaDesenhavel implements Desenhavel {
                 maiorX += -menorX;
                 maiorX += 30;
                 
-                for ( ArvoreBinariaBuscaAnotada<Integer>.NoAnotado<Integer> no : abbAnt.percorrer( TipoPercursoArvores.EM_ORDEM ) ) {
+                for ( ArvoreAVLAnotada<Integer>.NoAnotado<Integer> no : aavlAnt.percorrer( TipoPercursoArvores.EM_ORDEM ) ) {
 
                     no.xIni += -menorX;
                     no.xFim += -menorX;
@@ -166,7 +166,7 @@ public class ArvoreBinariaBuscaDesenhavel implements Desenhavel {
         g2d.setColor( Color.BLACK );
         g2d.drawRect( 0, 0, painel.getWidth() - 2, painel.getHeight() - 2 );
         
-        if ( abbAnt == null || abbAnt.estaVazia() ) {
+        if ( aavlAnt == null || aavlAnt.estaVazia() ) {
             
             UteisDesenho.desenharPonteiro( g2d, 35, margemSuperior - 25, 20, 20, true, "raiz", 
                     UteisDesenho.PosicaoLabel.DIREITA,
@@ -174,7 +174,7 @@ public class ArvoreBinariaBuscaDesenhavel implements Desenhavel {
             
         } else {
             
-            for ( ArvoreBinariaBuscaAnotada<Integer>.NoAnotado<Integer> no : abbAnt.percorrer( TipoPercursoArvores.EM_ORDEM ) ) {
+            for ( ArvoreAVLAnotada<Integer>.NoAnotado<Integer> no : aavlAnt.percorrer( TipoPercursoArvores.EM_ORDEM ) ) {
                 
                 if ( no.pai != null ) {
                     g2d.drawLine( no.xCentro, no.yCentro, no.pai.xCentro, no.pai.yCentro );
@@ -193,7 +193,7 @@ public class ArvoreBinariaBuscaDesenhavel implements Desenhavel {
                 }
             }
             
-            for ( ArvoreBinariaBuscaAnotada<Integer>.NoAnotado<Integer> no : abbAnt.percorrer( TipoPercursoArvores.EM_ORDEM ) ) {
+            for ( ArvoreAVLAnotada<Integer>.NoAnotado<Integer> no : aavlAnt.percorrer( TipoPercursoArvores.EM_ORDEM ) ) {
                 
                 g2d.setColor( Color.WHITE );
                 
@@ -213,13 +213,14 @@ public class ArvoreBinariaBuscaDesenhavel implements Desenhavel {
                 g2d.drawString( no.valor.toString(), no.xCentro - largura / 2, no.yCentro + 5 );
                 
                 if ( mostrarAtributosNos ) {
-                    g2d.drawString( String.format( "n: %d", no.nivel ), no.xCentro + diametroNos / 2 + 10, no.yCentro );
-                    g2d.drawString( String.format( "g: %d", no.grau ), no.xCentro + diametroNos / 2 + 10, no.yCentro + 10 );
+                    g2d.drawString( String.format( "a: %d", no.altura ), no.xCentro + diametroNos / 2 + 10, no.yCentro );
+                    g2d.drawString( String.format( "n: %d", no.nivel ), no.xCentro + diametroNos / 2 + 10, no.yCentro + 10 );
+                    g2d.drawString( String.format( "g: %d", no.grau ), no.xCentro + diametroNos / 2 + 10, no.yCentro + 20 );
                 }
                 
             }
             
-            UteisDesenho.desenharPonteiro( g2d, abbAnt.getRaiz().xCentro - 10, abbAnt.getRaiz().yCentro - 65, 20, 20, false, "raiz", 
+            UteisDesenho.desenharPonteiro(g2d, aavlAnt.getRaiz().xCentro - 10, aavlAnt.getRaiz().yCentro - 65, 20, 20, false, "raiz", 
                     UteisDesenho.PosicaoLabel.DIREITA,
                     UteisDesenho.DirecaoSeta.BAIXO, Color.BLACK );
             
@@ -227,8 +228,8 @@ public class ArvoreBinariaBuscaDesenhavel implements Desenhavel {
         
     }
 
-    public void setAbbAnt( ArvoreBinariaBuscaAnotada<Integer> abbAnt ) {
-        this.abbAnt = abbAnt;
+    public void setAbbAnt( ArvoreAVLAnotada<Integer> abbAnt ) {
+        this.aavlAnt = abbAnt;
     }
 
     public void setMostrarAtributosNos( boolean mostrarAtributos ) {
@@ -243,7 +244,7 @@ public class ArvoreBinariaBuscaDesenhavel implements Desenhavel {
         return diametroNos;
     }
 
-    public void setListaPercurso( List<ArvoreBinariaBuscaAnotada<Integer>.NoAnotado<Integer>> listaPercurso ) {
+    public void setListaPercurso( List<ArvoreAVLAnotada<Integer>.NoAnotado<Integer>> listaPercurso ) {
         this.listaPercurso = listaPercurso;
         maximo = listaPercurso.size();
     }
@@ -268,7 +269,7 @@ public class ArvoreBinariaBuscaDesenhavel implements Desenhavel {
         return atual;
     }
 
-    public List<ArvoreBinariaBuscaAnotada<Integer>.NoAnotado<Integer>> getListaPercurso() {
+    public List<ArvoreAVLAnotada<Integer>.NoAnotado<Integer>> getListaPercurso() {
         return listaPercurso;
     }
     

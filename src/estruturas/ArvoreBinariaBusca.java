@@ -520,7 +520,6 @@ public class ArvoreBinariaBusca<Tipo extends Comparable> implements Iterable<Tip
     public static void main( String[] args ) {
         
         ArvoreBinariaBusca<Integer> abb = new ArvoreBinariaBusca<>();
-        ArvoreBinariaBusca<Integer> abb2 = new ArvoreBinariaBusca<>();
         
         abb.inserir( 6 );
         System.out.println( abb );
