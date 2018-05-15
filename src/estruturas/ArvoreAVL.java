@@ -324,7 +324,7 @@ public class ArvoreAVL<Tipo extends Comparable<? super Tipo>> implements Iterabl
     }
 
     /**
-     * Return the height of node t, or -1, if null.
+     * Retorna a altura de um no ou -1 caso no seja nulo.
      */
     private int altura( No<Tipo> no ) {
         return no == null ? -1 : no.altura;
