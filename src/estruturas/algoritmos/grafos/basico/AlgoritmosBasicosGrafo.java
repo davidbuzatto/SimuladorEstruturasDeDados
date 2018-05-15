@@ -4,9 +4,10 @@
  * and open the template in the editor.
  */
 
-package estruturas.algoritmos.grafos;
+package estruturas.algoritmos.grafos.basico;
 
-import estruturas.Grafo;
+import estruturas.algoritmos.grafos.*;
+import estruturas.GrafoBasico;
 
 /**
  * Classe com alguns algoritmos básicos para grafos.
@@ -18,13 +19,13 @@ public class AlgoritmosBasicosGrafo {
     /**
      * Calcula o grau de um vértice de um grafo.
      * 
-     * @param g Grafo
+     * @param g GrafoBasico
      * @param v Vértice
      * @return Grau do vértice do grafo.
      */
-    public static <Tipo extends Comparable> int grau( Grafo<Tipo> g, Tipo v ) {
+    public static int grau( GrafoBasico g, int v ) {
         int grau = 0;
-        for ( Tipo w : g.getAdjacentes( v ) ) {
+        for ( int w : g.adj( v ) ) {
             grau++;
         }
         return grau;
@@ -33,13 +34,13 @@ public class AlgoritmosBasicosGrafo {
     /**
      * Calcula o maior grau do grafo.
      * 
-     * @param g Grafo
+     * @param g GrafoBasico
      * @return O maior grau do grafo.
      */
-    public static <Tipo extends Comparable> int grauMaximo( Grafo<Tipo> g ) {
+    public static int grauMaximo( GrafoBasico g ) {
         int max = 0;
         int grau;
-        for ( Tipo v : g.getVertices() ) {
+        for ( int v = 0; v < g.v(); v++ ) {
             grau = grau( g, v );
             if ( grau > max ) {
                 max = grau;
@@ -51,34 +52,30 @@ public class AlgoritmosBasicosGrafo {
     /**
      * Calcula o grau médio do grafo.
      * 
-     * @param g Grafo
+     * @param g GrafoBasico
      * @return Grau médio do grafo.
      */
-    public static double grauMedio( Grafo g ) {
-        return 2.0 * g.getQuantidadeArestas() / g.getQuantidadeVertices();
+    public static double grauMedio( GrafoBasico g ) {
+        return 2.0 * g.e() / g.v();
     }
 
     /**
      * Calcula a quantidade de laços dentro de um grafo.
      * 
-     * @param g Grafo
+     * @param g GrafoBasico
      * @return Quantidade de laços.
      */
-    public static <Tipo extends Comparable> int quantidadeLacos( Grafo<Tipo> g ) {
-        
+    public static int quantidadeLacos( GrafoBasico g ) {
         int cont = 0;
-        
-        for ( Tipo v : g.getVertices() ) {
-            for ( Tipo w : g.getAdjacentes( v ) ) {
-                if ( v.equals( w ) ) {
+        for ( int v = 0; v < g.v(); v++ ) {
+            for ( int w : g.adj( v ) ) {
+                if ( v == w ) {
                     cont++;
                 }
             }
         }
-        
         // para laços, 2 iguais (implementação)
         return cont / 2;
-        
     }
 
 }

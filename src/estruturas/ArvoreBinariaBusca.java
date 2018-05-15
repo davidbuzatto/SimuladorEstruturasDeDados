@@ -29,7 +29,7 @@ import java.util.List;
  * 
  * @author David Buzatto
  */
-public class ArvoreBinariaBusca<Tipo extends Comparable> implements Iterable<Tipo> {
+public class ArvoreBinariaBusca<Tipo extends Comparable<? super Tipo>> implements Iterable<Tipo> {
     
     /*
      * Classe interna que define os nós da árvore.

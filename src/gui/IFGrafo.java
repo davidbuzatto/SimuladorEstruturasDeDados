@@ -6,12 +6,12 @@
 
 package gui;
 
-import estruturas.Grafo;
+import estruturas.GrafoBasico;
 import estruturas.Lista;
-import estruturas.algoritmos.grafos.AlgoritmosBasicosGrafo;
-import estruturas.algoritmos.grafos.BuscaLargura;
-import estruturas.algoritmos.grafos.BuscaProfundidade;
-import estruturas.algoritmos.grafos.ComponentesConexos;
+import estruturas.algoritmos.grafos.basico.AlgoritmosBasicosGrafo;
+import estruturas.algoritmos.grafos.basico.BuscaLargura;
+import estruturas.algoritmos.grafos.basico.BuscaProfundidade;
+import estruturas.algoritmos.grafos.basico.ComponentesConexos;
 import gui.desenho.PainelDesenho;
 import gui.desenho.estruturas.ArestaGrafoAnotado;
 import gui.desenho.estruturas.GrafoAnotado;
@@ -49,7 +49,7 @@ public class IFGrafo extends javax.swing.JInternalFrame {
 
     private GrafoDesenhavel grafoD;
     private GrafoAnotado grafoAnt;
-    private Grafo grafo;
+    private GrafoBasico grafo;
     private boolean movendo;
     private VerticeGrafoAnotado verticeMovimento;
     private VerticeGrafoAnotado verticeRemocao;
@@ -62,7 +62,7 @@ public class IFGrafo extends javax.swing.JInternalFrame {
     private BuscaProfundidade dfs;
     private BuscaLargura bfs;
     
-    private DefaultListModel modeloAdj;
+    private DefaultListModel<String> modeloAdj;
     
     /**
      * Creates new form IFArvoreBinariaBusca
@@ -74,7 +74,7 @@ public class IFGrafo extends javax.swing.JInternalFrame {
         
         initComponents();
         
-        modeloAdj = new DefaultListModel();
+        modeloAdj = new DefaultListModel<>();
         listaAdj.setModel( modeloAdj );
         
         setVisible( true );
@@ -158,7 +158,7 @@ public class IFGrafo extends javax.swing.JInternalFrame {
         fieldGMX = new javax.swing.JTextField();
         labelListaAdj = new javax.swing.JLabel();
         spAdj = new javax.swing.JScrollPane();
-        listaAdj = new javax.swing.JList();
+        listaAdj = new javax.swing.JList<>();
 
         itemMenuRemover.setIcon(new javax.swing.ImageIcon(getClass().getResource("/gui/imagens/delete.png"))); // NOI18N
         itemMenuRemover.setText("remover");
@@ -1024,7 +1024,7 @@ public class IFGrafo extends javax.swing.JInternalFrame {
             sb = new StringBuilder();
             
             sb.append( grafoAnt.getTransicaoGrafoParaAnotado().get( v ) ).append( " -> { " );
-            adj = (Lista) grafo.adj( v );
+            adj = (Lista<Integer>) grafo.adj( v );
             
             for ( int w : adj ) {
                 if ( cont == adj.getTamanho() - 1 ) {
@@ -1070,7 +1070,7 @@ public class IFGrafo extends javax.swing.JInternalFrame {
     private javax.swing.JLabel labelGMX;
     private javax.swing.JLabel labelListaAdj;
     private javax.swing.JLabel labelV;
-    private javax.swing.JList listaAdj;
+    private javax.swing.JList<String> listaAdj;
     private javax.swing.JPopupMenu menuPopUp;
     private javax.swing.JPanel painelAlgoritmos;
     private javax.swing.JPanel painelDados;

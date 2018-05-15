@@ -6,45 +6,49 @@
 
 package estruturas.algoritmos.grafos;
 
+import estruturas.GrafoBasico;
 import estruturas.Grafo;
 import estruturas.Pilha;
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * Algoritmo de busca em profundidade.
  * 
  * @author David Buzatto
  */
-public class BuscaProfundidade extends Caminhos {
+public class BuscaProfundidade<Tipo extends Comparable<? super Tipo>> extends Caminhos<Tipo> {
 
-    private boolean[] marcado;
-    private int[] arestaAte;
-    private Grafo g;
+    private Map<Tipo, Boolean> marcado;
+    private Map<Tipo, Tipo> arestaAte;
+    private Grafo<Tipo> g;
 
-    public BuscaProfundidade( Grafo g, int f ) {
+    public BuscaProfundidade( Grafo<Tipo> g, Tipo f ) {
         
         this.g = g;
         this.fonte = f;
         
-        marcado = new boolean[g.v()];
-        arestaAte = new int[g.v()];
+        marcado = new HashMap<>();
+        arestaAte = new HashMap<>();
         
-        for ( int i = 0; i < g.v(); i++ ) {
-            arestaAte[i] = -1;
+        for ( Tipo v : g.getVertices() ) {
+            marcado.put( v, false );
+            arestaAte.put( v, null );
         }
         
         dfs( g, f );
         
     }
 
-    private void dfs( Grafo g, int v ) {
+    private void dfs( Grafo<Tipo> g, Tipo v ) {
         
-        marcado[v] = true;
+        marcado.put( v , true );
         
-        for ( int w : g.adj( v ) ) {
+        for ( Tipo w : g.getAdjacentes( v ) ) {
             
-            if ( !marcado[w] ) {
+            if ( !marcado.get( w ) ) {
                 dfs( g, w );
-                arestaAte[w] = v;
+                arestaAte.put( w, v );
             }
             
         }
@@ -52,18 +56,18 @@ public class BuscaProfundidade extends Caminhos {
     }
     
     @Override
-    public Iterable<Integer> caminhoAte( int w ) {
+    public Iterable<Tipo> caminhoAte( Tipo w ) {
         
-        Pilha<Integer> p = new Pilha<>();
+        Pilha<Tipo> p = new Pilha<>();
         
-        if ( arestaAte[w] != -1 ) {    
+        if ( arestaAte.get( w ) != null ) {    
             
-            int atual = w;
+            Tipo atual = w;
             p.empilhar( atual );
 
-            while ( atual != -1 ) {
-                atual = arestaAte[atual];
-                if ( atual != -1 ) {
+            while ( atual != null ) {
+                atual = arestaAte.get( atual );
+                if ( atual != null ) {
                     p.empilhar( atual );
                 }
             }
@@ -75,16 +79,16 @@ public class BuscaProfundidade extends Caminhos {
     }
     
     @Override
-    public boolean existeCaminhoAte( int w ) {
-        return arestaAte[w] != -1;
+    public boolean existeCaminhoAte( Tipo w ) {
+        return arestaAte.get( w ) != null;
     }
 
-    public boolean[] getMarcado() {
-        return marcado.clone();
+    public Map<Tipo, Boolean> getMarcado() {
+        return marcado;
     }
 
-    public int[] getArestaAte() {
-        return arestaAte.clone();
+    public Map<Tipo, Tipo> getArestaAte() {
+        return arestaAte;
     }
 
     @Override
@@ -94,11 +98,12 @@ public class BuscaProfundidade extends Caminhos {
         
         sb.append( "Busca em Profunidade (fonte: vértice " ).append( fonte ).append( ")\n" );
         sb.append( "v\tmarcado[v]\tarestaAte[v]\n" );
-        for ( int v = 0; v < g.v(); v++ ) {
+        
+        for ( Tipo v : g.getVertices() ) {
             sb.append( String.format( "%d\t%s\t\t%s\n",
                     v, 
-                    marcado[v] ? "T" : "F", 
-                    arestaAte[v] == -1 ? "-" : arestaAte[v] ) );
+                    marcado.get( v ) ? "T" : "F", 
+                    arestaAte.get( v ) == null ? "-" : arestaAte.get( v ) ) );
         }
         
         return sb.toString();

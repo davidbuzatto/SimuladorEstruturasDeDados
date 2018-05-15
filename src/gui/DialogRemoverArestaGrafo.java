@@ -52,7 +52,7 @@ public class DialogRemoverArestaGrafo extends javax.swing.JDialog {
 
         painelArestas = new javax.swing.JPanel();
         sp = new javax.swing.JScrollPane();
-        listaArestas = new javax.swing.JList();
+        listaArestas = new javax.swing.JList<>();
         btnRemover = new javax.swing.JButton();
         btnCancelar = new javax.swing.JButton();
         btnOK = new javax.swing.JButton();
@@ -165,7 +165,7 @@ public class DialogRemoverArestaGrafo extends javax.swing.JDialog {
     private javax.swing.JButton btnCancelar;
     private javax.swing.JButton btnOK;
     private javax.swing.JButton btnRemover;
-    private javax.swing.JList listaArestas;
+    private javax.swing.JList<ArestaGrafoAnotado> listaArestas;
     private javax.swing.JPanel painelArestas;
     private javax.swing.JScrollPane sp;
     // End of variables declaration//GEN-END:variables

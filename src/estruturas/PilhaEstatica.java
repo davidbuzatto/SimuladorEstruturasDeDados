@@ -43,6 +43,7 @@ public class PilhaEstatica<Tipo> implements Iterable<Tipo> {
      * 
      * @param maximo Tamanho máximo da pilha.
      */
+    @SuppressWarnings( "unchecked" )
     public PilhaEstatica( int maximo ) {
         
         tamanhoMaximo = maximo;

@@ -6,7 +6,7 @@
 
 package gui.desenho.estruturas;
 
-import estruturas.Grafo;
+import estruturas.GrafoBasico;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -33,7 +33,7 @@ public class GrafoAnotado implements Serializable {
     private Map<Integer, VerticeGrafoAnotado> vertices;
     private Map<String, ArestaGrafoAnotado> arestas;
     
-    private transient Grafo grafo;
+    private transient GrafoBasico grafo;
     
     public GrafoAnotado() {
         vertices = new LinkedHashMap<>();
@@ -109,7 +109,7 @@ public class GrafoAnotado implements Serializable {
         
     }
     
-    public Grafo gerarGrafo() {
+    public GrafoBasico gerarGrafo() {
         
         transicaoAnotadoParaGrafo = new HashMap<>();
         transicaoGrafoParaAnotado = new HashMap<>();
@@ -123,7 +123,7 @@ public class GrafoAnotado implements Serializable {
             transicaoGrafoParaAnotado.put( t.getValue(), t.getKey() );
         }
         
-        Grafo g = new Grafo( vertices.size() );
+        GrafoBasico g = new GrafoBasico( vertices.size() );
         
         for ( Entry<String, ArestaGrafoAnotado> e : arestas.entrySet() ) {
             
@@ -156,7 +156,7 @@ public class GrafoAnotado implements Serializable {
         return arestas;
     }
 
-    public Grafo getGrafo() {
+    public GrafoBasico getGrafo() {
         return grafo;
     }
     

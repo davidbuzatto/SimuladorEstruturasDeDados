@@ -20,7 +20,7 @@ public class IFTabelaSimbolos extends javax.swing.JInternalFrame {
 
     private TabelaSimbolos<String, String> tabelaSimbolos;
     private TabelaSimbolosDesenhavel tabelaSimbolosD;
-    private DefaultComboBoxModel dcbm;
+    private DefaultComboBoxModel<String> dcbm;
     
     /**
      * Creates new form IFLista
@@ -33,7 +33,7 @@ public class IFTabelaSimbolos extends javax.swing.JInternalFrame {
         initComponents();
         setVisible( true );
         
-        dcbm = new DefaultComboBoxModel();
+        dcbm = new DefaultComboBoxModel<>();
         comboItensTabela.setModel( dcbm );
         
         tabelaSimbolosD.setPainel( painelDesenho );
@@ -59,7 +59,7 @@ public class IFTabelaSimbolos extends javax.swing.JInternalFrame {
         labelRemover = new javax.swing.JLabel();
         fieldChave = new javax.swing.JTextField();
         fieldValor = new javax.swing.JTextField();
-        comboItensTabela = new javax.swing.JComboBox();
+        comboItensTabela = new javax.swing.JComboBox<>();
         btnInserir = new javax.swing.JButton();
         btnRemover = new javax.swing.JButton();
         btnEsvaziar = new javax.swing.JButton();
@@ -291,7 +291,7 @@ public class IFTabelaSimbolos extends javax.swing.JInternalFrame {
     private javax.swing.JButton btnEsvaziar;
     private javax.swing.JButton btnInserir;
     private javax.swing.JButton btnRemover;
-    private javax.swing.JComboBox comboItensTabela;
+    private javax.swing.JComboBox<String> comboItensTabela;
     private javax.swing.JTextField fieldChave;
     private javax.swing.JTextField fieldTamanho;
     private javax.swing.JTextField fieldValor;

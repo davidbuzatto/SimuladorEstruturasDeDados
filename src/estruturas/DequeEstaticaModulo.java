@@ -58,6 +58,7 @@ public class DequeEstaticaModulo<Tipo> implements Iterable<Tipo> {
      * 
      * @param maximo Tamanho máximo da deque.
      */
+    @SuppressWarnings( "unchecked" )
     public DequeEstaticaModulo( int maximo ) {
         
         tamanhoMaximo = maximo;

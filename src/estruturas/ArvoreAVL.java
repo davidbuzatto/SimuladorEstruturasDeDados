@@ -21,7 +21,7 @@ import java.util.List;
  * 
  * @author David Buzatto
  */
-public class ArvoreAVL<Tipo extends Comparable> implements Iterable<Tipo> {
+public class ArvoreAVL<Tipo extends Comparable<? super Tipo>> implements Iterable<Tipo> {
 
     /*
      * Classe interna que define os nós da árvore.

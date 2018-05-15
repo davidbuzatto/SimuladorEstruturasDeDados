@@ -53,6 +53,7 @@ public class FilaEstaticaModulo<Tipo> implements Iterable<Tipo> {
      * 
      * @param maximo Tamanho máximo da fila.
      */
+    @SuppressWarnings( "unchecked" )
     public FilaEstaticaModulo( int maximo ) {
         
         tamanhoMaximo = maximo;

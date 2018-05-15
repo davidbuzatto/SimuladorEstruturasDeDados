@@ -27,10 +27,10 @@ import javax.swing.SwingUtilities;
 public class IFArvoreBinariaBusca extends javax.swing.JInternalFrame {
 
     private ArvoreBinariaBusca<Integer> abb;
-    private ArvoreBinariaBuscaDesenhavel abbD;
+    private ArvoreBinariaBuscaDesenhavel<Integer> abbD;
     private ArvoreBinariaBuscaAnotada<Integer> abbAnt;
     private ArvoreBinariaBuscaAnotada<Integer>.NoAnotado<Integer> noRemocao;
-    private DefaultListModel dlm;
+    private DefaultListModel<Integer> dlm;
     private PainelDesenho painelD;
     
     /**
@@ -39,13 +39,13 @@ public class IFArvoreBinariaBusca extends javax.swing.JInternalFrame {
     public IFArvoreBinariaBusca() {
         
         abb = new ArvoreBinariaBusca<>();
-        abbD = new ArvoreBinariaBuscaDesenhavel( abb );
+        abbD = new ArvoreBinariaBuscaDesenhavel<>( abb );
         abbAnt = new ArvoreBinariaBuscaAnotada<>( abb );
         
         initComponents();
         setVisible( true );
         
-        dlm = new DefaultListModel();
+        dlm = new DefaultListModel<>();
         listResPercurso.setModel( dlm );
         
         painelD = (PainelDesenho) painelDesenho;
@@ -86,7 +86,7 @@ public class IFArvoreBinariaBusca extends javax.swing.JInternalFrame {
         radioNivel = new javax.swing.JRadioButton();
         checkInverter = new javax.swing.JCheckBox();
         spResPercurso = new javax.swing.JScrollPane();
-        listResPercurso = new javax.swing.JList();
+        listResPercurso = new javax.swing.JList<>();
         btnAvancar = new javax.swing.JButton();
         btnRetroceder = new javax.swing.JButton();
         btnExecutar = new javax.swing.JButton();
@@ -779,7 +779,7 @@ public class IFArvoreBinariaBusca extends javax.swing.JInternalFrame {
     private javax.swing.JLabel labelRaiz;
     private javax.swing.JLabel labelValor;
     private javax.swing.JLabel labelZoom;
-    private javax.swing.JList listResPercurso;
+    private javax.swing.JList<Integer> listResPercurso;
     private javax.swing.JPopupMenu menuPopUp;
     private javax.swing.JPanel painelDados;
     private javax.swing.JPanel painelDesenho;

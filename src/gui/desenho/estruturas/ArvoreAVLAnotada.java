@@ -22,7 +22,7 @@ import java.util.List;
  * 
  * @author David Buzatto
  */
-public class ArvoreAVLAnotada<Tipo extends Comparable> {
+public class ArvoreAVLAnotada<Tipo extends Comparable<? super Tipo>> {
         
     /*
      * Classe interna que representa os nós da árvore anotada.

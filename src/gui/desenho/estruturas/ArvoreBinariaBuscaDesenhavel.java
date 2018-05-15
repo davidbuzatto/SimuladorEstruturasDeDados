@@ -25,11 +25,11 @@ import uteis.UteisDesenho;
  * 
  * @author David Buzatto
  */
-public class ArvoreBinariaBuscaDesenhavel implements Desenhavel {
+public class ArvoreBinariaBuscaDesenhavel<Tipo extends Comparable<? super Tipo>> implements Desenhavel {
     
-    private ArvoreBinariaBusca<Integer> abb;
+    private ArvoreBinariaBusca<Tipo> abb;
     private PainelDesenho painel;
-    private ArvoreBinariaBuscaAnotada<Integer> abbAnt;
+    private ArvoreBinariaBuscaAnotada<Tipo> abbAnt;
     private boolean mostrarAtributosNos;
     private int diametroNos;
     
@@ -42,9 +42,9 @@ public class ArvoreBinariaBuscaDesenhavel implements Desenhavel {
     private int maiorY;
     
     // lista de itens do percurso executado
-    private List<ArvoreBinariaBuscaAnotada<Integer>.NoAnotado<Integer>> listaPercurso;
+    private List<ArvoreBinariaBuscaAnotada<Tipo>.NoAnotado<Tipo>> listaPercurso;
     
-    public ArvoreBinariaBuscaDesenhavel( ArvoreBinariaBusca<Integer> abb ) {
+    public ArvoreBinariaBuscaDesenhavel( ArvoreBinariaBusca<Tipo> abb ) {
         this.abb = abb;
         diametroNos = 30;
         listaPercurso = new ArrayList<>();
@@ -92,7 +92,7 @@ public class ArvoreBinariaBuscaDesenhavel implements Desenhavel {
             int espH = diametroNos + diametroNos / 3;
             int margemSuperior = 40;
 
-            for ( ArvoreBinariaBuscaAnotada<Integer>.NoAnotado<Integer> no : abbAnt.percorrer( TipoPercursoArvores.EM_ORDEM ) ) {
+            for ( ArvoreBinariaBuscaAnotada<Tipo>.NoAnotado<Tipo> no : abbAnt.percorrer( TipoPercursoArvores.EM_ORDEM ) ) {
 
                 no.xIni = ( ( ( no.rank + 1 ) - rankRaiz ) * espH - diametroNos / 2 ) * diametroNos / 30;
                 no.yIni = margemSuperior + ( no.nivel + 1 ) * espV - diametroNos / 2;
@@ -125,7 +125,7 @@ public class ArvoreBinariaBuscaDesenhavel implements Desenhavel {
                 maiorX += -menorX;
                 maiorX += 30;
                 
-                for ( ArvoreBinariaBuscaAnotada<Integer>.NoAnotado<Integer> no : abbAnt.percorrer( TipoPercursoArvores.EM_ORDEM ) ) {
+                for ( ArvoreBinariaBuscaAnotada<Tipo>.NoAnotado<Tipo> no : abbAnt.percorrer( TipoPercursoArvores.EM_ORDEM ) ) {
 
                     no.xIni += -menorX;
                     no.xFim += -menorX;
@@ -174,7 +174,7 @@ public class ArvoreBinariaBuscaDesenhavel implements Desenhavel {
             
         } else {
             
-            for ( ArvoreBinariaBuscaAnotada<Integer>.NoAnotado<Integer> no : abbAnt.percorrer( TipoPercursoArvores.EM_ORDEM ) ) {
+            for ( ArvoreBinariaBuscaAnotada<Tipo>.NoAnotado<Tipo> no : abbAnt.percorrer( TipoPercursoArvores.EM_ORDEM ) ) {
                 
                 if ( no.pai != null ) {
                     g2d.drawLine( no.xCentro, no.yCentro, no.pai.xCentro, no.pai.yCentro );
@@ -193,7 +193,7 @@ public class ArvoreBinariaBuscaDesenhavel implements Desenhavel {
                 }
             }
             
-            for ( ArvoreBinariaBuscaAnotada<Integer>.NoAnotado<Integer> no : abbAnt.percorrer( TipoPercursoArvores.EM_ORDEM ) ) {
+            for ( ArvoreBinariaBuscaAnotada<Tipo>.NoAnotado<Tipo> no : abbAnt.percorrer( TipoPercursoArvores.EM_ORDEM ) ) {
                 
                 g2d.setColor( Color.WHITE );
                 
@@ -227,7 +227,7 @@ public class ArvoreBinariaBuscaDesenhavel implements Desenhavel {
         
     }
 
-    public void setAbbAnt( ArvoreBinariaBuscaAnotada<Integer> abbAnt ) {
+    public void setAbbAnt( ArvoreBinariaBuscaAnotada<Tipo> abbAnt ) {
         this.abbAnt = abbAnt;
     }
 
@@ -243,7 +243,7 @@ public class ArvoreBinariaBuscaDesenhavel implements Desenhavel {
         return diametroNos;
     }
 
-    public void setListaPercurso( List<ArvoreBinariaBuscaAnotada<Integer>.NoAnotado<Integer>> listaPercurso ) {
+    public void setListaPercurso( List<ArvoreBinariaBuscaAnotada<Tipo>.NoAnotado<Tipo>> listaPercurso ) {
         this.listaPercurso = listaPercurso;
         maximo = listaPercurso.size();
     }
@@ -268,7 +268,7 @@ public class ArvoreBinariaBuscaDesenhavel implements Desenhavel {
         return atual;
     }
 
-    public List<ArvoreBinariaBuscaAnotada<Integer>.NoAnotado<Integer>> getListaPercurso() {
+    public List<ArvoreBinariaBuscaAnotada<Tipo>.NoAnotado<Tipo>> getListaPercurso() {
         return listaPercurso;
     }
     

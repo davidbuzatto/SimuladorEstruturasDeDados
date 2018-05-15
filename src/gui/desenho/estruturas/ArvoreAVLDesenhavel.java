@@ -25,11 +25,11 @@ import uteis.UteisDesenho;
  * 
  * @author David Buzatto
  */
-public class ArvoreAVLDesenhavel implements Desenhavel {
+public class ArvoreAVLDesenhavel<Tipo extends Comparable<? super Tipo>> implements Desenhavel {
     
-    private ArvoreAVL<Integer> aavl;
+    private ArvoreAVL<Tipo> aavl;
     private PainelDesenho painel;
-    private ArvoreAVLAnotada<Integer> aavlAnt;
+    private ArvoreAVLAnotada<Tipo> aavlAnt;
     private boolean mostrarAtributosNos;
     private int diametroNos;
     
@@ -44,7 +44,7 @@ public class ArvoreAVLDesenhavel implements Desenhavel {
     // lista de itens do percurso executado
     private List<ArvoreAVLAnotada<Integer>.NoAnotado<Integer>> listaPercurso;
     
-    public ArvoreAVLDesenhavel( ArvoreAVL<Integer> abb ) {
+    public ArvoreAVLDesenhavel( ArvoreAVL<Tipo> abb ) {
         this.aavl = abb;
         diametroNos = 30;
         listaPercurso = new ArrayList<>();
@@ -92,7 +92,7 @@ public class ArvoreAVLDesenhavel implements Desenhavel {
             int espH = diametroNos + diametroNos / 3;
             int margemSuperior = 40;
 
-            for ( ArvoreAVLAnotada<Integer>.NoAnotado<Integer> no : aavlAnt.percorrer( TipoPercursoArvores.EM_ORDEM ) ) {
+            for ( ArvoreAVLAnotada<Tipo>.NoAnotado<Tipo> no : aavlAnt.percorrer( TipoPercursoArvores.EM_ORDEM ) ) {
 
                 no.xIni = ( ( ( no.rank + 1 ) - rankRaiz ) * espH - diametroNos / 2 ) * diametroNos / 30;
                 no.yIni = margemSuperior + ( no.nivel + 1 ) * espV - diametroNos / 2;
@@ -125,7 +125,7 @@ public class ArvoreAVLDesenhavel implements Desenhavel {
                 maiorX += -menorX;
                 maiorX += 30;
                 
-                for ( ArvoreAVLAnotada<Integer>.NoAnotado<Integer> no : aavlAnt.percorrer( TipoPercursoArvores.EM_ORDEM ) ) {
+                for ( ArvoreAVLAnotada<Tipo>.NoAnotado<Tipo> no : aavlAnt.percorrer( TipoPercursoArvores.EM_ORDEM ) ) {
 
                     no.xIni += -menorX;
                     no.xFim += -menorX;
@@ -174,7 +174,7 @@ public class ArvoreAVLDesenhavel implements Desenhavel {
             
         } else {
             
-            for ( ArvoreAVLAnotada<Integer>.NoAnotado<Integer> no : aavlAnt.percorrer( TipoPercursoArvores.EM_ORDEM ) ) {
+            for ( ArvoreAVLAnotada<Tipo>.NoAnotado<Tipo> no : aavlAnt.percorrer( TipoPercursoArvores.EM_ORDEM ) ) {
                 
                 if ( no.pai != null ) {
                     g2d.drawLine( no.xCentro, no.yCentro, no.pai.xCentro, no.pai.yCentro );
@@ -193,7 +193,7 @@ public class ArvoreAVLDesenhavel implements Desenhavel {
                 }
             }
             
-            for ( ArvoreAVLAnotada<Integer>.NoAnotado<Integer> no : aavlAnt.percorrer( TipoPercursoArvores.EM_ORDEM ) ) {
+            for ( ArvoreAVLAnotada<Tipo>.NoAnotado<Tipo> no : aavlAnt.percorrer( TipoPercursoArvores.EM_ORDEM ) ) {
                 
                 g2d.setColor( Color.WHITE );
                 
@@ -228,7 +228,7 @@ public class ArvoreAVLDesenhavel implements Desenhavel {
         
     }
 
-    public void setAbbAnt( ArvoreAVLAnotada<Integer> abbAnt ) {
+    public void setAbbAnt( ArvoreAVLAnotada<Tipo> abbAnt ) {
         this.aavlAnt = abbAnt;
     }
 

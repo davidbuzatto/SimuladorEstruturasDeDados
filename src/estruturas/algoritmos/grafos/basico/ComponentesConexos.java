@@ -4,37 +4,30 @@
  * and open the template in the editor.
  */
 
-package estruturas.algoritmos.grafos;
+package estruturas.algoritmos.grafos.basico;
 
+import estruturas.algoritmos.grafos.*;
 import estruturas.GrafoBasico;
-import estruturas.Grafo;
-import java.util.HashMap;
-import java.util.Map;
 
 /**
  * Algoritmo para contagem de componentes conexos.
  * 
  * @author David Buzatto
  */
-public class ComponentesConexos<Tipo extends Comparable<? super Tipo>> {
+public class ComponentesConexos {
     
-    private Map<Tipo, Boolean> marcado;
-    private Map<Tipo, Integer> id;
+    private boolean[] marcado;
+    private int[] id; // identificadores dos componentes
     private int cont; // getQuantidade de componentes
     
-    public ComponentesConexos( Grafo<Tipo> g ) {
+    public ComponentesConexos( GrafoBasico g ) {
         
-        marcado = new HashMap<>();
-        id = new HashMap<>();
-        
-        for ( Tipo v : g.getVertices() ) {
-            marcado.put( v, false );
-            id.put( v, 0 );
-        }
+        marcado = new boolean[g.v()];
+        id = new int[g.v()];
         
         // realiza a contagem usando dfs
-        for ( Tipo v : g.getVertices() ) {
-            if ( !marcado.get( v ) ) {
+        for ( int v = 0; v < g.v(); v++ ) {
+            if ( !marcado[v] ) {
                 dfs( g, v );
                 cont++;
             }
@@ -49,8 +42,8 @@ public class ComponentesConexos<Tipo extends Comparable<? super Tipo>> {
      * @param w Outro vértice
      * @return Se os dois vértices estão conectados.
      */
-    public boolean conectado( Tipo v, Tipo w ) {
-        return id.get( v ) == id.get( w );
+    public boolean conectado( int v, int w ) {
+        return id[v] == id[w];
     }
     
     /**
@@ -68,26 +61,24 @@ public class ComponentesConexos<Tipo extends Comparable<? super Tipo>> {
      * @param v vértice que se deseja descobrir o componente.
      * @return O identificador do componente do vértice desejado.
      */
-    public int id( Tipo v ) {
-        return id.get( v );
+    public int id( int v ) {
+        return id[v];
     }
 
     /*
      * Busca em profundidade para encontrar os componentes.
      */
-    private void dfs( Grafo<Tipo> g, Tipo v ) {
+    private void dfs( GrafoBasico g, int v ) {
         
-        marcado.put( v , true );
+        marcado[v] = true;
         
         // todos os vertices descobertos na mesma chamada de dfs têm o mesmo id
-        id.put( v , cont );
+        id[v] = cont;
         
-        for ( Tipo w : g.getAdjacentes( v ) ) {
-            
-            if ( !marcado.get( w ) ) {
+        for ( int w : g.adj( v ) ) {
+            if ( !marcado[w] ) {
                 dfs( g, w );
             }
-            
         }
         
     }

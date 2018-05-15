@@ -6,8 +6,8 @@
 
 package gui;
 
-import estruturas.Grafo;
-import estruturas.algoritmos.grafos.BuscaProfundidade;
+import estruturas.GrafoBasico;
+import estruturas.algoritmos.grafos.basico.BuscaProfundidade;
 import gui.desenho.estruturas.GrafoAnotado;
 import java.util.Map.Entry;
 import javax.swing.table.DefaultTableModel;
@@ -19,7 +19,7 @@ import javax.swing.table.DefaultTableModel;
  */
 public class DialogTabelaDFS extends javax.swing.JDialog {
 
-    private Grafo grafo;
+    private GrafoBasico grafo;
     private GrafoAnotado grafoAnt;
     private BuscaProfundidade dfs;
     private DefaultTableModel modelo;
@@ -28,7 +28,7 @@ public class DialogTabelaDFS extends javax.swing.JDialog {
      * Creates new form DialogRemoverArestaGrafo
      */
     public DialogTabelaDFS( java.awt.Frame parent, boolean modal, 
-            Grafo grafo, GrafoAnotado grafoAnt, BuscaProfundidade dfs ) {
+            GrafoBasico grafo, GrafoAnotado grafoAnt, BuscaProfundidade dfs ) {
         
         super( parent, modal );
         initComponents();
