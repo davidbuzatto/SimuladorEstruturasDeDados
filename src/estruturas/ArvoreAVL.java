@@ -278,15 +278,15 @@ public class ArvoreAVL<Tipo extends Comparable<? super Tipo>> implements Iterabl
 
         if ( altura( no.esquerda ) - altura( no.direita ) > DESBALANCEAMENTO_PERMITIDO ) {
             if ( altura( no.esquerda.esquerda ) >= altura( no.esquerda.direita ) ) {
-                no = rotateWithLeftChild( no );
+                no = rotacionarComFilhoEsquerdo( no );
             } else {
-                no = doubleWithLeftChild( no );
+                no = rotacionarDuploComFilhoEsquerdo( no );
             }
         } else if ( altura( no.direita ) - altura( no.esquerda ) > DESBALANCEAMENTO_PERMITIDO ) {
             if ( altura( no.direita.direita ) >= altura( no.direita.esquerda ) ) {
-                no = rotateWithRightChild( no );
+                no = rotacionarComFilhoDireito( no );
             } else {
-                no = doubleWithRightChild( no );
+                no = rotacionarDuploComFilhoDireito( no );
             }
         }
 
@@ -331,10 +331,10 @@ public class ArvoreAVL<Tipo extends Comparable<? super Tipo>> implements Iterabl
     }
 
     /**
-     * Rotate binary tree node with left child. For AVL trees, this is a single
-     * rotation for case 1. Update heights, then return new root.
+     * Rotacionada um nó com filho à esquerda. Para as árvores AVL, essa é a 
+     * rotação simples do caso 1. Atualiza as alturas e retorna a nova raiz.
      */
-    private No<Tipo> rotateWithLeftChild( No<Tipo> k2 ) {
+    private No<Tipo> rotacionarComFilhoEsquerdo( No<Tipo> k2 ) {
         No<Tipo> k1 = k2.esquerda;
         k2.esquerda = k1.direita;
         k1.direita = k2;
@@ -344,10 +344,10 @@ public class ArvoreAVL<Tipo extends Comparable<? super Tipo>> implements Iterabl
     }
 
     /**
-     * Rotate binary tree node with right child. For AVL trees, this is a single
-     * rotation for case 4. Update heights, then return new root.
+     * Rotacionada um nó com filho à direita. Para as árvores AVL, essa é a 
+     * rotação simples do caso 4. Atualiza as alturas e retorna a nova raiz.
      */
-    private No<Tipo> rotateWithRightChild( No<Tipo> k1 ) {
+    private No<Tipo> rotacionarComFilhoDireito( No<Tipo> k1 ) {
         No<Tipo> k2 = k1.direita;
         k1.direita = k2.esquerda;
         k2.esquerda = k1;
@@ -357,23 +357,29 @@ public class ArvoreAVL<Tipo extends Comparable<? super Tipo>> implements Iterabl
     }
 
     /**
-     * Double rotate binary tree node: first left child with its right child;
-     * then node k3 with new left child. For AVL trees, this is a double
-     * rotation for case 2. Update heights, then return new root.
+     * Realiza uma rotação dupla:
+     *     1 - filho da esquerda com seu filho da direita;
+     *     2 - nó k3 com seu novo filho à esquerda.
+     * 
+     * Para as árvores AVL, essa é a rotação dupla do caso 2.
+     * Atualiza as alturas e retorna a nova raiz.
      */
-    private No<Tipo> doubleWithLeftChild( No<Tipo> k3 ) {
-        k3.esquerda = rotateWithRightChild( k3.esquerda );
-        return rotateWithLeftChild( k3 );
+    private No<Tipo> rotacionarDuploComFilhoEsquerdo( No<Tipo> k3 ) {
+        k3.esquerda = rotacionarComFilhoDireito( k3.esquerda );
+        return rotacionarComFilhoEsquerdo( k3 );
     }
 
     /**
-     * Double rotate binary tree node: first right child with its left child;
-     * then node k1 with new right child. For AVL trees, this is a double
-     * rotation for case 3. Update heights, then return new root.
+     * Realiza uma rotação dupla:
+     *     1 - filho da direita com seu filho da esquerda;
+     *     2 - nó k1 com seu novo filho à direita.
+     * 
+     * Para as árvores AVL, essa é a rotação dupla do caso 3.
+     * Atualiza as alturas e retorna a nova raiz.
      */
-    private No<Tipo> doubleWithRightChild( No<Tipo> k1 ) {
-        k1.direita = rotateWithLeftChild( k1.direita );
-        return rotateWithRightChild( k1 );
+    private No<Tipo> rotacionarDuploComFilhoDireito( No<Tipo> k1 ) {
+        k1.direita = rotacionarComFilhoEsquerdo( k1.direita );
+        return rotacionarComFilhoDireito( k1 );
     }
 
     
@@ -426,7 +432,11 @@ public class ArvoreAVL<Tipo extends Comparable<? super Tipo>> implements Iterabl
         return raiz;
     }
     
-    // Test program
+    /**
+     * Testes da árvore.
+     * 
+     * @param args
+     */
     public static void main( String[] args ) {
         
         ArvoreAVL<Integer> aavl = new ArvoreAVL<>();

@@ -30,7 +30,6 @@ public class JanelaPrincipal extends javax.swing.JFrame {
         
         initComponents();
         
-        btnArvoreVP.setVisible( false );
         btnHeapMinimo.setVisible( false );
         btnHeapMaximo.setVisible( false );
         btnTabelaHash.setVisible( false );
@@ -438,8 +437,29 @@ public class JanelaPrincipal extends javax.swing.JFrame {
     }//GEN-LAST:event_btnTabelaSimbolosActionPerformed
 
     private void btnArvoreVPActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnArvoreVPActionPerformed
-        JOptionPane.showMessageDialog( this, "Não implementado!", 
-                "ERRO", JOptionPane.ERROR_MESSAGE );
+        
+        JInternalFrame iFrame = iFrames.get( "ifAVP" );
+        
+        if ( iFrame == null ) {
+            
+            iFrame = new IFArvoreVermelhoPreto();
+            desktopPane.add( iFrame );
+            iFrames.put( "ifAVP", iFrame );
+            
+            iFrame.addInternalFrameListener( new InternalFrameAdapter() {
+                @Override
+                public void internalFrameClosing( InternalFrameEvent e ) {
+                    iFrames.remove( "ifAVP" );
+                }
+            });
+            
+        }
+        
+        try {
+            iFrame.setSelected( true );
+        } catch ( PropertyVetoException ex ) {
+        }
+        
     }//GEN-LAST:event_btnArvoreVPActionPerformed
 
     private void btnTabelaHashActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnTabelaHashActionPerformed

@@ -6,7 +6,7 @@
 
 package gui.desenho.estruturas;
 
-import estruturas.ArvoreAVL;
+import estruturas.ArvoreVermelhoPreto;
 import estruturas.algoritmos.arvores.TipoPercursoArvores;
 import gui.desenho.PainelDesenho;
 import java.awt.BasicStroke;
@@ -21,15 +21,15 @@ import javax.swing.JViewport;
 import uteis.UteisDesenho;
 
 /**
- * Árvore AVL desenhável.
+ * Árvore vermelho-preto desenhável.
  * 
  * @author David Buzatto
  */
-public class ArvoreAVLDesenhavel<Tipo extends Comparable<? super Tipo>> implements Desenhavel {
+public class ArvoreVermelhoPretoDesenhavel<TipoChave extends Comparable<? super TipoChave>, TipoValor> implements Desenhavel {
     
-    private ArvoreAVL<Tipo> aavl;
+    private ArvoreVermelhoPreto<TipoChave, TipoValor> avp;
     private PainelDesenho painel;
-    private ArvoreAVLAnotada<Tipo> aavlAnt;
+    private ArvoreVermelhoPretoAnotada<TipoChave, TipoValor> avpAnt;
     private boolean mostrarAtributosNos;
     private int diametroNos;
     
@@ -42,10 +42,10 @@ public class ArvoreAVLDesenhavel<Tipo extends Comparable<? super Tipo>> implemen
     private int maiorY;
     
     // lista de itens do percurso executado
-    private List<ArvoreAVLAnotada<Integer>.NoAnotado<Integer>> listaPercurso;
+    private List<ArvoreVermelhoPretoAnotada<Integer, String>.NoAnotado<Integer, String>> listaPercurso;
     
-    public ArvoreAVLDesenhavel( ArvoreAVL<Tipo> abb ) {
-        this.aavl = abb;
+    public ArvoreVermelhoPretoDesenhavel( ArvoreVermelhoPreto<TipoChave, TipoValor> abb ) {
+        this.avp = abb;
         diametroNos = 30;
         listaPercurso = new ArrayList<>();
         atual = -1;
@@ -80,19 +80,19 @@ public class ArvoreAVLDesenhavel<Tipo extends Comparable<? super Tipo>> implemen
     
     private void calcularNovoTamanoPainelEPosicaoNos() {
         
-        if ( aavlAnt != null && aavlAnt.getRaiz() != null ) {
+        if ( avpAnt != null && avpAnt.getRaiz() != null ) {
             
             menorX = Integer.MAX_VALUE;
             maiorX = Integer.MIN_VALUE;
             menorY = Integer.MAX_VALUE;
             maiorY = Integer.MIN_VALUE;
         
-            int rankRaiz = aavlAnt.getRaiz().rank + 1;
+            int rankRaiz = avpAnt.getRaiz().rank + 1;
             int espV = diametroNos + diametroNos / 3;
             int espH = diametroNos + diametroNos / 3;
             int margemSuperior = 40;
 
-            for ( ArvoreAVLAnotada<Tipo>.NoAnotado<Tipo> no : aavlAnt.percorrer( TipoPercursoArvores.EM_ORDEM ) ) {
+            for ( ArvoreVermelhoPretoAnotada<TipoChave, TipoValor>.NoAnotado<TipoChave, TipoValor> no : avpAnt.percorrer( TipoPercursoArvores.EM_ORDEM ) ) {
 
                 no.xIni = ( ( ( no.rank + 1 ) - rankRaiz ) * espH - diametroNos / 2 ) * diametroNos / 30;
                 no.yIni = margemSuperior + ( no.nivel + 1 ) * espV - diametroNos / 2;
@@ -125,7 +125,7 @@ public class ArvoreAVLDesenhavel<Tipo extends Comparable<? super Tipo>> implemen
                 maiorX += -menorX;
                 maiorX += 30;
                 
-                for ( ArvoreAVLAnotada<Tipo>.NoAnotado<Tipo> no : aavlAnt.percorrer( TipoPercursoArvores.EM_ORDEM ) ) {
+                for ( ArvoreVermelhoPretoAnotada<TipoChave, TipoValor>.NoAnotado<TipoChave, TipoValor> no : avpAnt.percorrer( TipoPercursoArvores.EM_ORDEM ) ) {
 
                     no.xIni += -menorX;
                     no.xFim += -menorX;
@@ -166,7 +166,7 @@ public class ArvoreAVLDesenhavel<Tipo extends Comparable<? super Tipo>> implemen
         g2d.setColor( Color.BLACK );
         g2d.drawRect( 0, 0, painel.getWidth() - 2, painel.getHeight() - 2 );
         
-        if ( aavlAnt == null || aavlAnt.estaVazia() ) {
+        if ( avpAnt == null || avpAnt.estaVazia() ) {
             
             UteisDesenho.desenharPonteiro( g2d, 35, margemSuperior - 25, 20, 20, true, "raiz", 
                     UteisDesenho.PosicaoLabel.DIREITA,
@@ -174,11 +174,21 @@ public class ArvoreAVLDesenhavel<Tipo extends Comparable<? super Tipo>> implemen
             
         } else {
             
-            for ( ArvoreAVLAnotada<Tipo>.NoAnotado<Tipo> no : aavlAnt.percorrer( TipoPercursoArvores.EM_ORDEM ) ) {
+            for ( ArvoreVermelhoPretoAnotada<TipoChave, TipoValor>.NoAnotado<TipoChave, TipoValor> no : avpAnt.percorrer( TipoPercursoArvores.EM_ORDEM ) ) {
                 
                 if ( no.pai != null ) {
+                    
+                    if ( no.cor == ArvoreVermelhoPreto.CorNo.VERMELHO ) {
+                        g2d.setColor( Color.RED );
+                    } else {
+                        g2d.setColor( Color.BLACK );
+                    }
+                    
                     g2d.drawLine( no.xCentro, no.yCentro, no.pai.xCentro, no.pai.yCentro );
+                    
                 }
+                
+                g2d.setColor( Color.BLACK );
                 
                 if ( no.esquerda == null ) {
                     g2d.drawLine( no.xCentro, no.yCentro, no.xCentro - diametroNos + 10, no.yCentro + diametroNos - 10 );
@@ -193,7 +203,7 @@ public class ArvoreAVLDesenhavel<Tipo extends Comparable<? super Tipo>> implemen
                 }
             }
             
-            for ( ArvoreAVLAnotada<Tipo>.NoAnotado<Tipo> no : aavlAnt.percorrer( TipoPercursoArvores.EM_ORDEM ) ) {
+            for ( ArvoreVermelhoPretoAnotada<TipoChave, TipoValor>.NoAnotado<TipoChave, TipoValor> no : avpAnt.percorrer( TipoPercursoArvores.EM_ORDEM ) ) {
                 
                 g2d.setColor( Color.WHITE );
                 
@@ -213,14 +223,15 @@ public class ArvoreAVLDesenhavel<Tipo extends Comparable<? super Tipo>> implemen
                 g2d.drawString( no.valor.toString(), no.xCentro - largura / 2, no.yCentro + 5 );
                 
                 if ( mostrarAtributosNos ) {
-                    g2d.drawString( String.format( "a: %d", no.altura ), no.xCentro + diametroNos / 2 + 10, no.yCentro );
-                    g2d.drawString( String.format( "n: %d", no.nivel ), no.xCentro + diametroNos / 2 + 10, no.yCentro + 10 );
-                    g2d.drawString( String.format( "g: %d", no.grau ), no.xCentro + diametroNos / 2 + 10, no.yCentro + 20 );
+                    g2d.drawString( String.format( "v: \"%s\"", no.valor ), no.xCentro + diametroNos / 2 + 10, no.yCentro );
+                    g2d.drawString( String.format( "c: %d", no.n ), no.xCentro + diametroNos / 2 + 10, no.yCentro + 10 );
+                    g2d.drawString( String.format( "n: %d", no.nivel ), no.xCentro + diametroNos / 2 + 10, no.yCentro + 20 );
+                    g2d.drawString( String.format( "g: %d", no.grau ), no.xCentro + diametroNos / 2 + 10, no.yCentro + 30 );
                 }
                 
             }
             
-            UteisDesenho.desenharPonteiro(g2d, aavlAnt.getRaiz().xCentro - 10, aavlAnt.getRaiz().yCentro - 65, 20, 20, false, "raiz", 
+            UteisDesenho.desenharPonteiro(g2d, avpAnt.getRaiz().xCentro - 10, avpAnt.getRaiz().yCentro - 65, 20, 20, false, "raiz", 
                     UteisDesenho.PosicaoLabel.DIREITA,
                     UteisDesenho.DirecaoSeta.BAIXO, Color.BLACK );
             
@@ -228,8 +239,8 @@ public class ArvoreAVLDesenhavel<Tipo extends Comparable<? super Tipo>> implemen
         
     }
 
-    public void setAbbAnt( ArvoreAVLAnotada<Tipo> aavlAnt ) {
-        this.aavlAnt = aavlAnt;
+    public void setAbbAnt( ArvoreVermelhoPretoAnotada<TipoChave, TipoValor> avpAnt ) {
+        this.avpAnt = avpAnt;
     }
 
     public void setMostrarAtributosNos( boolean mostrarAtributos ) {
@@ -244,7 +255,7 @@ public class ArvoreAVLDesenhavel<Tipo extends Comparable<? super Tipo>> implemen
         return diametroNos;
     }
 
-    public void setListaPercurso( List<ArvoreAVLAnotada<Integer>.NoAnotado<Integer>> listaPercurso ) {
+    public void setListaPercurso( List<ArvoreVermelhoPretoAnotada<Integer, String>.NoAnotado<Integer, String>> listaPercurso ) {
         this.listaPercurso = listaPercurso;
         maximo = listaPercurso.size();
     }
@@ -269,7 +280,7 @@ public class ArvoreAVLDesenhavel<Tipo extends Comparable<? super Tipo>> implemen
         return atual;
     }
 
-    public List<ArvoreAVLAnotada<Integer>.NoAnotado<Integer>> getListaPercurso() {
+    public List<ArvoreVermelhoPretoAnotada<Integer, String>.NoAnotado<Integer, String>> getListaPercurso() {
         return listaPercurso;
     }
     
