@@ -8,7 +8,7 @@ package gui;
 
 import estruturas.GrafoBasico;
 import estruturas.algoritmos.grafos.basico.BuscaLargura;
-import gui.desenho.estruturas.GrafoAnotado;
+import gui.desenho.estruturas.GrafoBasicoAnotado;
 import java.util.Map.Entry;
 import javax.swing.table.DefaultTableModel;
 
@@ -20,7 +20,7 @@ import javax.swing.table.DefaultTableModel;
 public class DialogTabelaBFS extends javax.swing.JDialog {
 
     private GrafoBasico grafo;
-    private GrafoAnotado grafoAnt;
+    private GrafoBasicoAnotado grafoAnt;
     private BuscaLargura bfs;
     private DefaultTableModel modelo;
     
@@ -28,7 +28,7 @@ public class DialogTabelaBFS extends javax.swing.JDialog {
      * Creates new form DialogRemoverArestaGrafo
      */
     public DialogTabelaBFS( java.awt.Frame parent, boolean modal, 
-            GrafoBasico grafo, GrafoAnotado grafoAnt, BuscaLargura bfs ) {
+            GrafoBasico grafo, GrafoBasicoAnotado grafoAnt, BuscaLargura bfs ) {
         
         super( parent, modal );
         initComponents();

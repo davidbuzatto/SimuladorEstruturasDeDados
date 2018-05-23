@@ -13,10 +13,10 @@ import estruturas.algoritmos.grafos.basico.BuscaLargura;
 import estruturas.algoritmos.grafos.basico.BuscaProfundidade;
 import estruturas.algoritmos.grafos.basico.ComponentesConexos;
 import gui.desenho.PainelDesenho;
-import gui.desenho.estruturas.ArestaGrafoAnotado;
-import gui.desenho.estruturas.GrafoAnotado;
-import gui.desenho.estruturas.GrafoDesenhavel;
-import gui.desenho.estruturas.VerticeGrafoAnotado;
+import gui.desenho.estruturas.ArestaGrafoBasicoAnotado;
+import gui.desenho.estruturas.GrafoBasicoAnotado;
+import gui.desenho.estruturas.GrafoBasicoDesenhavel;
+import gui.desenho.estruturas.VerticeGrafoBasicoAnotado;
 import java.awt.Graphics2D;
 import java.awt.Point;
 import java.awt.RenderingHints;
@@ -47,14 +47,14 @@ import javax.swing.filechooser.FileNameExtensionFilter;
  */
 public class IFGrafo extends javax.swing.JInternalFrame {
 
-    private GrafoDesenhavel grafoD;
-    private GrafoAnotado grafoAnt;
+    private GrafoBasicoDesenhavel grafoD;
+    private GrafoBasicoAnotado grafoAnt;
     private GrafoBasico grafo;
     private boolean movendo;
-    private VerticeGrafoAnotado verticeMovimento;
-    private VerticeGrafoAnotado verticeRemocao;
-    private VerticeGrafoAnotado verticeArestaO;
-    private VerticeGrafoAnotado verticeArestaD;
+    private VerticeGrafoBasicoAnotado verticeMovimento;
+    private VerticeGrafoBasicoAnotado verticeRemocao;
+    private VerticeGrafoBasicoAnotado verticeArestaO;
+    private VerticeGrafoBasicoAnotado verticeArestaD;
     private int tamanhoVertice = 40;
     private int deslocamentoX;
     private int deslocamentoY;
@@ -69,8 +69,8 @@ public class IFGrafo extends javax.swing.JInternalFrame {
      */
     public IFGrafo() {
         
-        grafoAnt = new GrafoAnotado();
-        grafoD = new GrafoDesenhavel( grafoAnt );
+        grafoAnt = new GrafoBasicoAnotado();
+        grafoD = new GrafoBasicoDesenhavel( grafoAnt );
         
         initComponents();
         
@@ -554,7 +554,7 @@ public class IFGrafo extends javax.swing.JInternalFrame {
         
             } else if ( tbtnInsArestas.isSelected() ) {
                 
-                for ( Entry<Integer, VerticeGrafoAnotado> v : grafoAnt.getVertices().entrySet() ) {
+                for ( Entry<Integer, VerticeGrafoBasicoAnotado> v : grafoAnt.getVertices().entrySet() ) {
                     
                     Point p = evt.getPoint();
 
@@ -589,7 +589,7 @@ public class IFGrafo extends javax.swing.JInternalFrame {
         
             } else {
                 
-                for ( Entry<Integer, VerticeGrafoAnotado> v : grafoAnt.getVertices().entrySet() ) {
+                for ( Entry<Integer, VerticeGrafoBasicoAnotado> v : grafoAnt.getVertices().entrySet() ) {
                     
                     Point p = evt.getPoint();
                 
@@ -617,7 +617,7 @@ public class IFGrafo extends javax.swing.JInternalFrame {
             tbtnInsVertices.setSelected( false );
             tbtnInsArestas.setSelected( false );
             
-            for ( Entry<Integer, VerticeGrafoAnotado> v : grafoAnt.getVertices().entrySet() ) {
+            for ( Entry<Integer, VerticeGrafoBasicoAnotado> v : grafoAnt.getVertices().entrySet() ) {
                     
                 Point p = evt.getPoint();
 
@@ -652,15 +652,15 @@ public class IFGrafo extends javax.swing.JInternalFrame {
 
     private void btnRemoverArestasActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnRemoverArestasActionPerformed
         
-        List<ArestaGrafoAnotado> arestas = new ArrayList<>();
-        List<ArestaGrafoAnotado> arestasRemovidas = new ArrayList<>();
-        for ( Entry<String, ArestaGrafoAnotado> a : grafoAnt.getArestas().entrySet() ) {
+        List<ArestaGrafoBasicoAnotado> arestas = new ArrayList<>();
+        List<ArestaGrafoBasicoAnotado> arestasRemovidas = new ArrayList<>();
+        for ( Entry<String, ArestaGrafoBasicoAnotado> a : grafoAnt.getArestas().entrySet() ) {
             arestas.add( a.getValue() );
         }
         
-        Collections.sort( arestas, new Comparator<ArestaGrafoAnotado>() {
+        Collections.sort(arestas, new Comparator<ArestaGrafoBasicoAnotado>() {
             @Override
-            public int compare( ArestaGrafoAnotado o1, ArestaGrafoAnotado o2 ) {
+            public int compare( ArestaGrafoBasicoAnotado o1, ArestaGrafoBasicoAnotado o2 ) {
                 if ( o1.origem.v < o2.origem.v ) return -1;
                 if ( o1.origem.v > o2.origem.v ) return +1;
                 if ( o1.destino.v < o2.destino.v ) return -1;
@@ -673,7 +673,7 @@ public class IFGrafo extends javax.swing.JInternalFrame {
         d.setVisible( true );
         
         if ( arestas.size() != grafoAnt.getArestas().size() ) {
-            for ( ArestaGrafoAnotado a : arestasRemovidas ) {
+            for ( ArestaGrafoBasicoAnotado a : arestasRemovidas ) {
                 grafoAnt.removerAresta( a.origem.v, a.destino.v );
             }
         }
@@ -692,7 +692,7 @@ public class IFGrafo extends javax.swing.JInternalFrame {
             boolean achou = false;
             
             // buscando a fonte
-            for ( Entry<Integer, VerticeGrafoAnotado> v : grafoAnt.getVertices().entrySet() ) {
+            for ( Entry<Integer, VerticeGrafoBasicoAnotado> v : grafoAnt.getVertices().entrySet() ) {
                 
                 if ( v.getValue().v == fonte ) {
                     achou = true;
@@ -726,7 +726,7 @@ public class IFGrafo extends javax.swing.JInternalFrame {
             boolean achou = false;
             
             // buscando a fonte
-            for ( Entry<Integer, VerticeGrafoAnotado> v : grafoAnt.getVertices().entrySet() ) {
+            for ( Entry<Integer, VerticeGrafoBasicoAnotado> v : grafoAnt.getVertices().entrySet() ) {
                 
                 if ( v.getValue().v == fonte ) {
                     achou = true;
@@ -837,9 +837,9 @@ public class IFGrafo extends javax.swing.JInternalFrame {
             int minY = 0;
             int maxY = 0;
             boolean primeiro = true;
-            VerticeGrafoAnotado v;
+            VerticeGrafoBasicoAnotado v;
             
-            for ( Entry<Integer, VerticeGrafoAnotado> e : grafoAnt.getVertices().entrySet() ) {
+            for ( Entry<Integer, VerticeGrafoBasicoAnotado> e : grafoAnt.getVertices().entrySet() ) {
                 
                 v = e.getValue();
                 
@@ -978,10 +978,10 @@ public class IFGrafo extends javax.swing.JInternalFrame {
                 
                 File f = jfc.getSelectedFile();
                 ObjectInputStream oin = new ObjectInputStream( new FileInputStream( f ) );
-                grafoAnt = (GrafoAnotado) oin.readObject();
+                grafoAnt = (GrafoBasicoAnotado) oin.readObject();
                 oin.close();
                 
-                grafoD = new GrafoDesenhavel( grafoAnt );
+                grafoD = new GrafoBasicoDesenhavel( grafoAnt );
                 grafoD.setPainel( painelDesenho );
                 ((PainelDesenho) painelDesenho).setEstruturaDesenhavel( grafoD );
                 atualizarDadosGrafo();

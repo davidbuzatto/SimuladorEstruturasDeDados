@@ -30,8 +30,6 @@ public class JanelaPrincipal extends javax.swing.JFrame {
         
         initComponents();
         
-        btnHeapMinimo.setVisible( false );
-        btnHeapMaximo.setVisible( false );
         btnTabelaHash.setVisible( false );
         btnGrafoPonderado.setVisible( false );
         
@@ -405,7 +403,7 @@ public class JanelaPrincipal extends javax.swing.JFrame {
                 "Simulador de Estruturas de Dados\n\n"
                         + "Desenvolvido por: Prof. David Buzatto\n"
                         + "E-mail: davidbuzatto@ifsp.edu.br\n"
-                        + "Versão atual: 30/03/2014", 
+                        + "Versão atual: 23/05/2014", 
                 "Sobre...", JOptionPane.INFORMATION_MESSAGE );
         
     }//GEN-LAST:event_btnSobreActionPerformed
@@ -468,13 +466,55 @@ public class JanelaPrincipal extends javax.swing.JFrame {
     }//GEN-LAST:event_btnTabelaHashActionPerformed
 
     private void btnHeapMinimoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnHeapMinimoActionPerformed
-        JOptionPane.showMessageDialog( this, "Não implementado!", 
-                "ERRO", JOptionPane.ERROR_MESSAGE );
+        
+        JInternalFrame iFrame = iFrames.get( "ifHMin" );
+        
+        if ( iFrame == null ) {
+            
+            iFrame = new IFHeapMinimo();
+            desktopPane.add( iFrame );
+            iFrames.put( "ifHMin", iFrame );
+            
+            iFrame.addInternalFrameListener( new InternalFrameAdapter() {
+                @Override
+                public void internalFrameClosing( InternalFrameEvent e ) {
+                    iFrames.remove( "ifHMin" );
+                }
+            });
+            
+        }
+        
+        try {
+            iFrame.setSelected( true );
+        } catch ( PropertyVetoException ex ) {
+        }
+        
     }//GEN-LAST:event_btnHeapMinimoActionPerformed
 
     private void btnHeapMaximoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnHeapMaximoActionPerformed
-        JOptionPane.showMessageDialog( this, "Não implementado!", 
-                "ERRO", JOptionPane.ERROR_MESSAGE );
+        
+        JInternalFrame iFrame = iFrames.get( "ifHMax" );
+        
+        if ( iFrame == null ) {
+            
+            iFrame = new IFHeapMaximo();
+            desktopPane.add( iFrame );
+            iFrames.put( "ifHMax", iFrame );
+            
+            iFrame.addInternalFrameListener( new InternalFrameAdapter() {
+                @Override
+                public void internalFrameClosing( InternalFrameEvent e ) {
+                    iFrames.remove( "ifHMax" );
+                }
+            });
+            
+        }
+        
+        try {
+            iFrame.setSelected( true );
+        } catch ( PropertyVetoException ex ) {
+        }
+        
     }//GEN-LAST:event_btnHeapMaximoActionPerformed
 
     private void btnGrafoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnGrafoActionPerformed

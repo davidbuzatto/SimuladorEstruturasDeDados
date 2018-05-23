@@ -105,7 +105,7 @@
                 </Property>
               </Properties>
               <AuxValues>
-                <AuxValue name="JavaCodeGenerator_TypeParameters" type="java.lang.String" value="&lt;ArestaGrafoAnotado&gt;"/>
+                <AuxValue name="JavaCodeGenerator_TypeParameters" type="java.lang.String" value="&lt;gui.desenho.estruturas.ArestaGrafoBasicoAnotado&gt;"/>
               </AuxValues>
             </Component>
           </SubComponents>

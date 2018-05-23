@@ -6,7 +6,7 @@
 
 package uteis;
 
-import gui.desenho.estruturas.VerticeGrafoAnotado;
+import gui.desenho.estruturas.VerticeGrafoBasicoAnotado;
 import java.awt.Color;
 import java.awt.Font;
 import java.awt.FontMetrics;
@@ -305,7 +305,7 @@ public class UteisDesenho {
 
     }
     
-    public static void desenharFlechaVertice( VerticeGrafoAnotado origem, VerticeGrafoAnotado destino, Graphics2D g2d ) {
+    public static void desenharFlechaVertice( VerticeGrafoBasicoAnotado origem, VerticeGrafoBasicoAnotado destino, Graphics2D g2d ) {
         
         // gera a hipotenusa
         double h = UteisDesenho.gerarHipotenusa(

@@ -13,7 +13,7 @@ import java.io.Serializable;
  * 
  * @author David Buzatto
  */
-public class VerticeGrafoAnotado implements Serializable {
+public class VerticeGrafoBasicoAnotado implements Serializable {
     
     public int v;
         

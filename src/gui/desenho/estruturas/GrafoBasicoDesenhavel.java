@@ -25,11 +25,11 @@ import uteis.UteisDesenho;
  * 
  * @author David Buzatto
  */
-public class GrafoDesenhavel implements Desenhavel {
+public class GrafoBasicoDesenhavel implements Desenhavel {
     
-    private GrafoAnotado grafoAnt;
+    private GrafoBasicoAnotado grafoAnt;
     private JPanel painel;
-    private VerticeGrafoAnotado verticeArestaOrigem;
+    private VerticeGrafoBasicoAnotado verticeArestaOrigem;
     private Caminhos caminho;
     private ComponentesConexos cc;
     private int caminhoAte;
@@ -45,7 +45,7 @@ public class GrafoDesenhavel implements Desenhavel {
     private static final Color laranjaClaro = new Color( 255, 192, 0 );
     private static final Color[] coresCc = new Color[30];
     
-    public GrafoDesenhavel( GrafoAnotado grafo ) {
+    public GrafoBasicoDesenhavel( GrafoBasicoAnotado grafo ) {
         
         this.grafoAnt = grafo;
         
@@ -84,9 +84,9 @@ public class GrafoDesenhavel implements Desenhavel {
             
             g2d.setColor( Color.BLACK );
             
-            for ( Entry<String, ArestaGrafoAnotado> a : grafoAnt.getArestas().entrySet() ) {
+            for ( Entry<String, ArestaGrafoBasicoAnotado> a : grafoAnt.getArestas().entrySet() ) {
 
-                ArestaGrafoAnotado ag = a.getValue();
+                ArestaGrafoBasicoAnotado ag = a.getValue();
                 g2d.drawLine( ag.origem.xCentro, ag.origem.yCentro,
                         ag.destino.xCentro, ag.destino.yCentro );
 
@@ -97,9 +97,9 @@ public class GrafoDesenhavel implements Desenhavel {
             g2d.setStroke( new BasicStroke( 4 ) );
             g2d.setColor( cinza );
             
-            for ( Entry<String, ArestaGrafoAnotado> a : grafoAnt.getArestas().entrySet() ) {
+            for ( Entry<String, ArestaGrafoBasicoAnotado> a : grafoAnt.getArestas().entrySet() ) {
 
-                ArestaGrafoAnotado ag = a.getValue();
+                ArestaGrafoBasicoAnotado ag = a.getValue();
                 g2d.drawLine( ag.origem.xCentro, ag.origem.yCentro,
                         ag.destino.xCentro, ag.destino.yCentro );
 
@@ -117,8 +117,8 @@ public class GrafoDesenhavel implements Desenhavel {
                 arestaAte = ((BuscaLargura) caminho).getArestaAte();
             }
             
-            VerticeGrafoAnotado origem = null;
-            VerticeGrafoAnotado destino = null;
+            VerticeGrafoBasicoAnotado origem = null;
+            VerticeGrafoBasicoAnotado destino = null;
                     
             for ( int v = 0; v < arestaAte.length; v++ ) {
                 
@@ -174,21 +174,21 @@ public class GrafoDesenhavel implements Desenhavel {
         }
         
         if ( cc == null ) {
-            for ( Entry<Integer, VerticeGrafoAnotado> v : grafoAnt.getVertices().entrySet() ) {
-                VerticeGrafoAnotado vg = v.getValue();
+            for ( Entry<Integer, VerticeGrafoBasicoAnotado> v : grafoAnt.getVertices().entrySet() ) {
+                VerticeGrafoBasicoAnotado vg = v.getValue();
                 vg.id = -1;
             }
         } else {
-            for ( Entry<Integer, VerticeGrafoAnotado> v : grafoAnt.getVertices().entrySet() ) {
-                VerticeGrafoAnotado vg = v.getValue();
+            for ( Entry<Integer, VerticeGrafoBasicoAnotado> v : grafoAnt.getVertices().entrySet() ) {
+                VerticeGrafoBasicoAnotado vg = v.getValue();
                 vg.id = cc.id( grafoAnt.getTransicaoAnotadoParaGrafo().get( vg.v ) );
             }
         }
         
         // vértices
-        for ( Entry<Integer, VerticeGrafoAnotado> v : grafoAnt.getVertices().entrySet() ) {
+        for ( Entry<Integer, VerticeGrafoBasicoAnotado> v : grafoAnt.getVertices().entrySet() ) {
             
-            VerticeGrafoAnotado vg = v.getValue();
+            VerticeGrafoBasicoAnotado vg = v.getValue();
             
             g2d.setStroke( new BasicStroke( 2 ) );
             
@@ -217,7 +217,7 @@ public class GrafoDesenhavel implements Desenhavel {
         
     }
 
-    public void setVerticeArestaOrigem( VerticeGrafoAnotado verticeArestaOrigem ) {
+    public void setVerticeArestaOrigem( VerticeGrafoBasicoAnotado verticeArestaOrigem ) {
         this.verticeArestaOrigem = verticeArestaOrigem;
     }
 
