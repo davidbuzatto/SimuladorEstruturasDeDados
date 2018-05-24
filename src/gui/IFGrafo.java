@@ -6,16 +6,15 @@
 
 package gui;
 
-import estruturas.GrafoBasico;
-import estruturas.Lista;
-import estruturas.algoritmos.grafos.basico.AlgoritmosBasicosGrafoBasico;
-import estruturas.algoritmos.grafos.basico.BuscaLargura;
-import estruturas.algoritmos.grafos.basico.BuscaProfundidade;
-import estruturas.algoritmos.grafos.basico.ComponentesConexos;
+import estruturas.Grafo;
+import estruturas.algoritmos.grafos.AlgoritmosBasicosGrafo;
+import estruturas.algoritmos.grafos.BuscaLargura;
+import estruturas.algoritmos.grafos.BuscaProfundidade;
+import estruturas.algoritmos.grafos.ComponentesConexos;
 import gui.desenho.PainelDesenho;
 import gui.desenho.estruturas.ArestaGrafoAnotado;
-import gui.desenho.estruturas.GrafoBasicoAnotado;
-import gui.desenho.estruturas.GrafoBasicoDesenhavel;
+import gui.desenho.estruturas.GrafoAnotado;
+import gui.desenho.estruturas.GrafoDesenhavel;
 import gui.desenho.estruturas.VerticeGrafoAnotado;
 import java.awt.Graphics2D;
 import java.awt.Point;
@@ -32,6 +31,7 @@ import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
 import java.util.Map.Entry;
+import java.util.Set;
 import javax.imageio.ImageIO;
 import javax.swing.DefaultListModel;
 import javax.swing.JFileChooser;
@@ -47,9 +47,9 @@ import javax.swing.filechooser.FileNameExtensionFilter;
  */
 public class IFGrafo extends javax.swing.JInternalFrame {
 
-    private GrafoBasicoDesenhavel grafoD;
-    private GrafoBasicoAnotado grafoAnt;
-    private GrafoBasico grafo;
+    private GrafoDesenhavel grafoD;
+    private GrafoAnotado grafoAnt;
+    private Grafo<Integer> grafo;
     private boolean movendo;
     private VerticeGrafoAnotado verticeMovimento;
     private VerticeGrafoAnotado verticeRemocao;
@@ -59,8 +59,8 @@ public class IFGrafo extends javax.swing.JInternalFrame {
     private int deslocamentoX;
     private int deslocamentoY;
     
-    private BuscaProfundidade dfs;
-    private BuscaLargura bfs;
+    private BuscaProfundidade<Integer> dfs;
+    private BuscaLargura<Integer> bfs;
     
     private DefaultListModel<String> modeloAdj;
     
@@ -69,8 +69,8 @@ public class IFGrafo extends javax.swing.JInternalFrame {
      */
     public IFGrafo() {
         
-        grafoAnt = new GrafoBasicoAnotado();
-        grafoD = new GrafoBasicoDesenhavel( grafoAnt );
+        grafoAnt = new GrafoAnotado();
+        grafoD = new GrafoDesenhavel( grafoAnt );
         
         initComponents();
         
@@ -672,11 +672,11 @@ public class IFGrafo extends javax.swing.JInternalFrame {
         DialogRemoverArestaGrafo d = new DialogRemoverArestaGrafo( null, true, arestas, arestasRemovidas );
         d.setVisible( true );
         
-        if ( arestas.size() != grafoAnt.getArestas().size() ) {
+        //if ( arestas.size() != grafoAnt.getArestas().size() ) {
             for ( ArestaGrafoAnotado a : arestasRemovidas ) {
                 grafoAnt.removerAresta( a.origem.v, a.destino.v );
             }
-        }
+        //}
         
         atualizarDadosGrafo();
         
@@ -704,7 +704,7 @@ public class IFGrafo extends javax.swing.JInternalFrame {
             if ( achou ) {
                 
                 atualizarDadosGrafo();
-                dfs = new BuscaProfundidade( grafo, fonte );
+                dfs = new BuscaProfundidade<>( grafo, fonte );
                 grafoD.setCaminho( dfs );
                 painelDesenho.repaint();
                 
@@ -738,7 +738,7 @@ public class IFGrafo extends javax.swing.JInternalFrame {
             if ( achou ) {
                 
                 atualizarDadosGrafo();
-                bfs = new BuscaLargura( grafo, fonte );
+                bfs = new BuscaLargura<>( grafo, fonte );
                 grafoD.setCaminho( bfs );
                 painelDesenho.repaint();
                 
@@ -809,7 +809,7 @@ public class IFGrafo extends javax.swing.JInternalFrame {
     private void btnIdentificarCCActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnIdentificarCCActionPerformed
         
         atualizarDadosGrafo();
-        ComponentesConexos cc = new ComponentesConexos( grafo );
+        ComponentesConexos<Integer> cc = new ComponentesConexos<>( grafo );
         grafoD.setCc( cc );
         painelDesenho.repaint();
         
@@ -830,7 +830,7 @@ public class IFGrafo extends javax.swing.JInternalFrame {
 
     private void btnSalvarImagemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnSalvarImagemActionPerformed
         
-        if ( grafoAnt.getGrafo().v() != 0 ) {
+        if ( grafoAnt.getGrafo().getQuantidadeVertices() != 0 ) {
             
             int minX = 0;
             int maxX = 0;
@@ -978,10 +978,10 @@ public class IFGrafo extends javax.swing.JInternalFrame {
                 
                 File f = jfc.getSelectedFile();
                 ObjectInputStream oin = new ObjectInputStream( new FileInputStream( f ) );
-                grafoAnt = (GrafoBasicoAnotado) oin.readObject();
+                grafoAnt = (GrafoAnotado) oin.readObject();
                 oin.close();
                 
-                grafoD = new GrafoBasicoDesenhavel( grafoAnt );
+                grafoD = new GrafoDesenhavel( grafoAnt );
                 grafoD.setPainel( painelDesenho );
                 ((PainelDesenho) painelDesenho).setEstruturaDesenhavel( grafoD );
                 atualizarDadosGrafo();
@@ -1000,10 +1000,10 @@ public class IFGrafo extends javax.swing.JInternalFrame {
         
         grafo = grafoAnt.gerarGrafo();
         
-        fieldV.setText( String.valueOf( grafo.v() ) );
-        fieldA.setText( String.valueOf( grafo.e() ) );
-        fieldGM.setText(String.valueOf((double) Math.round(AlgoritmosBasicosGrafoBasico.grauMedio( grafo ) * 1000 ) / 1000 ) );
-        fieldGMX.setText(String.valueOf(AlgoritmosBasicosGrafoBasico.grauMaximo( grafo ) ) );
+        fieldV.setText( String.valueOf( grafo.getQuantidadeVertices() ) );
+        fieldA.setText( String.valueOf( grafo.getQuantidadeArestas() ) );
+        fieldGM.setText(String.valueOf( (double) Math.round(AlgoritmosBasicosGrafo.grauMedio( grafo ) * 1000 ) / 1000 ) );
+        fieldGMX.setText( String.valueOf( AlgoritmosBasicosGrafo.grauMaximo( grafo ) ) );
         
         dfs = null;
         bfs = null;
@@ -1014,19 +1014,19 @@ public class IFGrafo extends javax.swing.JInternalFrame {
                 
         modeloAdj.clear();
         StringBuilder sb;
-        Lista<Integer> adj;
+        List<Integer> adj;
         int cont;
         
-        for ( int v = 0; v < grafo.v(); v++ ) {
+        for ( int v : grafo.getVertices() ) {
             
             cont = 0;
             sb = new StringBuilder();
             
             sb.append( grafoAnt.getTransicaoGrafoParaAnotado().get( v ) ).append( " -> { " );
-            adj = (Lista<Integer>) grafo.adj( v );
+            adj = grafo.getAdjacentes( v );
             
             for ( int w : adj ) {
-                if ( cont == adj.getTamanho() - 1 ) {
+                if ( cont == adj.size() - 1 ) {
                     sb.append( grafoAnt.getTransicaoGrafoParaAnotado().get( w ) ).append( " " );
                 } else {
                     sb.append( grafoAnt.getTransicaoGrafoParaAnotado().get( w ) ).append( ", " );

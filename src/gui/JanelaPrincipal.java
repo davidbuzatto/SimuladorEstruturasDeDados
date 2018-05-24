@@ -29,10 +29,6 @@ public class JanelaPrincipal extends javax.swing.JFrame {
     public JanelaPrincipal() {
         
         initComponents();
-        
-        btnTabelaHash.setVisible( false );
-        btnGrafoPonderado.setVisible( false );
-        
         setExtendedState( MAXIMIZED_BOTH );
         
     }
@@ -60,6 +56,8 @@ public class JanelaPrincipal extends javax.swing.JFrame {
         btnHeapMaximo = new javax.swing.JButton();
         btnGrafo = new javax.swing.JButton();
         btnGrafoPonderado = new javax.swing.JButton();
+        btnDigrafo = new javax.swing.JButton();
+        btnDigrafoPonderado = new javax.swing.JButton();
         btnSobre = new javax.swing.JButton();
         desktopPane = new javax.swing.JDesktopPane();
 
@@ -225,6 +223,30 @@ public class JanelaPrincipal extends javax.swing.JFrame {
         });
         barraFerramentas.add(btnGrafoPonderado);
 
+        btnDigrafo.setIcon(new javax.swing.ImageIcon(getClass().getResource("/gui/imagens/digrafo.png"))); // NOI18N
+        btnDigrafo.setText("Digrafo");
+        btnDigrafo.setFocusable(false);
+        btnDigrafo.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
+        btnDigrafo.setVerticalTextPosition(javax.swing.SwingConstants.BOTTOM);
+        btnDigrafo.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnDigrafoActionPerformed(evt);
+            }
+        });
+        barraFerramentas.add(btnDigrafo);
+
+        btnDigrafoPonderado.setIcon(new javax.swing.ImageIcon(getClass().getResource("/gui/imagens/digrafoPonderado.png"))); // NOI18N
+        btnDigrafoPonderado.setText("Digrafo Ponderado");
+        btnDigrafoPonderado.setFocusable(false);
+        btnDigrafoPonderado.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
+        btnDigrafoPonderado.setVerticalTextPosition(javax.swing.SwingConstants.BOTTOM);
+        btnDigrafoPonderado.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnDigrafoPonderadoActionPerformed(evt);
+            }
+        });
+        barraFerramentas.add(btnDigrafoPonderado);
+
         btnSobre.setIcon(new javax.swing.ImageIcon(getClass().getResource("/gui/imagens/sobre.png"))); // NOI18N
         btnSobre.setText("Sobre");
         btnSobre.setFocusable(false);
@@ -263,7 +285,7 @@ public class JanelaPrincipal extends javax.swing.JFrame {
                 .addComponent(desktopPane))
         );
 
-        setSize(new java.awt.Dimension(1070, 414));
+        setSize(new java.awt.Dimension(1292, 414));
         setLocationRelativeTo(null);
     }// </editor-fold>//GEN-END:initComponents
 
@@ -574,6 +596,16 @@ public class JanelaPrincipal extends javax.swing.JFrame {
         
     }//GEN-LAST:event_btnArvoreAVLActionPerformed
 
+    private void btnDigrafoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnDigrafoActionPerformed
+        JOptionPane.showMessageDialog( this, "Não implementado!", 
+                "ERRO", JOptionPane.ERROR_MESSAGE );
+    }//GEN-LAST:event_btnDigrafoActionPerformed
+
+    private void btnDigrafoPonderadoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnDigrafoPonderadoActionPerformed
+        JOptionPane.showMessageDialog( this, "Não implementado!", 
+                "ERRO", JOptionPane.ERROR_MESSAGE );
+    }//GEN-LAST:event_btnDigrafoPonderadoActionPerformed
+
     /**
      * @param args the command line arguments
      */
@@ -615,6 +647,8 @@ public class JanelaPrincipal extends javax.swing.JFrame {
     private javax.swing.JButton btnArvoreAVL;
     private javax.swing.JButton btnArvoreVP;
     private javax.swing.JButton btnDeque;
+    private javax.swing.JButton btnDigrafo;
+    private javax.swing.JButton btnDigrafoPonderado;
     private javax.swing.JButton btnFila;
     private javax.swing.JButton btnGrafo;
     private javax.swing.JButton btnGrafoPonderado;

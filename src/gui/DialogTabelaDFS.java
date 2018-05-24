@@ -6,10 +6,10 @@
 
 package gui;
 
-import estruturas.GrafoBasico;
-import estruturas.algoritmos.grafos.basico.BuscaProfundidade;
-import gui.desenho.estruturas.GrafoBasicoAnotado;
-import java.util.Map.Entry;
+import estruturas.Grafo;
+import estruturas.algoritmos.grafos.BuscaProfundidade;
+import gui.desenho.estruturas.GrafoAnotado;
+import java.util.Map;
 import javax.swing.table.DefaultTableModel;
 
 /**
@@ -19,8 +19,8 @@ import javax.swing.table.DefaultTableModel;
  */
 public class DialogTabelaDFS extends javax.swing.JDialog {
 
-    private GrafoBasico grafo;
-    private GrafoBasicoAnotado grafoAnt;
+    private Grafo<Integer> grafo;
+    private GrafoAnotado grafoAnt;
     private BuscaProfundidade dfs;
     private DefaultTableModel modelo;
     
@@ -28,7 +28,7 @@ public class DialogTabelaDFS extends javax.swing.JDialog {
      * Creates new form DialogRemoverArestaGrafo
      */
     public DialogTabelaDFS( java.awt.Frame parent, boolean modal, 
-            GrafoBasico grafo, GrafoBasicoAnotado grafoAnt, BuscaProfundidade dfs ) {
+            Grafo<Integer> grafo, GrafoAnotado grafoAnt, BuscaProfundidade<Integer> dfs ) {
         
         super( parent, modal );
         initComponents();
@@ -43,16 +43,19 @@ public class DialogTabelaDFS extends javax.swing.JDialog {
             "arestaAte[v]"
         }, 0 );
         
-        boolean[] marcado = dfs.getMarcado();
-        int[] arestaAte = dfs.getArestaAte();
+        Map<Integer, Boolean> marcado = dfs.getMarcado();
+        Map<Integer, Integer> arestaAte = dfs.getArestaAte();
         
-        for ( int i = 0; i < marcado.length; i++ ) {
+        for ( Map.Entry<Integer, Boolean> e : marcado.entrySet() ) {
+            
+            Integer a = arestaAte.get( e.getKey() );
             
             modelo.addRow( new String[]{
-                String.valueOf( grafoAnt.getTransicaoGrafoParaAnotado().get( i ) ), 
-                marcado[i] ? "<html><font color=\"#0070C0\">T</font></html>" : "F", 
-                arestaAte[i] == -1 ? "-" : String.valueOf( grafoAnt.getTransicaoGrafoParaAnotado().get( arestaAte[i] ) )
+                String.valueOf( grafoAnt.getTransicaoGrafoParaAnotado().get( e.getKey() ) ), 
+                e.getValue() ? "<html><font color=\"#0070C0\">T</font></html>" : "F", 
+                a == null ? "-" : String.valueOf( a )
             });
+            
         }
         
         tabela.setModel( modelo );

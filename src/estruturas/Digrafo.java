@@ -11,10 +11,10 @@ import estruturas.algoritmos.digrafos.BuscaLargura;
 import estruturas.algoritmos.digrafos.BuscaProfundidade;
 import estruturas.algoritmos.digrafos.ComponentesConexos;
 import java.util.ArrayList;
-import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.TreeMap;
 
 /**
  * Implementação de um digrafo utilizando lista de adjacências implementada como
@@ -35,7 +35,7 @@ public class Digrafo<Tipo extends Comparable> {
     public Digrafo() {
         
         // cria o mapa de listas de adjacências
-        adj = new LinkedHashMap<>();
+        adj = new TreeMap<>();
         
     }
     

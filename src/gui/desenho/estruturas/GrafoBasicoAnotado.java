@@ -14,6 +14,7 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
+import java.util.TreeMap;
 
 /**
  * Uma estrutura de grafo para ser usado no desenho.
@@ -38,8 +39,8 @@ public class GrafoBasicoAnotado implements Serializable {
     private transient GrafoBasico grafo;
     
     public GrafoBasicoAnotado() {
-        vertices = new LinkedHashMap<>();
-        arestas = new LinkedHashMap<>();
+        vertices = new TreeMap<>();
+        arestas = new TreeMap<>();
     }
     
     // x e y são o centro do vértice no desenho

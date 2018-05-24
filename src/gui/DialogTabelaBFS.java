@@ -6,10 +6,10 @@
 
 package gui;
 
-import estruturas.GrafoBasico;
-import estruturas.algoritmos.grafos.basico.BuscaLargura;
-import gui.desenho.estruturas.GrafoBasicoAnotado;
-import java.util.Map.Entry;
+import estruturas.Grafo;
+import estruturas.algoritmos.grafos.BuscaLargura;
+import gui.desenho.estruturas.GrafoAnotado;
+import java.util.Map;
 import javax.swing.table.DefaultTableModel;
 
 /**
@@ -19,8 +19,8 @@ import javax.swing.table.DefaultTableModel;
  */
 public class DialogTabelaBFS extends javax.swing.JDialog {
 
-    private GrafoBasico grafo;
-    private GrafoBasicoAnotado grafoAnt;
+    private Grafo<Integer> grafo;
+    private GrafoAnotado grafoAnt;
     private BuscaLargura bfs;
     private DefaultTableModel modelo;
     
@@ -28,7 +28,7 @@ public class DialogTabelaBFS extends javax.swing.JDialog {
      * Creates new form DialogRemoverArestaGrafo
      */
     public DialogTabelaBFS( java.awt.Frame parent, boolean modal, 
-            GrafoBasico grafo, GrafoBasicoAnotado grafoAnt, BuscaLargura bfs ) {
+            Grafo<Integer> grafo, GrafoAnotado grafoAnt, BuscaLargura<Integer> bfs ) {
         
         super( parent, modal );
         initComponents();
@@ -44,18 +44,22 @@ public class DialogTabelaBFS extends javax.swing.JDialog {
             "distanciaAte[v]"
         }, 0 );
         
-        boolean[] marcado = bfs.getMarcado();
-        int[] arestaAte = bfs.getArestaAte();
-        int[] distanciaAte = bfs.getDistanciaAte();
+        Map<Integer, Boolean> marcado = bfs.getMarcado();
+        Map<Integer, Integer> arestaAte = bfs.getArestaAte();
+        Map<Integer, Integer> distanciaAte = bfs.getDistanciaAte();
         
-        for ( int i = 0; i < marcado.length; i++ ) {
+        for ( Map.Entry<Integer, Boolean> e : marcado.entrySet() ) {
+            
+            Integer a = arestaAte.get( e.getKey() );
+            Integer d = distanciaAte.get( e.getKey() );
             
             modelo.addRow( new String[]{
-                String.valueOf( grafoAnt.getTransicaoGrafoParaAnotado().get( i ) ), 
-                marcado[i] ? "<html><font color=\"#0070C0\">T</font></html>" : "F", 
-                arestaAte[i] == -1 ? "-" : String.valueOf( grafoAnt.getTransicaoGrafoParaAnotado().get( arestaAte[i] ) ),
-                distanciaAte[i] == -1 ? "-" : String.valueOf( distanciaAte[i] )
+                String.valueOf( grafoAnt.getTransicaoGrafoParaAnotado().get( e.getKey() ) ), 
+                e.getValue() ? "<html><font color=\"#0070C0\">T</font></html>" : "F", 
+                a == null ? "-" : String.valueOf( a ),
+                d == -1 ? "-" : String.valueOf( d )
             });
+            
         }
         
         tabela.setModel( modelo );

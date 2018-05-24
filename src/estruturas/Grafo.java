@@ -15,6 +15,7 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.TreeMap;
 
 /**
  * Implementação de um grafo utilizando lista de adjacências implementada como
@@ -35,7 +36,7 @@ public class Grafo<Tipo extends Comparable> {
     public Grafo() {
         
         // cria o mapa de listas de adjacências
-        adj = new LinkedHashMap<>();
+        adj = new TreeMap<>();
         
     }
     

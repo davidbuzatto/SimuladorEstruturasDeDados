@@ -9,8 +9,8 @@ package estruturas.algoritmos.digrafos;
 import estruturas.Digrafo;
 import estruturas.Pilha;
 import estruturas.algoritmos.grafos.Caminhos;
-import java.util.HashMap;
 import java.util.Map;
+import java.util.TreeMap;
 
 /**
  * Algoritmo de busca em profundidade.
@@ -28,8 +28,8 @@ public class BuscaProfundidade<Tipo extends Comparable<? super Tipo>> extends Ca
         this.dg = dg;
         this.fonte = f;
         
-        marcado = new HashMap<>();
-        arestaAte = new HashMap<>();
+        marcado = new TreeMap<>();
+        arestaAte = new TreeMap<>();
         
         for ( Tipo v : dg.getVertices() ) {
             marcado.put( v, false );

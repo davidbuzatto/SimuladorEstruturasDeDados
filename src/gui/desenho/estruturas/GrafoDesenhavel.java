@@ -8,20 +8,21 @@ package gui.desenho.estruturas;
 
 import estruturas.Grafo;
 import estruturas.algoritmos.grafos.Caminhos;
-import estruturas.algoritmos.grafos.basico.BuscaLargura;
-import estruturas.algoritmos.grafos.basico.BuscaProfundidade;
-import estruturas.algoritmos.grafos.basico.ComponentesConexos;
+import estruturas.algoritmos.grafos.BuscaLargura;
+import estruturas.algoritmos.grafos.BuscaProfundidade;
+import estruturas.algoritmos.grafos.ComponentesConexos;
 import java.awt.BasicStroke;
 import java.awt.Color;
 import java.awt.Font;
 import java.awt.FontMetrics;
 import java.awt.Graphics2D;
+import java.util.Map;
 import java.util.Map.Entry;
 import javax.swing.JPanel;
 import uteis.UteisDesenho;
 
 /**
- * GrafoBasico desenhável.
+ * Grafo desenhável.
  * 
  * @author David Buzatto
  */
@@ -30,8 +31,8 @@ public class GrafoDesenhavel implements Desenhavel {
     private GrafoAnotado grafoAnt;
     private JPanel painel;
     private VerticeGrafoAnotado verticeArestaOrigem;
-    private Caminhos caminho;
-    private ComponentesConexos cc;
+    private Caminhos<Integer> caminho;
+    private ComponentesConexos<Integer> cc;
     private int caminhoAte;
     
     public GrafoDesenhavel( GrafoAnotado grafo ) {
@@ -85,23 +86,23 @@ public class GrafoDesenhavel implements Desenhavel {
             g2d.setColor( UteisDesenho.VERDE );
             
             Grafo<Integer> g = grafoAnt.getGrafo();
-            int[] arestaAte = null;
+            Map<Integer, Integer> arestaAte = null;
             
             if ( caminho instanceof BuscaProfundidade ) {
-                arestaAte = ((BuscaProfundidade) caminho).getArestaAte();
+                arestaAte = ((BuscaProfundidade<Integer>) caminho).getArestaAte();
             } else if ( caminho instanceof BuscaLargura ) {
-                arestaAte = ((BuscaLargura) caminho).getArestaAte();
+                arestaAte = ((BuscaLargura<Integer>) caminho).getArestaAte();
             }
             
             VerticeGrafoAnotado origem = null;
             VerticeGrafoAnotado destino = null;
                     
-            for ( int v = 0; v < arestaAte.length; v++ ) {
+            for ( Map.Entry<Integer, Integer> e : arestaAte.entrySet() ) {
                 
-                if ( arestaAte[v] != -1 ) {
+                if ( e.getKey() != -1 && e.getValue() != null ) {
                     
-                    origem = grafoAnt.getVertices().get( grafoAnt.getTransicaoGrafoParaAnotado().get( arestaAte[v] ) );
-                    destino = grafoAnt.getVertices().get( grafoAnt.getTransicaoGrafoParaAnotado().get( v ) );
+                    origem = grafoAnt.getVertices().get( grafoAnt.getTransicaoGrafoParaAnotado().get( e.getValue() ) );
+                    destino = grafoAnt.getVertices().get( grafoAnt.getTransicaoGrafoParaAnotado().get( e.getKey() ) );
                     
                     g2d.drawLine( origem.xCentro, origem.yCentro,
                         destino.xCentro, destino.yCentro );
@@ -125,11 +126,11 @@ public class GrafoDesenhavel implements Desenhavel {
                     
                     if ( primeiro == true ) {
                         o = caminhoAte;
-                        d = arestaAte[o];
+                        d = arestaAte.get(o);
                         primeiro = false;
                     } else {
                         o = d;
-                        d = arestaAte[o];
+                        d = arestaAte.get(o);
                     }
 
                     if ( d != -1 ) {
@@ -197,7 +198,7 @@ public class GrafoDesenhavel implements Desenhavel {
         this.verticeArestaOrigem = verticeArestaOrigem;
     }
 
-    public void setCaminho( Caminhos caminho ) {
+    public void setCaminho( Caminhos<Integer> caminho ) {
         this.caminho = caminho;
     }
 
@@ -205,7 +206,7 @@ public class GrafoDesenhavel implements Desenhavel {
         this.caminhoAte = caminhoAte;
     }
 
-    public void setCc( ComponentesConexos cc ) {
+    public void setCc( ComponentesConexos<Integer> cc ) {
         this.cc = cc;
     }
     

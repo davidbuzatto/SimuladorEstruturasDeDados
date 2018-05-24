@@ -10,8 +10,8 @@ import estruturas.Fila;
 import estruturas.Digrafo;
 import estruturas.Pilha;
 import estruturas.algoritmos.grafos.Caminhos;
-import java.util.HashMap;
 import java.util.Map;
+import java.util.TreeMap;
 
 /**
  * Algoritmo de busca em largura.
@@ -30,9 +30,9 @@ public class BuscaLargura<Tipo extends Comparable<? super Tipo>> extends Caminho
         this.g = g;
         this.fonte = f;
         
-        marcado = new HashMap<>();
-        arestaAte = new HashMap<>();
-        distanciaAte = new HashMap<>();
+        marcado = new TreeMap<>();
+        arestaAte = new TreeMap<>();
+        distanciaAte = new TreeMap<>();
         
         for ( Tipo v : g.getVertices() ) {
             marcado.put( v, false );
