@@ -13,11 +13,13 @@ import java.io.Serializable;
  * 
  * @author David Buzatto
  */
-public class ArestaGrafoBasicoAnotado implements Serializable {
+public class ArestaGrafoAnotado implements Serializable {
+    
+    private static final long serialVersionUID = 2L;
     
     // origem e destino em grafos não direcionados não fazem sentido
-    public VerticeGrafoBasicoAnotado origem;
-    public VerticeGrafoBasicoAnotado destino;
+    public VerticeGrafoAnotado origem;
+    public VerticeGrafoAnotado destino;
 
     @Override
     public String toString() {

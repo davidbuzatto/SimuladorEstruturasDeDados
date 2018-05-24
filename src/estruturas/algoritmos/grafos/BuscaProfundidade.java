@@ -6,7 +6,6 @@
 
 package estruturas.algoritmos.grafos;
 
-import estruturas.GrafoBasico;
 import estruturas.Grafo;
 import estruturas.Pilha;
 import java.util.HashMap;
@@ -42,7 +41,7 @@ public class BuscaProfundidade<Tipo extends Comparable<? super Tipo>> extends Ca
 
     private void dfs( Grafo<Tipo> g, Tipo v ) {
         
-        marcado.put( v , true );
+        marcado.put( v, true );
         
         for ( Tipo w : g.getAdjacentes( v ) ) {
             

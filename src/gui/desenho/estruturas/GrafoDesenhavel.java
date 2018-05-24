@@ -6,7 +6,7 @@
 
 package gui.desenho.estruturas;
 
-import estruturas.GrafoBasico;
+import estruturas.Grafo;
 import estruturas.algoritmos.grafos.Caminhos;
 import estruturas.algoritmos.grafos.basico.BuscaLargura;
 import estruturas.algoritmos.grafos.basico.BuscaProfundidade;
@@ -25,16 +25,16 @@ import uteis.UteisDesenho;
  * 
  * @author David Buzatto
  */
-public class GrafoBasicoDesenhavel implements Desenhavel {
+public class GrafoDesenhavel implements Desenhavel {
     
-    private GrafoBasicoAnotado grafoAnt;
+    private GrafoAnotado grafoAnt;
     private JPanel painel;
     private VerticeGrafoAnotado verticeArestaOrigem;
     private Caminhos caminho;
     private ComponentesConexos cc;
     private int caminhoAte;
     
-    public GrafoBasicoDesenhavel( GrafoBasicoAnotado grafo ) {
+    public GrafoDesenhavel( GrafoAnotado grafo ) {
         this.grafoAnt = grafo;
     }
     
@@ -84,7 +84,7 @@ public class GrafoBasicoDesenhavel implements Desenhavel {
             g2d.setStroke( new BasicStroke( 6, BasicStroke.CAP_ROUND, BasicStroke.JOIN_MITER ) );
             g2d.setColor( UteisDesenho.VERDE );
             
-            GrafoBasico g = grafoAnt.getGrafo();
+            Grafo<Integer> g = grafoAnt.getGrafo();
             int[] arestaAte = null;
             
             if ( caminho instanceof BuscaProfundidade ) {

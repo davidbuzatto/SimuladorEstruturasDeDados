@@ -6,17 +6,17 @@
 
 package estruturas.algoritmos.grafos.basico;
 
-import estruturas.algoritmos.grafos.*;
 import estruturas.Fila;
 import estruturas.GrafoBasico;
 import estruturas.Pilha;
+import estruturas.algoritmos.grafos.Caminhos;
 
 /**
  * Algoritmo de busca em largura.
  * 
  * @author David Buzatto
  */
-public class BuscaLargura extends Caminhos {
+public class BuscaLargura extends Caminhos<Integer> {
 
     private boolean[] marcado;
     private int[] arestaAte;
@@ -68,7 +68,7 @@ public class BuscaLargura extends Caminhos {
     }
 
     @Override
-    public Iterable<Integer> caminhoAte( int w ) {
+    public Iterable<Integer> caminhoAte( Integer w ) {
         
         Pilha<Integer> p = new Pilha<>();
         
@@ -91,7 +91,7 @@ public class BuscaLargura extends Caminhos {
     }
     
     @Override
-    public boolean existeCaminhoAte( int w ) {
+    public boolean existeCaminhoAte( Integer w ) {
         return arestaAte[w] != -1;
     }
     

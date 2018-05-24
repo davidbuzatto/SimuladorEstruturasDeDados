@@ -22,12 +22,16 @@ public class AlgoritmosBasicosGrafo {
      * @param v Vértice
      * @return Grau do vértice do grafo.
      */
-    public static <Tipo extends Comparable> int grau( Grafo<Tipo> g, Tipo v ) {
+    public static <Tipo extends Comparable<? super Tipo>> int grau( Grafo<Tipo> g, Tipo v ) {
+        
         int grau = 0;
+        
         for ( Tipo w : g.getAdjacentes( v ) ) {
             grau++;
         }
+        
         return grau;
+        
     }
 
     /**
@@ -36,16 +40,20 @@ public class AlgoritmosBasicosGrafo {
      * @param g Grafo
      * @return O maior grau do grafo.
      */
-    public static <Tipo extends Comparable> int grauMaximo( Grafo<Tipo> g ) {
+    public static <Tipo extends Comparable<? super Tipo>> int grauMaximo( Grafo<Tipo> g ) {
+        
         int max = 0;
         int grau;
+        
         for ( Tipo v : g.getVertices() ) {
             grau = grau( g, v );
             if ( grau > max ) {
                 max = grau;
             }
         }
+        
         return max;
+        
     }
 
     /**
@@ -55,7 +63,7 @@ public class AlgoritmosBasicosGrafo {
      * @return Grau médio do grafo.
      */
     public static double grauMedio( Grafo g ) {
-        return 2.0 * g.getQuantidadeArestas() / g.getQuantidadeVertices();
+        return 2.0 * g.getQuantidadeArestas() / (double) g.getQuantidadeVertices();
     }
 
     /**
@@ -64,7 +72,7 @@ public class AlgoritmosBasicosGrafo {
      * @param g Grafo
      * @return Quantidade de laços.
      */
-    public static <Tipo extends Comparable> int quantidadeLacos( Grafo<Tipo> g ) {
+    public static <Tipo extends Comparable<? super Tipo>> int quantidadeLacos( Grafo<Tipo> g ) {
         
         int cont = 0;
         

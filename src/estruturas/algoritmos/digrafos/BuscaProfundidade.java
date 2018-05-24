@@ -4,71 +4,57 @@
  * and open the template in the editor.
  */
 
-package estruturas.algoritmos.grafos;
+package estruturas.algoritmos.digrafos;
 
-import estruturas.Fila;
-import estruturas.Grafo;
+import estruturas.Digrafo;
 import estruturas.Pilha;
+import estruturas.algoritmos.grafos.Caminhos;
 import java.util.HashMap;
 import java.util.Map;
 
 /**
- * Algoritmo de busca em largura.
+ * Algoritmo de busca em profundidade.
  * 
  * @author David Buzatto
  */
-public class BuscaLargura<Tipo extends Comparable<? super Tipo>> extends Caminhos<Tipo> {
+public class BuscaProfundidade<Tipo extends Comparable<? super Tipo>> extends Caminhos<Tipo> {
 
     private Map<Tipo, Boolean> marcado;
     private Map<Tipo, Tipo> arestaAte;
-    private Map<Tipo, Integer> distanciaAte;
-    private Grafo<Tipo> g;
-    
-    public BuscaLargura( Grafo<Tipo> g, Tipo f ) {
+    private Digrafo<Tipo> dg;
+
+    public BuscaProfundidade( Digrafo<Tipo> dg, Tipo f ) {
         
-        this.g = g;
+        this.dg = dg;
         this.fonte = f;
         
         marcado = new HashMap<>();
         arestaAte = new HashMap<>();
-        distanciaAte = new HashMap<>();
         
-        for ( Tipo v : g.getVertices() ) {
+        for ( Tipo v : dg.getVertices() ) {
             marcado.put( v, false );
             arestaAte.put( v, null );
-            distanciaAte.put( v, -1 );
         }
         
-        bfs( g, f );
+        dfs( dg, f );
         
     }
 
-    private void bfs( Grafo<Tipo> g, Tipo f ) {
+    private void dfs( Digrafo<Tipo> dg, Tipo v ) {
         
-        Fila<Tipo> fila = new Fila<>();
-        fila.enfileirar( f );
-        marcado.put( f, true );
-        distanciaAte.put( f, 0 );
+        marcado.put( v, true );
         
-        while ( !fila.estaVazia() ) {
+        for ( Tipo w : dg.getAdjacentes( v ) ) {
             
-            Tipo v = fila.desenfileirar();
-            
-            for ( Tipo w : g.getAdjacentes( v ) ) {
-                
-                if ( !marcado.get( w ) ) {
-                    fila.enfileirar( w );
-                    marcado.put( w, true );
-                    arestaAte.put( w, v );
-                    distanciaAte.put( w, distanciaAte.get( v ) + 1 );
-                }
-                
+            if ( !marcado.get( w ) ) {
+                dfs( dg, w );
+                arestaAte.put( w, v );
             }
             
         }
         
     }
-
+    
     @Override
     public Iterable<Tipo> caminhoAte( Tipo w ) {
         
@@ -105,24 +91,19 @@ public class BuscaLargura<Tipo extends Comparable<? super Tipo>> extends Caminho
         return arestaAte;
     }
 
-    public Map<Tipo, Integer> getDistanciaAte() {
-        return distanciaAte;
-    }
-
     @Override
     public String toString() {
         
         StringBuilder sb = new StringBuilder();
         
-        sb.append( "Busca em Largura (fonte: vértice " ).append( fonte ).append( ")\n" );
-        sb.append( "v\tmarcado[v]\tarestaAte[v]\tdistanciaAte[v]\n" );
+        sb.append( "Busca em Profunidade (fonte: vértice " ).append( fonte ).append( ")\n" );
+        sb.append( "v\tmarcado[v]\tarestaAte[v]\n" );
         
-        for ( Tipo v : g.getVertices() ) {
-            sb.append( String.format( "%d\t%s\t\t%s\t\t%s\n", 
+        for ( Tipo v : dg.getVertices() ) {
+            sb.append( String.format( "%d\t%s\t\t%s\n",
                     v, 
                     marcado.get( v ) ? "T" : "F", 
-                    arestaAte.get( v ) == null ? "-" : arestaAte.get( v ),  
-                    distanciaAte.get( v ) == -1 ? "-" : distanciaAte.get( v ) ) );
+                    arestaAte.get( v ) == null ? "-" : arestaAte.get( v ) ) );
         }
         
         return sb.toString();

@@ -6,10 +6,10 @@
 
 package estruturas;
 
-import estruturas.algoritmos.grafos.AlgoritmosBasicosGrafo;
-import estruturas.algoritmos.grafos.BuscaLargura;
-import estruturas.algoritmos.grafos.BuscaProfundidade;
-import estruturas.algoritmos.grafos.ComponentesConexos;
+import estruturas.algoritmos.digrafos.AlgoritmosBasicosDigrafo;
+import estruturas.algoritmos.digrafos.BuscaLargura;
+import estruturas.algoritmos.digrafos.BuscaProfundidade;
+import estruturas.algoritmos.digrafos.ComponentesConexos;
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
 import java.util.List;
@@ -17,22 +17,22 @@ import java.util.Map;
 import java.util.Set;
 
 /**
- * Implementação de um grafo utilizando lista de adjacências implementada como
+ * Implementação de um digrafo utilizando lista de adjacências implementada como
  * mapa.
  * 
  * Permite mais de uma aresta v-w/w-v e remove todas as ocorrências.
  * 
  * @author David Buzatto
  */
-public class Grafo<Tipo extends Comparable> {
+public class Digrafo<Tipo extends Comparable> {
     
     private int quantidadeArestas;
     private Map<Tipo, List<Tipo>> adj;
     
     /**
-     * Constrói um grafo vazio.
+     * Constrói um digrafo vazio.
      */
-    public Grafo() {
+    public Digrafo() {
         
         // cria o mapa de listas de adjacências
         adj = new LinkedHashMap<>();
@@ -40,7 +40,7 @@ public class Grafo<Tipo extends Comparable> {
     }
     
     /**
-     * Adiciona um vértice no grafo.
+     * Adiciona um vértice no digrafo.
      * 
      * @param v Valor do vértice.
      */
@@ -57,7 +57,7 @@ public class Grafo<Tipo extends Comparable> {
     }
     
     /**
-     * Remove um vértice do grafo e todas as arestas em que ele está.
+     * Remove um vértice do digrafo e todas as arestas em que ele está.
      * 
      * @param v Valor do vértice.
      */
@@ -66,19 +66,26 @@ public class Grafo<Tipo extends Comparable> {
         // se o vértice existe
         if ( adj.containsKey( v ) ) {
             
-            // para cada aresta do vértice
-            for ( Tipo w : getAdjacentes( v ) ) {
+            // remoção das arestas de entrada
+            for ( Tipo w : getVertices() ) {
                 
-                // remove a ligação à ele
-                List<Tipo> vs = getAdjacentes( w );
+                // se não é o vértice de origem
+                if ( !w.equals( v ) ) {
+                    
+                    // remove a ligação à ele
+                    List<Tipo> vs = getAdjacentes( w );
 
-                while ( vs.contains( v ) ) {
-                    vs.remove( v );
-                    quantidadeArestas--;
+                    while ( vs.contains( v ) ) {
+                        vs.remove( v );
+                        quantidadeArestas--;
+                    }
+                    
                 }
+                
                 
             }
             
+            // remoção das arestas de saída
             quantidadeArestas -= getAdjacentes( v ).size();
             adj.remove( v );
             
@@ -87,7 +94,7 @@ public class Grafo<Tipo extends Comparable> {
     }
     
     /**
-     * Adicionar uma aresta v-w / w-v.
+     * Adicionar uma aresta v-w.
      * Permite arestas duplicadas!
      * 
      * @param v Uma extremidade da aresta.
@@ -95,21 +102,18 @@ public class Grafo<Tipo extends Comparable> {
      */
     public void adicionarAresta( Tipo v, Tipo w ) {
         
-        // como é um grafo, a aresta é de ida e volta, ou seja,
-        // v-w e w-v. em laços, haverá dois laços iguais para cada vértice
-        // com laço
+        // como é um digrafo, a aresta é de ida, ou seja, v-w
         adicionarVertice( v );
         adicionarVertice( w );
         
         getAdjacentes( v ).add( 0, w );
-        getAdjacentes( w ).add( 0, v );
         
         quantidadeArestas++;
         
     }
     
     /**
-     * Remove uma aresta v-w / w-v.
+     * Remove uma aresta v-w.
      * Remove duplicatas caso exista!
      * 
      * @param v Uma extremidade da aresta.
@@ -117,25 +121,13 @@ public class Grafo<Tipo extends Comparable> {
      */
     public void removerAresta( Tipo v, Tipo w ) {
         
-        int quantidadeRemovida = 0;
-        
         if ( adj.containsKey( v ) ) {
             List<Tipo> ws = getAdjacentes( v );
             while ( ws.contains( w ) ) {
                 ws.remove( w );
-                quantidadeRemovida++;
+                quantidadeArestas--;
             }
         }
-        
-        if ( adj.containsKey( w ) ) {
-            List<Tipo> vs = getAdjacentes( w );
-            while ( vs.contains( v ) ) {
-                vs.remove( v );
-                quantidadeRemovida++;
-            }
-        }
-        
-        quantidadeArestas -= quantidadeRemovida/2;
         
     }
     
@@ -203,39 +195,48 @@ public class Grafo<Tipo extends Comparable> {
     
     public static void main( String[] args ) {
         
-        Grafo<Integer> g = new Grafo<>();        
-        g.adicionarAresta( 0, 5 );
-        g.adicionarAresta( 4, 3 );
-        g.adicionarAresta( 0, 1 );
-        g.adicionarAresta( 9, 12 );
-        g.adicionarAresta( 6, 4 );
-        g.adicionarAresta( 5, 4 );
-        g.adicionarAresta( 0, 2 );
-        g.adicionarAresta( 11, 12 );
-        g.adicionarAresta( 9, 10 );
-        g.adicionarAresta( 0, 6 );
-        g.adicionarAresta( 7, 8 );
-        g.adicionarAresta( 9, 11 );
-        g.adicionarAresta( 5, 3 );
+        Digrafo<Integer> dg = new Digrafo<>();        
+        dg.adicionarAresta( 0, 5 );
+        dg.adicionarAresta( 4, 3 );
+        dg.adicionarAresta( 0, 1 );
+        dg.adicionarAresta( 9, 12 );
+        dg.adicionarAresta( 6, 4 );
+        dg.adicionarAresta( 5, 4 );
+        dg.adicionarAresta( 0, 2 );
+        dg.adicionarAresta( 11, 12 );
+        dg.adicionarAresta( 9, 10 );
+        dg.adicionarAresta( 0, 6 );
+        dg.adicionarAresta( 7, 8 );
+        dg.adicionarAresta( 9, 11 );
+        dg.adicionarAresta( 5, 3 );
+        //dg.adicionarAresta( 5, 5 );
         
-        System.out.println( g );
+        System.out.println( dg );
         
-        /*g.adicionarVertice( 30 );
-        g.adicionarAresta( 30, 5 );
-        g.removerVertice( 5 );
-        g.removerVertice( 30 );
-        System.out.println( g );*/
+        /*dg.adicionarVertice( 30 );
+        dg.adicionarAresta( 30, 5 );
+        dg.adicionarAresta( 5, 30 );
+        dg.adicionarAresta( 1, 30 );
+        dg.adicionarAresta( 9, 30 );
+        dg.removerAresta( 5, 30 );
+        dg.removerVertice( 5 );
+        dg.removerVertice( 30 );
+        System.out.println( dg );*/
         
         // utilizando os algoritmos
-        System.out.println( "Grau do vértice 0: " + AlgoritmosBasicosGrafo.grau( g, 0 ) );
-        System.out.println( "Grau máximo: " + AlgoritmosBasicosGrafo.grauMaximo( g ) );
-        System.out.println( "Grau médio: " + AlgoritmosBasicosGrafo.grauMedio( g ) );
-        System.out.println( "Quantidade de laços: " + AlgoritmosBasicosGrafo.quantidadeLacos( g ) );
+        System.out.println( "Grau de saída vértice 0: " + AlgoritmosBasicosDigrafo.grauSaida( dg, 0 ) );
+        System.out.println( "Grau de entrada vértice 0: " + AlgoritmosBasicosDigrafo.grauEntrada( dg, 0 ) );
+        System.out.println( "Grau de saída do vértice 3: " + AlgoritmosBasicosDigrafo.grauSaida( dg, 3 ) );
+        System.out.println( "Grau de entrada do vértice 3: " + AlgoritmosBasicosDigrafo.grauEntrada( dg, 3 ) );
+        System.out.println( "Grau máximo de saída: " + AlgoritmosBasicosDigrafo.grauMaximoSaida( dg ) );
+        System.out.println( "Grau máximo de entrada: " + AlgoritmosBasicosDigrafo.grauMaximoEntrada( dg ) );
+        System.out.println( "Grau médio: " + AlgoritmosBasicosDigrafo.grauMedio( dg ) );
+        System.out.println( "Quantidade de laços: " + AlgoritmosBasicosDigrafo.quantidadeLacos( dg ) );
         
-        BuscaProfundidade<Integer> dfs = new BuscaProfundidade<>( g, 0 );
+        BuscaProfundidade<Integer> dfs = new BuscaProfundidade<>( dg, 0 );
         System.out.println( dfs );
         
-        for ( int w = 0; w < g.getQuantidadeVertices(); w++ ) {
+        for ( int w = 0; w < dg.getQuantidadeVertices(); w++ ) {
             System.out.printf( "Caminho de 0 a %d: ", w );
             for ( int a : dfs.caminhoAte( w ) ) {
                 System.out.print( a + " " );
@@ -245,10 +246,10 @@ public class Grafo<Tipo extends Comparable> {
         System.out.println();
         
         
-        BuscaLargura<Integer> bfs = new BuscaLargura<>( g, 0 );
+        BuscaLargura<Integer> bfs = new BuscaLargura<>( dg, 0 );
         System.out.println( bfs );
         
-        for ( int w = 0; w < g.getQuantidadeVertices(); w++ ) {
+        for ( int w = 0; w < dg.getQuantidadeVertices(); w++ ) {
             System.out.printf( "Caminho de 0 a %d: ", w );
             for ( int a : bfs.caminhoAte( w ) ) {
                 System.out.print( a + " " );
@@ -257,7 +258,7 @@ public class Grafo<Tipo extends Comparable> {
         }
         System.out.println();
         
-        ComponentesConexos<Integer> cc = new ComponentesConexos<>( g );
+        ComponentesConexos<Integer> cc = new ComponentesConexos<>( dg );
         System.out.println( "Quantidade de componentes conexos: " + cc.getQuantidade() );
         
     }

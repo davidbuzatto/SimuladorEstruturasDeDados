@@ -6,7 +6,6 @@
 
 package estruturas.algoritmos.grafos.basico;
 
-import estruturas.algoritmos.grafos.*;
 import estruturas.GrafoBasico;
 
 /**

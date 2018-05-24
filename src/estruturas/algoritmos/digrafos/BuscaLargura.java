@@ -4,11 +4,12 @@
  * and open the template in the editor.
  */
 
-package estruturas.algoritmos.grafos;
+package estruturas.algoritmos.digrafos;
 
 import estruturas.Fila;
-import estruturas.Grafo;
+import estruturas.Digrafo;
 import estruturas.Pilha;
+import estruturas.algoritmos.grafos.Caminhos;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -22,9 +23,9 @@ public class BuscaLargura<Tipo extends Comparable<? super Tipo>> extends Caminho
     private Map<Tipo, Boolean> marcado;
     private Map<Tipo, Tipo> arestaAte;
     private Map<Tipo, Integer> distanciaAte;
-    private Grafo<Tipo> g;
+    private Digrafo<Tipo> g;
     
-    public BuscaLargura( Grafo<Tipo> g, Tipo f ) {
+    public BuscaLargura( Digrafo<Tipo> g, Tipo f ) {
         
         this.g = g;
         this.fonte = f;
@@ -43,7 +44,7 @@ public class BuscaLargura<Tipo extends Comparable<? super Tipo>> extends Caminho
         
     }
 
-    private void bfs( Grafo<Tipo> g, Tipo f ) {
+    private void bfs( Digrafo<Tipo> g, Tipo f ) {
         
         Fila<Tipo> fila = new Fila<>();
         fila.enfileirar( f );

@@ -6,7 +6,7 @@
 
 package gui.desenho.estruturas;
 
-import estruturas.GrafoBasico;
+import estruturas.Grafo;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -20,7 +20,7 @@ import java.util.Map.Entry;
  * 
  * @author David Buzatto
  */
-public class GrafoBasicoAnotado implements Serializable {
+public class GrafoAnotado implements Serializable {
     
     private static final long serialVersionUID = 2L;
     
@@ -35,9 +35,9 @@ public class GrafoBasicoAnotado implements Serializable {
     private Map<Integer, VerticeGrafoAnotado> vertices;
     private Map<String, ArestaGrafoAnotado> arestas;
     
-    private transient GrafoBasico grafo;
+    private transient Grafo<Integer> grafo;
     
-    public GrafoBasicoAnotado() {
+    public GrafoAnotado() {
         vertices = new LinkedHashMap<>();
         arestas = new LinkedHashMap<>();
     }
@@ -111,7 +111,7 @@ public class GrafoBasicoAnotado implements Serializable {
         
     }
     
-    public GrafoBasico gerarGrafo() {
+    public Grafo<Integer> gerarGrafo() {
         
         transicaoAnotadoParaGrafo = new HashMap<>();
         transicaoGrafoParaAnotado = new HashMap<>();
@@ -125,7 +125,7 @@ public class GrafoBasicoAnotado implements Serializable {
             transicaoGrafoParaAnotado.put( t.getValue(), t.getKey() );
         }
         
-        GrafoBasico g = new GrafoBasico( vertices.size() );
+        Grafo<Integer> g = new Grafo<>();
         
         for ( Entry<String, ArestaGrafoAnotado> e : arestas.entrySet() ) {
             
@@ -158,13 +158,13 @@ public class GrafoBasicoAnotado implements Serializable {
         return arestas;
     }
 
-    public GrafoBasico getGrafo() {
+    public Grafo<Integer> getGrafo() {
         return grafo;
     }
     
     public static void main( String[] args ) {
         
-        GrafoBasicoAnotado a = new GrafoBasicoAnotado();
+        GrafoAnotado a = new GrafoAnotado();
         a.adicionarVertice( 1, 1, 1 );
         a.adicionarVertice( 1, 1, 1 );
         a.adicionarVertice( 1, 1, 1 );

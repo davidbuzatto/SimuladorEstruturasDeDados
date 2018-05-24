@@ -6,16 +6,16 @@
 
 package estruturas.algoritmos.grafos.basico;
 
-import estruturas.algoritmos.grafos.*;
 import estruturas.GrafoBasico;
 import estruturas.Pilha;
+import estruturas.algoritmos.grafos.Caminhos;
 
 /**
  * Algoritmo de busca em profundidade.
  * 
  * @author David Buzatto
  */
-public class BuscaProfundidade extends Caminhos {
+public class BuscaProfundidade extends Caminhos<Integer> {
 
     private boolean[] marcado;
     private int[] arestaAte;
@@ -53,7 +53,7 @@ public class BuscaProfundidade extends Caminhos {
     }
     
     @Override
-    public Iterable<Integer> caminhoAte( int w ) {
+    public Iterable<Integer> caminhoAte( Integer w ) {
         
         Pilha<Integer> p = new Pilha<>();
         
@@ -76,7 +76,7 @@ public class BuscaProfundidade extends Caminhos {
     }
     
     @Override
-    public boolean existeCaminhoAte( int w ) {
+    public boolean existeCaminhoAte( Integer w ) {
         return arestaAte[w] != -1;
     }
 

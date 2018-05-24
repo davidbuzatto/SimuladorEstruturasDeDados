@@ -13,7 +13,9 @@ import java.io.Serializable;
  * 
  * @author David Buzatto
  */
-public class VerticeGrafoBasicoAnotado implements Serializable {
+public class VerticeGrafoAnotado implements Serializable {
+    
+    private static final long serialVersionUID = 2L;
     
     public int v;
         

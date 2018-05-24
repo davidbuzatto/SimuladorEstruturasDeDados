@@ -6,7 +6,7 @@
 
 package uteis;
 
-import gui.desenho.estruturas.VerticeGrafoBasicoAnotado;
+import gui.desenho.estruturas.VerticeGrafoAnotado;
 import java.awt.Color;
 import java.awt.Font;
 import java.awt.FontMetrics;
@@ -20,6 +20,33 @@ import java.awt.geom.Line2D;
  * @author David Buzatto
  */
 public class UteisDesenho {
+    
+    // cores para os grafos
+    public static final Color AZUL = new Color( 0, 162, 232 );
+    public static final Color CINZA = new Color( 217, 217, 217 );
+    public static final Color CINZA_CLARO = new Color( 242, 242, 242 );
+    public static final Color VERDE = new Color( 152, 199, 35 );
+    public static final Color MARCADO_DENTRO = new Color( 155, 208, 213 );
+    public static final Color MARCADO_CONTORNO = new Color( 100, 128, 134 );
+    public static final Color VERMELHO = new Color( 192, 0, 0 );
+    public static final Color LARANJA = new Color( 255, 153, 51 );
+    public static final Color LARANJA_CLARO = new Color( 255, 192, 0 );
+    public static final Color[] CORES_CC = new Color[30];
+    
+    static {
+        
+        for ( int i = 1; i <= CORES_CC.length; i++ ) {
+            CORES_CC[i-1] = Color.getHSBColor( i*8 / (float) 255, 184 / (float) 255, 184 / (float) 255 );
+        }
+        
+        for ( int i = 0; i < CORES_CC.length; i++ ) {
+            Color c = CORES_CC[i];
+            int p = (int) ( Math.random() * 30 );
+            CORES_CC[i] = CORES_CC[p];
+            CORES_CC[p] = c;
+        }
+        
+    }
     
     public enum PosicaoLabel {
         CIMA,
@@ -305,7 +332,7 @@ public class UteisDesenho {
 
     }
     
-    public static void desenharFlechaVertice( VerticeGrafoBasicoAnotado origem, VerticeGrafoBasicoAnotado destino, Graphics2D g2d ) {
+    public static void desenharFlechaVertice( VerticeGrafoAnotado origem, VerticeGrafoAnotado destino, Graphics2D g2d ) {
         
         // gera a hipotenusa
         double h = UteisDesenho.gerarHipotenusa(

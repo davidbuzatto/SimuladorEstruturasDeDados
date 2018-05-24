@@ -7,7 +7,7 @@
 package estruturas;
 
 import estruturas.algoritmos.grafos.basico.ComponentesConexos;
-import estruturas.algoritmos.grafos.basico.AlgoritmosBasicosGrafo;
+import estruturas.algoritmos.grafos.basico.AlgoritmosBasicosGrafoBasico;
 import estruturas.algoritmos.grafos.basico.BuscaLargura;
 import estruturas.algoritmos.grafos.basico.BuscaProfundidade;
 
@@ -129,10 +129,10 @@ public class GrafoBasico {
         System.out.println( g );
         
         // utilizando os algoritmos
-        System.out.println( "Grau do vértice 0: " + AlgoritmosBasicosGrafo.grau( g, 0 ) );
-        System.out.println( "Grau máximo: " + AlgoritmosBasicosGrafo.grauMaximo( g ) );
-        System.out.println( "Grau médio: " + AlgoritmosBasicosGrafo.grauMedio( g ) );
-        System.out.println( "Quantidade de laços: " + AlgoritmosBasicosGrafo.quantidadeLacos( g ) );
+        System.out.println( "Grau do vértice 0: " + AlgoritmosBasicosGrafoBasico.grau( g, 0 ) );
+        System.out.println( "Grau máximo: " + AlgoritmosBasicosGrafoBasico.grauMaximo( g ) );
+        System.out.println( "Grau médio: " + AlgoritmosBasicosGrafoBasico.grauMedio( g ) );
+        System.out.println( "Quantidade de laços: " + AlgoritmosBasicosGrafoBasico.quantidadeLacos( g ) );
         
         BuscaProfundidade dfs = new BuscaProfundidade( g, 0 );
         System.out.println( dfs );

@@ -6,7 +6,7 @@
 
 package gui;
 
-import gui.desenho.estruturas.ArestaGrafoBasicoAnotado;
+import gui.desenho.estruturas.ArestaGrafoAnotado;
 import java.util.List;
 import javax.swing.DefaultListModel;
 
@@ -17,14 +17,14 @@ import javax.swing.DefaultListModel;
  */
 public class DialogRemoverArestaGrafo extends javax.swing.JDialog {
 
-    private DefaultListModel<ArestaGrafoBasicoAnotado> modelo;
-    private List<ArestaGrafoBasicoAnotado> arestas;
-    private List<ArestaGrafoBasicoAnotado> arestasRemovidas;
+    private DefaultListModel<ArestaGrafoAnotado> modelo;
+    private List<ArestaGrafoAnotado> arestas;
+    private List<ArestaGrafoAnotado> arestasRemovidas;
     
     /**
      * Creates new form DialogRemoverArestaGrafo
      */
-    public DialogRemoverArestaGrafo( java.awt.Frame parent, boolean modal, List<ArestaGrafoBasicoAnotado> arestas, List<ArestaGrafoBasicoAnotado> arestasRemovidas ) {
+    public DialogRemoverArestaGrafo( java.awt.Frame parent, boolean modal, List<ArestaGrafoAnotado> arestas, List<ArestaGrafoAnotado> arestasRemovidas ) {
         
         super( parent, modal );
         initComponents();
@@ -33,7 +33,7 @@ public class DialogRemoverArestaGrafo extends javax.swing.JDialog {
         this.arestasRemovidas = arestasRemovidas;
         
         modelo = new DefaultListModel<>();
-        for ( ArestaGrafoBasicoAnotado a : arestas ) {
+        for ( ArestaGrafoAnotado a : arestas ) {
             modelo.addElement( a );
         }
         
@@ -156,7 +156,7 @@ public class DialogRemoverArestaGrafo extends javax.swing.JDialog {
         
         for ( Object o : listaArestas.getSelectedValuesList() ) {
             modelo.removeElement( o );
-            arestasRemovidas.add((ArestaGrafoBasicoAnotado) o );
+            arestasRemovidas.add((ArestaGrafoAnotado) o );
         }
         
     }//GEN-LAST:event_btnRemoverActionPerformed
@@ -165,7 +165,7 @@ public class DialogRemoverArestaGrafo extends javax.swing.JDialog {
     private javax.swing.JButton btnCancelar;
     private javax.swing.JButton btnOK;
     private javax.swing.JButton btnRemover;
-    private javax.swing.JList<ArestaGrafoBasicoAnotado> listaArestas;
+    private javax.swing.JList<ArestaGrafoAnotado> listaArestas;
     private javax.swing.JPanel painelArestas;
     private javax.swing.JScrollPane sp;
     // End of variables declaration//GEN-END:variables

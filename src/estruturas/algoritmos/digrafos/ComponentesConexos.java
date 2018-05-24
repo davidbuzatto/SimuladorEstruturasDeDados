@@ -4,9 +4,9 @@
  * and open the template in the editor.
  */
 
-package estruturas.algoritmos.grafos;
+package estruturas.algoritmos.digrafos;
 
-import estruturas.Grafo;
+import estruturas.Digrafo;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -21,7 +21,7 @@ public class ComponentesConexos<Tipo extends Comparable<? super Tipo>> {
     private Map<Tipo, Integer> id;
     private int cont; // getQuantidade de componentes
     
-    public ComponentesConexos( Grafo<Tipo> g ) {
+    public ComponentesConexos( Digrafo<Tipo> g ) {
         
         marcado = new HashMap<>();
         id = new HashMap<>();
@@ -74,7 +74,7 @@ public class ComponentesConexos<Tipo extends Comparable<? super Tipo>> {
     /*
      * Busca em profundidade para encontrar os componentes.
      */
-    private void dfs( Grafo<Tipo> g, Tipo v ) {
+    private void dfs( Digrafo<Tipo> g, Tipo v ) {
         
         marcado.put( v , true );
         
