@@ -6,14 +6,14 @@
 
 package gui;
 
-import estruturas.Grafo;
-import estruturas.algoritmos.grafos.AlgoritmosBasicosGrafo;
-import estruturas.algoritmos.grafos.BuscaLargura;
-import estruturas.algoritmos.grafos.BuscaProfundidade;
-import estruturas.algoritmos.grafos.ComponentesConexos;
+import estruturas.Digrafo;
+import estruturas.algoritmos.digrafos.AlgoritmosBasicosDigrafo;
+import estruturas.algoritmos.digrafos.BuscaLargura;
+import estruturas.algoritmos.digrafos.BuscaProfundidade;
+import estruturas.algoritmos.digrafos.ComponentesFortes;
 import gui.desenho.PainelDesenho;
-import gui.desenho.estruturas.GrafoAnotado;
-import gui.desenho.estruturas.GrafoDesenhavel;
+import gui.desenho.estruturas.DigrafoAnotado;
+import gui.desenho.estruturas.DigrafoDesenhavel;
 import gui.desenho.estruturas.VerticeGrafoAnotado;
 import java.awt.Graphics2D;
 import java.awt.Point;
@@ -40,11 +40,11 @@ import javax.swing.filechooser.FileNameExtensionFilter;
  * 
  * @author David Buzatto
  */
-public class IFGrafo extends javax.swing.JInternalFrame {
+public class IFDigrafo extends javax.swing.JInternalFrame {
 
-    private GrafoDesenhavel grafoD;
-    private GrafoAnotado grafoAnt;
-    private Grafo<Integer> grafo;
+    private DigrafoDesenhavel digrafoD;
+    private DigrafoAnotado digrafoAnt;
+    private Digrafo<Integer> digrafo;
     private boolean movendo;
     private VerticeGrafoAnotado verticeMovimento;
     private VerticeGrafoAnotado verticeRemocao;
@@ -62,11 +62,10 @@ public class IFGrafo extends javax.swing.JInternalFrame {
     /**
      * Creates new form IFArvoreBinariaBusca
      */
-    public IFGrafo() {
+    public IFDigrafo() {
         
-        grafoAnt = new GrafoAnotado();
-        grafoD = new GrafoDesenhavel( grafoAnt );
-        grafo = new Grafo<>();
+        digrafoAnt = new DigrafoAnotado();
+        digrafoD = new DigrafoDesenhavel( digrafoAnt );
         
         initComponents();
         
@@ -75,38 +74,38 @@ public class IFGrafo extends javax.swing.JInternalFrame {
         
         setVisible( true );
         
-        grafoD.setPainel( painelDesenho );
+        digrafoD.setPainel( painelDesenho );
         
         // grafo base
-        grafoAnt.adicionarVertice( 100, 100, tamanhoVertice );
-        grafoAnt.adicionarVertice( 150, 200, tamanhoVertice );
-        grafoAnt.adicionarVertice( 250, 200, tamanhoVertice );
-        grafoAnt.adicionarVertice( 200, 300, tamanhoVertice );
-        grafoAnt.adicionarVertice( 300, 300, tamanhoVertice );
-        grafoAnt.adicionarVertice( 100, 400, tamanhoVertice );
-        grafoAnt.adicionarVertice( 350, 200, tamanhoVertice );
-        grafoAnt.adicionarVertice( 450, 150, tamanhoVertice );
-        grafoAnt.adicionarVertice( 550, 150, tamanhoVertice );
-        grafoAnt.adicionarVertice( 450, 250, tamanhoVertice );
-        grafoAnt.adicionarVertice( 550, 250, tamanhoVertice );
-        grafoAnt.adicionarVertice( 450, 350, tamanhoVertice );
-        grafoAnt.adicionarVertice( 550, 350, tamanhoVertice );
+        digrafoAnt.adicionarVertice( 100, 100, tamanhoVertice );
+        digrafoAnt.adicionarVertice( 150, 200, tamanhoVertice );
+        digrafoAnt.adicionarVertice( 250, 200, tamanhoVertice );
+        digrafoAnt.adicionarVertice( 200, 300, tamanhoVertice );
+        digrafoAnt.adicionarVertice( 300, 300, tamanhoVertice );
+        digrafoAnt.adicionarVertice( 100, 400, tamanhoVertice );
+        digrafoAnt.adicionarVertice( 350, 200, tamanhoVertice );
+        digrafoAnt.adicionarVertice( 450, 150, tamanhoVertice );
+        digrafoAnt.adicionarVertice( 550, 150, tamanhoVertice );
+        digrafoAnt.adicionarVertice( 450, 250, tamanhoVertice );
+        digrafoAnt.adicionarVertice( 550, 250, tamanhoVertice );
+        digrafoAnt.adicionarVertice( 450, 350, tamanhoVertice );
+        digrafoAnt.adicionarVertice( 550, 350, tamanhoVertice );
         
-        grafoAnt.adicionarAresta( 0, 5 );
-        grafoAnt.adicionarAresta( 4, 3 );
-        grafoAnt.adicionarAresta( 0, 1 );
-        grafoAnt.adicionarAresta( 9, 12 );
-        grafoAnt.adicionarAresta( 6, 4 );
-        grafoAnt.adicionarAresta( 5, 4 );
-        grafoAnt.adicionarAresta( 0, 2 );
-        grafoAnt.adicionarAresta( 11, 12 );
-        grafoAnt.adicionarAresta( 9, 10 );
-        grafoAnt.adicionarAresta( 0, 6 );
-        grafoAnt.adicionarAresta( 7, 8 );
-        grafoAnt.adicionarAresta( 9, 11 );
-        grafoAnt.adicionarAresta( 5, 3 );
+        digrafoAnt.adicionarAresta( 0, 5 );
+        digrafoAnt.adicionarAresta( 4, 3 );
+        digrafoAnt.adicionarAresta( 0, 1 );
+        digrafoAnt.adicionarAresta( 9, 12 );
+        digrafoAnt.adicionarAresta( 6, 4 );
+        digrafoAnt.adicionarAresta( 5, 4 );
+        digrafoAnt.adicionarAresta( 0, 2 );
+        digrafoAnt.adicionarAresta( 11, 12 );
+        digrafoAnt.adicionarAresta( 9, 10 );
+        digrafoAnt.adicionarAresta( 0, 6 );
+        digrafoAnt.adicionarAresta( 7, 8 );
+        digrafoAnt.adicionarAresta( 9, 11 );
+        digrafoAnt.adicionarAresta( 5, 3 );
         
-        atualizarDadosGrafo();
+        atualizarDadosDigrafo();
         painelDesenho.repaint();
         
     }
@@ -122,7 +121,7 @@ public class IFGrafo extends javax.swing.JInternalFrame {
 
         menuPopUp = new javax.swing.JPopupMenu();
         itemMenuRemover = new javax.swing.JMenuItem();
-        painelDesenho = new PainelDesenho( grafoD );
+        painelDesenho = new PainelDesenho( digrafoD );
         painelOperacoes = new javax.swing.JPanel();
         tbtnInsVertices = new javax.swing.JToggleButton();
         tbtnInsArestas = new javax.swing.JToggleButton();
@@ -141,17 +140,17 @@ public class IFGrafo extends javax.swing.JInternalFrame {
         labelCaminhoAte = new javax.swing.JLabel();
         fieldCaminhoAte = new javax.swing.JTextField();
         btnMostrarCaminho = new javax.swing.JButton();
-        btnIdentificarCC = new javax.swing.JButton();
+        btnIdentificarCF = new javax.swing.JButton();
         btnLimparAlgoritmos = new javax.swing.JButton();
         painelDados = new javax.swing.JPanel();
         labelV = new javax.swing.JLabel();
         labelA = new javax.swing.JLabel();
         labelGM = new javax.swing.JLabel();
-        labelGMX = new javax.swing.JLabel();
+        labelGMXS = new javax.swing.JLabel();
         fieldV = new javax.swing.JTextField();
         fieldA = new javax.swing.JTextField();
         fieldGM = new javax.swing.JTextField();
-        fieldGMX = new javax.swing.JTextField();
+        fieldGMXS = new javax.swing.JTextField();
         labelListaAdj = new javax.swing.JLabel();
         spAdj = new javax.swing.JScrollPane();
         listaAdj = new javax.swing.JList<>();
@@ -169,8 +168,8 @@ public class IFGrafo extends javax.swing.JInternalFrame {
         setIconifiable(true);
         setMaximizable(true);
         setResizable(true);
-        setTitle("Grafo");
-        setFrameIcon(new javax.swing.ImageIcon(getClass().getResource("/gui/imagens/grafoP.png"))); // NOI18N
+        setTitle("Digrafo");
+        setFrameIcon(new javax.swing.ImageIcon(getClass().getResource("/gui/imagens/digrafoP.png"))); // NOI18N
 
         painelDesenho.addMouseMotionListener(new java.awt.event.MouseMotionAdapter() {
             public void mouseDragged(java.awt.event.MouseEvent evt) {
@@ -289,10 +288,10 @@ public class IFGrafo extends javax.swing.JInternalFrame {
             }
         });
 
-        btnIdentificarCC.setText("Identificar Componentes Conexos");
-        btnIdentificarCC.addActionListener(new java.awt.event.ActionListener() {
+        btnIdentificarCF.setText("Identificar Componentes Fortes");
+        btnIdentificarCF.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                btnIdentificarCCActionPerformed(evt);
+                btnIdentificarCFActionPerformed(evt);
             }
         });
 
@@ -328,7 +327,7 @@ public class IFGrafo extends javax.swing.JInternalFrame {
                         .addComponent(btnTabelaBFS))
                     .addComponent(btnMostrarCaminho, javax.swing.GroupLayout.Alignment.TRAILING)
                     .addComponent(btnLimparAlgoritmos, javax.swing.GroupLayout.Alignment.TRAILING)
-                    .addComponent(btnIdentificarCC, javax.swing.GroupLayout.Alignment.TRAILING))
+                    .addComponent(btnIdentificarCF, javax.swing.GroupLayout.Alignment.TRAILING))
                 .addContainerGap())
         );
         painelAlgoritmosLayout.setVerticalGroup(
@@ -353,7 +352,7 @@ public class IFGrafo extends javax.swing.JInternalFrame {
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(btnMostrarCaminho)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(btnIdentificarCC)
+                .addComponent(btnIdentificarCF)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(btnLimparAlgoritmos)
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
@@ -367,7 +366,7 @@ public class IFGrafo extends javax.swing.JInternalFrame {
 
         labelGM.setText("Grau Médio:");
 
-        labelGMX.setText("Grau Máx.:");
+        labelGMXS.setText("Grau Máx. Saída:");
 
         fieldV.setEditable(false);
 
@@ -375,7 +374,7 @@ public class IFGrafo extends javax.swing.JInternalFrame {
 
         fieldGM.setEditable(false);
 
-        fieldGMX.setEditable(false);
+        fieldGMXS.setEditable(false);
 
         labelListaAdj.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
         labelListaAdj.setText("Lista de Adjacências");
@@ -404,9 +403,9 @@ public class IFGrafo extends javax.swing.JInternalFrame {
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                                 .addComponent(fieldA))
                             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, painelDadosLayout.createSequentialGroup()
-                                .addComponent(labelGMX)
+                                .addComponent(labelGMXS)
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(fieldGMX))))
+                                .addComponent(fieldGMXS))))
                     .addComponent(labelListaAdj, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addComponent(spAdj, javax.swing.GroupLayout.PREFERRED_SIZE, 0, Short.MAX_VALUE))
                 .addContainerGap())
@@ -424,8 +423,8 @@ public class IFGrafo extends javax.swing.JInternalFrame {
                 .addGroup(painelDadosLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(labelGM)
                     .addComponent(fieldGM, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(labelGMX)
-                    .addComponent(fieldGMX, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(labelGMXS)
+                    .addComponent(fieldGMXS, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addComponent(labelListaAdj)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
@@ -505,8 +504,8 @@ public class IFGrafo extends javax.swing.JInternalFrame {
 
     private void itemMenuRemoverActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_itemMenuRemoverActionPerformed
 
-        grafoAnt.removerVertice( verticeRemocao.v );
-        atualizarDadosGrafo();
+        digrafoAnt.removerVertice( verticeRemocao.v );
+        atualizarDadosDigrafo();
         
         painelDesenho.repaint();
             
@@ -545,12 +544,12 @@ public class IFGrafo extends javax.swing.JInternalFrame {
 
             if ( tbtnInsVertices.isSelected() ) {
                 
-                grafoAnt.adicionarVertice( evt.getX(), evt.getY(), tamanhoVertice );
-                atualizarDadosGrafo();
+                digrafoAnt.adicionarVertice( evt.getX(), evt.getY(), tamanhoVertice );
+                atualizarDadosDigrafo();
         
             } else if ( tbtnInsArestas.isSelected() ) {
                 
-                for ( Entry<Integer, VerticeGrafoAnotado> v : grafoAnt.getVertices().entrySet() ) {
+                for ( Entry<Integer, VerticeGrafoAnotado> v : digrafoAnt.getVertices().entrySet() ) {
                     
                     Point p = evt.getPoint();
 
@@ -561,14 +560,14 @@ public class IFGrafo extends javax.swing.JInternalFrame {
 
                         if ( verticeArestaO == null ) {
                             verticeArestaO = v.getValue();
-                            grafoD.setVerticeArestaOrigem( verticeArestaO );
+                            digrafoD.setVerticeArestaOrigem( verticeArestaO );
                         } else {
                             
                             verticeArestaD = v.getValue();
-                            grafoAnt.adicionarAresta( verticeArestaO.v, verticeArestaD.v );
-                            grafoD.setVerticeArestaOrigem( null );
+                            digrafoAnt.adicionarAresta( verticeArestaO.v, verticeArestaD.v );
+                            digrafoD.setVerticeArestaOrigem( null );
 
-                            atualizarDadosGrafo();
+                            atualizarDadosDigrafo();
                             
                             verticeArestaO = null;
                             verticeArestaD = null;
@@ -581,11 +580,11 @@ public class IFGrafo extends javax.swing.JInternalFrame {
 
                 }
                 
-                atualizarDadosGrafo();
+                atualizarDadosDigrafo();
         
             } else {
                 
-                for ( Entry<Integer, VerticeGrafoAnotado> v : grafoAnt.getVertices().entrySet() ) {
+                for ( Entry<Integer, VerticeGrafoAnotado> v : digrafoAnt.getVertices().entrySet() ) {
                     
                     Point p = evt.getPoint();
                 
@@ -613,7 +612,7 @@ public class IFGrafo extends javax.swing.JInternalFrame {
             tbtnInsVertices.setSelected( false );
             tbtnInsArestas.setSelected( false );
             
-            for ( Entry<Integer, VerticeGrafoAnotado> v : grafoAnt.getVertices().entrySet() ) {
+            for ( Entry<Integer, VerticeGrafoAnotado> v : digrafoAnt.getVertices().entrySet() ) {
                     
                 Point p = evt.getPoint();
 
@@ -648,7 +647,7 @@ public class IFGrafo extends javax.swing.JInternalFrame {
 
     private void btnRemoverArestasActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnRemoverArestasActionPerformed
         
-        DialogRemoverArestaGrafo d = new DialogRemoverArestaGrafo( null, true, grafoAnt.getGrafo() );
+        DialogRemoverArestaDigrafo d = new DialogRemoverArestaDigrafo( null, true, digrafoAnt.getDigrafo() );
         d.setVisible( true );
         
         for ( String aresta : d.getArestasRemovidas() ) {
@@ -657,11 +656,11 @@ public class IFGrafo extends javax.swing.JInternalFrame {
             int origem = Integer.parseInt( dados[0] );
             int destino = Integer.parseInt( dados[1] );
             
-            grafoAnt.removerAresta( origem, destino );
+            digrafoAnt.removerAresta( origem, destino );
             
         }
         
-        atualizarDadosGrafo();
+        atualizarDadosDigrafo();
         
         painelDesenho.repaint();
         
@@ -675,7 +674,7 @@ public class IFGrafo extends javax.swing.JInternalFrame {
             boolean achou = false;
             
             // buscando a fonte
-            for ( Entry<Integer, VerticeGrafoAnotado> v : grafoAnt.getVertices().entrySet() ) {
+            for ( Entry<Integer, VerticeGrafoAnotado> v : digrafoAnt.getVertices().entrySet() ) {
                 
                 if ( v.getValue().v == fonte ) {
                     achou = true;
@@ -686,9 +685,9 @@ public class IFGrafo extends javax.swing.JInternalFrame {
             
             if ( achou ) {
                 
-                atualizarDadosGrafo();
-                dfs = new BuscaProfundidade<>( grafo, fonte );
-                grafoD.setCaminho( dfs );
+                atualizarDadosDigrafo();
+                dfs = new BuscaProfundidade<>( digrafo, fonte );
+                digrafoD.setCaminho( dfs );
                 painelDesenho.repaint();
                 
             } else {
@@ -709,7 +708,7 @@ public class IFGrafo extends javax.swing.JInternalFrame {
             boolean achou = false;
             
             // buscando a fonte
-            for ( Entry<Integer, VerticeGrafoAnotado> v : grafoAnt.getVertices().entrySet() ) {
+            for ( Entry<Integer, VerticeGrafoAnotado> v : digrafoAnt.getVertices().entrySet() ) {
                 
                 if ( v.getValue().v == fonte ) {
                     achou = true;
@@ -720,9 +719,9 @@ public class IFGrafo extends javax.swing.JInternalFrame {
             
             if ( achou ) {
                 
-                atualizarDadosGrafo();
-                bfs = new BuscaLargura<>( grafo, fonte );
-                grafoD.setCaminho( bfs );
+                atualizarDadosDigrafo();
+                bfs = new BuscaLargura<>( digrafo, fonte );
+                digrafoD.setCaminho( bfs );
                 painelDesenho.repaint();
                 
             } else {
@@ -739,7 +738,7 @@ public class IFGrafo extends javax.swing.JInternalFrame {
         
         if ( dfs != null ) {
             
-            DialogTabelaDFSGrafo d = new DialogTabelaDFSGrafo( null, true, grafo, grafoAnt, dfs );
+            DialogTabelaDFSDigrafo d = new DialogTabelaDFSDigrafo( null, true, digrafo, digrafoAnt, dfs );
             d.setVisible( true );
             
         } else {
@@ -752,7 +751,7 @@ public class IFGrafo extends javax.swing.JInternalFrame {
         
         if ( bfs != null ) {
             
-            DialogTabelaBFSGrafo d = new DialogTabelaBFSGrafo( null, true, grafo, grafoAnt, bfs );
+            DialogTabelaBFSDigrafo d = new DialogTabelaBFSDigrafo( null, true, digrafo, digrafoAnt, bfs );
             d.setVisible( true );
             
         } else {
@@ -772,7 +771,7 @@ public class IFGrafo extends javax.swing.JInternalFrame {
 
                 if ( dfs != null || bfs != null ) {
 
-                    grafoD.setCaminhoAte( destino );
+                    digrafoD.setCaminhoAte( destino );
                     painelDesenho.repaint();
 
                 } else {
@@ -789,18 +788,18 @@ public class IFGrafo extends javax.swing.JInternalFrame {
         
     }//GEN-LAST:event_btnMostrarCaminhoActionPerformed
 
-    private void btnIdentificarCCActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnIdentificarCCActionPerformed
+    private void btnIdentificarCFActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnIdentificarCFActionPerformed
         
-        atualizarDadosGrafo();
-        ComponentesConexos<Integer> cc = new ComponentesConexos<>( grafo );
-        grafoD.setCc( cc );
+        atualizarDadosDigrafo();
+        ComponentesFortes<Integer> cc = new ComponentesFortes<>( digrafo );
+        digrafoD.setCf( cc );
         painelDesenho.repaint();
         
-    }//GEN-LAST:event_btnIdentificarCCActionPerformed
+    }//GEN-LAST:event_btnIdentificarCFActionPerformed
 
     private void btnLimparAlgoritmosActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnLimparAlgoritmosActionPerformed
         
-        atualizarDadosGrafo();
+        atualizarDadosDigrafo();
         fieldFonte.setText( "" );
         fieldCaminhoAte.setText( "" );
         painelDesenho.repaint();
@@ -809,15 +808,15 @@ public class IFGrafo extends javax.swing.JInternalFrame {
 
     private void btnRemoverTudoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnRemoverTudoActionPerformed
         
-        grafoAnt.limpar();
-        atualizarDadosGrafo();
+        digrafoAnt.limpar();
+        atualizarDadosDigrafo();
         painelDesenho.repaint();
         
     }//GEN-LAST:event_btnRemoverTudoActionPerformed
 
     private void btnSalvarImagemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnSalvarImagemActionPerformed
         
-        if ( grafoAnt.getGrafo().getQuantidadeVertices() != 0 ) {
+        if ( digrafoAnt.getDigrafo().getQuantidadeVertices() != 0 ) {
             
             int minX = 0;
             int maxX = 0;
@@ -826,7 +825,7 @@ public class IFGrafo extends javax.swing.JInternalFrame {
             boolean primeiro = true;
             VerticeGrafoAnotado v;
             
-            for ( Entry<Integer, VerticeGrafoAnotado> e : grafoAnt.getVertices().entrySet() ) {
+            for ( Entry<Integer, VerticeGrafoAnotado> e : digrafoAnt.getVertices().entrySet() ) {
                 
                 v = e.getValue();
                 
@@ -861,7 +860,7 @@ public class IFGrafo extends javax.swing.JInternalFrame {
             BufferedImage img = new BufferedImage( painelDesenho.getWidth(), painelDesenho.getHeight(), BufferedImage.TYPE_INT_ARGB );
             Graphics2D g2d = img.createGraphics();
             g2d.setRenderingHint( RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON );
-            grafoD.desenhar( g2d );
+            digrafoD.desenhar( g2d );
             
             try {
                 
@@ -909,7 +908,7 @@ public class IFGrafo extends javax.swing.JInternalFrame {
         try {
             
             JFileChooser jfc = new JFileChooser();
-            FileNameExtensionFilter fnef = new FileNameExtensionFilter( "Grafo (*.grafo)", "grafo" );
+            FileNameExtensionFilter fnef = new FileNameExtensionFilter( "Digrafo (*.digrafo)", "digrafo" );
 
             for ( FileFilter f : jfc.getChoosableFileFilters() ) {
                 jfc.removeChoosableFileFilter( f );
@@ -922,8 +921,8 @@ public class IFGrafo extends javax.swing.JInternalFrame {
             if ( jfc.showSaveDialog( this ) == JFileChooser.APPROVE_OPTION ) {
                 
                 File f = jfc.getSelectedFile();
-                if ( f.getName().lastIndexOf( ".grafo" ) == -1 ) {
-                    f = new File( f.getAbsolutePath() + ".grafo" );
+                if ( f.getName().lastIndexOf( ".digrafo" ) == -1 ) {
+                    f = new File( f.getAbsolutePath() + ".digrafo" );
                 }
                 
                 if ( !f.exists() || 
@@ -932,7 +931,7 @@ public class IFGrafo extends javax.swing.JInternalFrame {
                           JOptionPane.OK_CANCEL_OPTION ) == JOptionPane.OK_OPTION ) ) {
                     
                     ObjectOutputStream oout = new ObjectOutputStream( new FileOutputStream( f ) );
-                    oout.writeObject( grafoAnt );
+                    oout.writeObject( digrafoAnt );
                     oout.flush();
                     oout.close();
                     
@@ -951,27 +950,27 @@ public class IFGrafo extends javax.swing.JInternalFrame {
         try {
             
             JFileChooser jfc = new JFileChooser();
-            FileNameExtensionFilter fnef = new FileNameExtensionFilter( "Grafo (*.grafo)", "grafo" );
+            FileNameExtensionFilter fnef = new FileNameExtensionFilter( "Digrafo (*.digrafo)", "digrafo" );
 
             for ( FileFilter f : jfc.getChoosableFileFilters() ) {
                 jfc.removeChoosableFileFilter( f );
             }
 
             jfc.setFileFilter( fnef );
-            jfc.setDialogTitle( "Abrir Grafo" );
+            jfc.setDialogTitle( "Abrir Digrafo" );
             jfc.setMultiSelectionEnabled( false );
 
             if ( jfc.showOpenDialog( this ) == JFileChooser.APPROVE_OPTION ) {
                 
                 File f = jfc.getSelectedFile();
                 ObjectInputStream oin = new ObjectInputStream( new FileInputStream( f ) );
-                grafoAnt = (GrafoAnotado) oin.readObject();
+                digrafoAnt = (DigrafoAnotado) oin.readObject();
                 oin.close();
                 
-                grafoD = new GrafoDesenhavel( grafoAnt );
-                grafoD.setPainel( painelDesenho );
-                ((PainelDesenho) painelDesenho).setEstruturaDesenhavel( grafoD );
-                atualizarDadosGrafo();
+                digrafoD = new DigrafoDesenhavel( digrafoAnt );
+                digrafoD.setPainel( painelDesenho );
+                ((PainelDesenho) painelDesenho).setEstruturaDesenhavel(digrafoD );
+                atualizarDadosDigrafo();
                 
                 painelDesenho.repaint();
                 
@@ -983,34 +982,34 @@ public class IFGrafo extends javax.swing.JInternalFrame {
         
     }//GEN-LAST:event_btnAbrirActionPerformed
         
-    private void atualizarDadosGrafo() {
+    private void atualizarDadosDigrafo() {
         
-        grafo = grafoAnt.getGrafo();
+        digrafo = digrafoAnt.getDigrafo();
         
-        fieldV.setText( String.valueOf( grafo.getQuantidadeVertices() ) );
-        fieldA.setText( String.valueOf( grafo.getQuantidadeArestas() ) );
-        fieldGM.setText(String.valueOf( (double) Math.round(AlgoritmosBasicosGrafo.grauMedio( grafo ) * 1000 ) / 1000 ) );
-        fieldGMX.setText( String.valueOf( AlgoritmosBasicosGrafo.grauMaximo( grafo ) ) );
+        fieldV.setText( String.valueOf( digrafo.getQuantidadeVertices() ) );
+        fieldA.setText( String.valueOf( digrafo.getQuantidadeArestas() ) );
+        fieldGM.setText(String.valueOf( (double) Math.round(AlgoritmosBasicosDigrafo.grauMedio( digrafo ) * 1000 ) / 1000 ) );
+        fieldGMXS.setText( String.valueOf( AlgoritmosBasicosDigrafo.grauMaximoSaida( digrafo ) ) );
         
         dfs = null;
         bfs = null;
         
-        grafoD.setCaminho( null );
-        grafoD.setCaminhoAte( -1 );
-        grafoD.setCc( null );
+        digrafoD.setCaminho( null );
+        digrafoD.setCaminhoAte( -1 );
+        digrafoD.setCf( null );
                 
         modeloAdj.clear();
         StringBuilder sb;
         List<Integer> adj;
         int cont;
         
-        for ( int v : grafo.getVertices() ) {
+        for ( int v : digrafo.getVertices() ) {
             
             cont = 0;
             sb = new StringBuilder();
             
             sb.append( v ).append( " -> { " );
-            adj = grafo.getAdjacentes( v );
+            adj = digrafo.getAdjacentes( v );
             
             for ( int w : adj ) {
                 if ( cont == adj.size() - 1 ) {
@@ -1033,7 +1032,7 @@ public class IFGrafo extends javax.swing.JInternalFrame {
     private javax.swing.JButton btnAbrir;
     private javax.swing.JButton btnBFS;
     private javax.swing.JButton btnDFS;
-    private javax.swing.JButton btnIdentificarCC;
+    private javax.swing.JButton btnIdentificarCF;
     private javax.swing.JButton btnLimparAlgoritmos;
     private javax.swing.JButton btnMostrarCaminho;
     private javax.swing.JButton btnRemoverArestas;
@@ -1046,14 +1045,14 @@ public class IFGrafo extends javax.swing.JInternalFrame {
     private javax.swing.JTextField fieldCaminhoAte;
     private javax.swing.JTextField fieldFonte;
     private javax.swing.JTextField fieldGM;
-    private javax.swing.JTextField fieldGMX;
+    private javax.swing.JTextField fieldGMXS;
     private javax.swing.JTextField fieldV;
     private javax.swing.JMenuItem itemMenuRemover;
     private javax.swing.JLabel labelA;
     private javax.swing.JLabel labelCaminhoAte;
     private javax.swing.JLabel labelFonte;
     private javax.swing.JLabel labelGM;
-    private javax.swing.JLabel labelGMX;
+    private javax.swing.JLabel labelGMXS;
     private javax.swing.JLabel labelListaAdj;
     private javax.swing.JLabel labelV;
     private javax.swing.JList<String> listaAdj;

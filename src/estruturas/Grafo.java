@@ -10,8 +10,8 @@ import estruturas.algoritmos.grafos.AlgoritmosBasicosGrafo;
 import estruturas.algoritmos.grafos.BuscaLargura;
 import estruturas.algoritmos.grafos.BuscaProfundidade;
 import estruturas.algoritmos.grafos.ComponentesConexos;
+import java.io.Serializable;
 import java.util.ArrayList;
-import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -23,14 +23,18 @@ import java.util.TreeMap;
  * 
  * Permite mais de uma aresta v-w/w-v e remove todas as ocorrências.
  * 
+ * Implementa Serializable para poder ser salvo.
+ * 
  * @author David Buzatto
  */
-public class Grafo<Tipo extends Comparable> {
+public class Grafo<Tipo extends Comparable<? super Tipo>> implements Serializable {
+    
+    private static final long serialVersionUID = 2L;
     
     private int quantidadeArestas;
     private Map<Tipo, List<Tipo>> adj;
     
-    /**
+    /** 
      * Constrói um grafo vazio.
      */
     public Grafo() {

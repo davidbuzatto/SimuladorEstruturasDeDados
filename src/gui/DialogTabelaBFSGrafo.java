@@ -7,53 +7,57 @@
 package gui;
 
 import estruturas.Grafo;
-import estruturas.algoritmos.grafos.BuscaProfundidade;
+import estruturas.algoritmos.grafos.BuscaLargura;
 import gui.desenho.estruturas.GrafoAnotado;
 import java.util.Map;
 import javax.swing.table.DefaultTableModel;
 
 /**
- * Diálogo para exibição da tabela da busca em profundidade.
+ * Diálogo para exibição da tabela da busca em largura.
  * 
  * @author David Buzatto
  */
-public class DialogTabelaDFS extends javax.swing.JDialog {
+public class DialogTabelaBFSGrafo extends javax.swing.JDialog {
 
     private Grafo<Integer> grafo;
     private GrafoAnotado grafoAnt;
-    private BuscaProfundidade dfs;
+    private BuscaLargura bfs;
     private DefaultTableModel modelo;
     
     /**
      * Creates new form DialogRemoverArestaGrafo
      */
-    public DialogTabelaDFS( java.awt.Frame parent, boolean modal, 
-            Grafo<Integer> grafo, GrafoAnotado grafoAnt, BuscaProfundidade<Integer> dfs ) {
+    public DialogTabelaBFSGrafo( java.awt.Frame parent, boolean modal, 
+            Grafo<Integer> grafo, GrafoAnotado grafoAnt, BuscaLargura<Integer> bfs ) {
         
         super( parent, modal );
         initComponents();
         
         this.grafo = grafo;
         this.grafoAnt = grafoAnt;
-        this.dfs = dfs;
+        this.bfs = bfs;
         
         modelo = new DefaultTableModel( new String[]{
             "v",
             "marcado[v]",
-            "arestaAte[v]"
+            "arestaAte[v]",
+            "distanciaAte[v]"
         }, 0 );
         
-        Map<Integer, Boolean> marcado = dfs.getMarcado();
-        Map<Integer, Integer> arestaAte = dfs.getArestaAte();
+        Map<Integer, Boolean> marcado = bfs.getMarcado();
+        Map<Integer, Integer> arestaAte = bfs.getArestaAte();
+        Map<Integer, Integer> distanciaAte = bfs.getDistanciaAte();
         
         for ( Map.Entry<Integer, Boolean> e : marcado.entrySet() ) {
             
             Integer a = arestaAte.get( e.getKey() );
+            Integer d = distanciaAte.get( e.getKey() );
             
             modelo.addRow( new String[]{
-                String.valueOf( grafoAnt.getTransicaoGrafoParaAnotado().get( e.getKey() ) ), 
+                String.valueOf( e.getKey() ), 
                 e.getValue() ? "<html><font color=\"#0070C0\">T</font></html>" : "F", 
-                a == null ? "-" : String.valueOf( a )
+                a == null ? "-" : String.valueOf( a ),
+                d == -1 ? "-" : String.valueOf( d )
             });
             
         }
@@ -76,7 +80,7 @@ public class DialogTabelaDFS extends javax.swing.JDialog {
         btnOk = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
-        setTitle("Tabela DFS");
+        setTitle("Tabela BFS");
 
         tabela.setFont(new java.awt.Font("Tahoma", 1, 12)); // NOI18N
         sp.setViewportView(tabela);

@@ -6,27 +6,27 @@
 
 package gui.desenho.estruturas;
 
-import estruturas.Grafo;
+import estruturas.Digrafo;
 import java.io.Serializable;
 import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.TreeMap;
 
 /**
- * Uma estrutura de grafo para ser usado no desenho.
+ * Uma estrutura de digrafo para ser usado no desenho.
  * 
  * @author David Buzatto
  */
-public class GrafoAnotado implements Serializable {
+public class DigrafoAnotado implements Serializable {
     
     private static final long serialVersionUID = 2L;
     
     private int verticeAtual;
     private Map<Integer, VerticeGrafoAnotado> vertices;
-    private Grafo<Integer> grafo;
+    private Digrafo<Integer> digrafo;
     
-    public GrafoAnotado() {
-        grafo = new Grafo<>();
+    public DigrafoAnotado() {
+        digrafo = new Digrafo<>();
         vertices = new TreeMap<>();
     }
     
@@ -46,34 +46,34 @@ public class GrafoAnotado implements Serializable {
         v.tamanho = tamanho;
         
         vertices.put( v.v, v );
-        grafo.adicionarVertice( v.v );
+        digrafo.adicionarVertice( v.v );
         
     }
     
     public void adicionarAresta( int v, int w ) {
-        grafo.adicionarAresta( v, w );
+        digrafo.adicionarAresta( v, w );
     }
     
     public void removerVertice( int v ) {
-        grafo.removerVertice( v );
+        digrafo.removerVertice( v );
         
     }
     
     public void removerAresta( int v, int w ) {
-        grafo.removerAresta( v, w );
+        digrafo.removerAresta( v, w );
     }
 
     public Map<Integer, VerticeGrafoAnotado> getVertices() {
         return vertices;
     }
 
-    public Grafo<Integer> getGrafo() {
-        return grafo;
+    public Digrafo<Integer> getDigrafo() {
+        return digrafo;
     }
     
     public static void main( String[] args ) {
         
-        GrafoAnotado a = new GrafoAnotado();
+        DigrafoAnotado a = new DigrafoAnotado();
         a.adicionarVertice( 1, 1, 1 );
         a.adicionarVertice( 1, 1, 1 );
         a.adicionarVertice( 1, 1, 1 );
@@ -88,12 +88,12 @@ public class GrafoAnotado implements Serializable {
         //a.removerAresta( 1, 0 );
         
         System.out.println( a.verticeAtual );
-        System.out.println( a.getGrafo() );
+        System.out.println( a.getDigrafo() );
         
     }
     
     public void limpar() {
-        grafo = new Grafo<>();
+        digrafo = new Digrafo<>();
         vertices = new LinkedHashMap<>();
         verticeAtual = 0;
     }

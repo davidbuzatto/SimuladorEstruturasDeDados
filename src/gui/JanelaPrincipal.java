@@ -597,8 +597,29 @@ public class JanelaPrincipal extends javax.swing.JFrame {
     }//GEN-LAST:event_btnArvoreAVLActionPerformed
 
     private void btnDigrafoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnDigrafoActionPerformed
-        JOptionPane.showMessageDialog( this, "Não implementado!", 
-                "ERRO", JOptionPane.ERROR_MESSAGE );
+        
+        JInternalFrame iFrame = iFrames.get( "ifDigrafo" );
+        
+        if ( iFrame == null ) {
+            
+            iFrame = new IFDigrafo();
+            desktopPane.add( iFrame );
+            iFrames.put( "ifDigrafo", iFrame );
+            
+            iFrame.addInternalFrameListener( new InternalFrameAdapter() {
+                @Override
+                public void internalFrameClosing( InternalFrameEvent e ) {
+                    iFrames.remove( "ifDigrafo" );
+                }
+            });
+            
+        }
+        
+        try {
+            iFrame.setSelected( true );
+        } catch ( PropertyVetoException ex ) {
+        }
+        
     }//GEN-LAST:event_btnDigrafoActionPerformed
 
     private void btnDigrafoPonderadoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnDigrafoPonderadoActionPerformed

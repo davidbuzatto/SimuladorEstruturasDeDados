@@ -11,17 +11,18 @@ import java.util.HashMap;
 import java.util.Map;
 
 /**
- * Algoritmo para contagem de componentes conexos.
+ * Algoritmo de Kosaraju.
+ * Algoritmo para contagem de componentes fortes.
  * 
  * @author David Buzatto
  */
-public class ComponentesConexos<Tipo extends Comparable<? super Tipo>> {
+public class ComponentesFortes<Tipo extends Comparable<? super Tipo>> {
     
     private Map<Tipo, Boolean> marcado;
     private Map<Tipo, Integer> id;
-    private int cont; // getQuantidade de componentes
+    private int cont; // quantidade de componentes
     
-    public ComponentesConexos( Digrafo<Tipo> g ) {
+    public ComponentesFortes( Digrafo<Tipo> g ) {
         
         marcado = new HashMap<>();
         id = new HashMap<>();

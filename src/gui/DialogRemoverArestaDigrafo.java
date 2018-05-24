@@ -6,37 +6,37 @@
 
 package gui;
 
-import estruturas.Grafo;
+import estruturas.Digrafo;
 import java.util.ArrayList;
 import java.util.List;
 import javax.swing.DefaultListModel;
 
 /**
- * Diálogo para remoção de arestas do grafo.
+ * Diálogo para remoção de arestas do digrafo.
  * 
  * @author David Buzatto
  */
-public class DialogRemoverArestaGrafo extends javax.swing.JDialog {
+public class DialogRemoverArestaDigrafo extends javax.swing.JDialog {
 
     private DefaultListModel<String> modelo;
     private List<String> arestasRemovidas;
-    private Grafo<Integer> grafo;
+    private Digrafo<Integer> digrafo;
     
     /**
      * Creates new form DialogRemoverArestaGrafo
      */
-    public DialogRemoverArestaGrafo( java.awt.Frame parent, boolean modal, Grafo<Integer> grafo ) {
+    public DialogRemoverArestaDigrafo( java.awt.Frame parent, boolean modal, Digrafo<Integer> digrafo ) {
         
         super( parent, modal );
         initComponents();
         
-        this.grafo = grafo;
+        this.digrafo = digrafo;
         this.arestasRemovidas = new ArrayList<>();
         
         modelo = new DefaultListModel<>();
         
-        for ( Integer v : grafo.getVertices() ) {
-            for ( Integer w : grafo.getAdjacentes( v ) ) {
+        for ( Integer v : digrafo.getVertices() ) {
+            for ( Integer w : digrafo.getAdjacentes( v ) ) {
                 modelo.addElement( v + "-" + w );
             }
         }

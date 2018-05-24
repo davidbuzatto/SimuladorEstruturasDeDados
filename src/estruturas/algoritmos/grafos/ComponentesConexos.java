@@ -19,7 +19,7 @@ public class ComponentesConexos<Tipo extends Comparable<? super Tipo>> {
     
     private Map<Tipo, Boolean> marcado;
     private Map<Tipo, Integer> id;
-    private int cont; // getQuantidade de componentes
+    private int cont; // quantidade de componentes
     
     public ComponentesConexos( Grafo<Tipo> g ) {
         

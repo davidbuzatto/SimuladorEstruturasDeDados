@@ -9,7 +9,8 @@ package estruturas;
 import estruturas.algoritmos.digrafos.AlgoritmosBasicosDigrafo;
 import estruturas.algoritmos.digrafos.BuscaLargura;
 import estruturas.algoritmos.digrafos.BuscaProfundidade;
-import estruturas.algoritmos.digrafos.ComponentesConexos;
+import estruturas.algoritmos.digrafos.ComponentesFortes;
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -22,9 +23,13 @@ import java.util.TreeMap;
  * 
  * Permite mais de uma aresta v-w/w-v e remove todas as ocorrências.
  * 
+ * Implementa Serializable para poder ser salvo.
+ * 
  * @author David Buzatto
  */
-public class Digrafo<Tipo extends Comparable> {
+public class Digrafo<Tipo extends Comparable<? super Tipo>> implements Serializable {
+    
+    private static final long serialVersionUID = 2L;
     
     private int quantidadeArestas;
     private Map<Tipo, List<Tipo>> adj;
@@ -258,7 +263,7 @@ public class Digrafo<Tipo extends Comparable> {
         }
         System.out.println();
         
-        ComponentesConexos<Integer> cc = new ComponentesConexos<>( dg );
+        ComponentesFortes<Integer> cc = new ComponentesFortes<>( dg );
         System.out.println( "Quantidade de componentes conexos: " + cc.getQuantidade() );
         
     }

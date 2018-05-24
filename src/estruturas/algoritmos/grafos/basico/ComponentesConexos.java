@@ -17,7 +17,7 @@ public class ComponentesConexos {
     
     private boolean[] marcado;
     private int[] id; // identificadores dos componentes
-    private int cont; // getQuantidade de componentes
+    private int cont; // quantidade de componentes
     
     public ComponentesConexos( GrafoBasico g ) {
         
