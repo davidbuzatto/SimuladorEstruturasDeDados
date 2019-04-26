@@ -6,7 +6,7 @@
 
 package estruturas.algoritmos.arvores;
 
-import estruturas.ArvoreAVL;
+import estruturas.ArvoreAVLCV;
 import estruturas.Fila;
 import estruturas.Pilha;
 import java.util.ArrayList;
@@ -28,7 +28,7 @@ public class PercursosArvoreAVL {
      * @param tipo Tipo do percurso a ser executado.
      * @return Lista de elementos na ordem do percurso executado.
      */
-    public static <Tipo extends Comparable<? super Tipo>> Iterable<Tipo> percorrer( ArvoreAVL<Tipo> aavl, TipoPercursoArvores tipo ) {
+    public static <Tipo extends Comparable<? super Tipo>> Iterable<Tipo> percorrer( ArvoreAVLCV<Tipo> aavl, TipoPercursoArvores tipo ) {
         
         List<Tipo> elementos = new ArrayList<>();
         
@@ -67,7 +67,7 @@ public class PercursosArvoreAVL {
     /*
      * Métodos privados para os percursos.
      */
-    private static <Tipo extends Comparable<? super Tipo>> void preOrdem( ArvoreAVL<Tipo>.No<Tipo> no, List<Tipo> elementos ) {
+    private static <Tipo extends Comparable<? super Tipo>> void preOrdem( ArvoreAVLCV<Tipo>.No<Tipo> no, List<Tipo> elementos ) {
         
         if ( no != null ) {
             elementos.add( no.valor );
@@ -77,7 +77,7 @@ public class PercursosArvoreAVL {
         
     }
     
-    private static <Tipo extends Comparable<? super Tipo>> void emOrdem( ArvoreAVL<Tipo>.No<Tipo> no, List<Tipo> elementos ) {
+    private static <Tipo extends Comparable<? super Tipo>> void emOrdem( ArvoreAVLCV<Tipo>.No<Tipo> no, List<Tipo> elementos ) {
         
         if ( no != null ) {
             emOrdem( no.esquerda, elementos );
@@ -87,7 +87,7 @@ public class PercursosArvoreAVL {
         
     }
     
-    private static <Tipo extends Comparable<? super Tipo>> void posOrdem( ArvoreAVL<Tipo>.No<Tipo> no, List<Tipo> elementos ) {
+    private static <Tipo extends Comparable<? super Tipo>> void posOrdem( ArvoreAVLCV<Tipo>.No<Tipo> no, List<Tipo> elementos ) {
         
         if ( no != null ) {
             posOrdem( no.esquerda, elementos );
@@ -97,16 +97,16 @@ public class PercursosArvoreAVL {
         
     }
     
-    private static <Tipo extends Comparable<? super Tipo>> void emNivel( ArvoreAVL<Tipo>.No<Tipo> no, List<Tipo> elementos ) {
+    private static <Tipo extends Comparable<? super Tipo>> void emNivel( ArvoreAVLCV<Tipo>.No<Tipo> no, List<Tipo> elementos ) {
         
         if ( no != null ) {
             
-            Fila<ArvoreAVL<Tipo>.No<Tipo>> fila = new Fila<>();
+            Fila<ArvoreAVLCV<Tipo>.No<Tipo>> fila = new Fila<>();
             fila.enfileirar( no );
 
             while ( !fila.estaVazia() ) {
 
-                ArvoreAVL<Tipo>.No<Tipo> atual = fila.desenfileirar();
+                ArvoreAVLCV<Tipo>.No<Tipo> atual = fila.desenfileirar();
                 elementos.add( atual.valor );
 
                 if ( atual.esquerda != null ) {
@@ -123,7 +123,7 @@ public class PercursosArvoreAVL {
         
     }
     
-    private static <Tipo extends Comparable<? super Tipo>> void preOrdemInverso( ArvoreAVL<Tipo>.No<Tipo> no, List<Tipo> elementos ) {
+    private static <Tipo extends Comparable<? super Tipo>> void preOrdemInverso( ArvoreAVLCV<Tipo>.No<Tipo> no, List<Tipo> elementos ) {
         
         if ( no != null ) {
             elementos.add( no.valor );
@@ -133,7 +133,7 @@ public class PercursosArvoreAVL {
         
     }
     
-    private static <Tipo extends Comparable<? super Tipo>> void emOrdemInverso( ArvoreAVL<Tipo>.No<Tipo> no, List<Tipo> elementos ) {
+    private static <Tipo extends Comparable<? super Tipo>> void emOrdemInverso( ArvoreAVLCV<Tipo>.No<Tipo> no, List<Tipo> elementos ) {
         
         if ( no != null ) {
             emOrdemInverso( no.direita, elementos );
@@ -143,7 +143,7 @@ public class PercursosArvoreAVL {
         
     }
     
-    private static <Tipo extends Comparable<? super Tipo>> void posOrdemInverso( ArvoreAVL<Tipo>.No<Tipo> no, List<Tipo> elementos ) {
+    private static <Tipo extends Comparable<? super Tipo>> void posOrdemInverso( ArvoreAVLCV<Tipo>.No<Tipo> no, List<Tipo> elementos ) {
         
         if ( no != null ) {
             posOrdemInverso( no.direita, elementos );
@@ -153,17 +153,17 @@ public class PercursosArvoreAVL {
         
     }
     
-    private static <Tipo extends Comparable<? super Tipo>> void emNivelInverso( ArvoreAVL<Tipo>.No<Tipo> no, List<Tipo> elementos ) {
+    private static <Tipo extends Comparable<? super Tipo>> void emNivelInverso( ArvoreAVLCV<Tipo>.No<Tipo> no, List<Tipo> elementos ) {
         
         if ( no != null ) {
             
-            Fila<ArvoreAVL<Tipo>.No<Tipo>> fila = new Fila<>();
-            Pilha<ArvoreAVL<Tipo>.No<Tipo>> pilha = new Pilha<>();
+            Fila<ArvoreAVLCV<Tipo>.No<Tipo>> fila = new Fila<>();
+            Pilha<ArvoreAVLCV<Tipo>.No<Tipo>> pilha = new Pilha<>();
             fila.enfileirar( no );
 
             while ( !fila.estaVazia() ) {
 
-                ArvoreAVL<Tipo>.No<Tipo> atual = fila.desenfileirar();
+                ArvoreAVLCV<Tipo>.No<Tipo> atual = fila.desenfileirar();
                 pilha.empilhar( atual );
 
                 if ( atual.esquerda != null ) {

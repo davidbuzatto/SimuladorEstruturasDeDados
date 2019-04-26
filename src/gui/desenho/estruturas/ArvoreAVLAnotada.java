@@ -6,7 +6,7 @@
 
 package gui.desenho.estruturas;
 
-import estruturas.ArvoreAVL;
+import estruturas.ArvoreAVLCV;
 import estruturas.Fila;
 import estruturas.algoritmos.arvores.TipoPercursoArvores;
 import estruturas.Pilha;
@@ -76,7 +76,7 @@ public class ArvoreAVLAnotada<Tipo extends Comparable<? super Tipo>> {
      * Cria uma árvore anotada com base em uma árvore AVL passada.
      * @param aavl Árvore AVL que será usada como base.
      */
-    public ArvoreAVLAnotada( ArvoreAVL<Tipo> aavl ) {
+    public ArvoreAVLAnotada( ArvoreAVLCV<Tipo> aavl ) {
         copiar( aavl, aavl.getRaiz() );
         processar( raiz, null );
     }
@@ -89,7 +89,7 @@ public class ArvoreAVLAnotada<Tipo extends Comparable<? super Tipo>> {
      * @param no Nó que se quer iniciar a cópia (nó da árvore original).
      * @return Um nó anotado para a construção recursiva.
      */
-    private NoAnotado<Tipo> copiar( ArvoreAVL<Tipo> aavl, ArvoreAVL<Tipo>.No<Tipo> no ) {
+    private NoAnotado<Tipo> copiar( ArvoreAVLCV<Tipo> aavl, ArvoreAVLCV<Tipo>.No<Tipo> no ) {
 
         NoAnotado<Tipo> novoNo = null;
 

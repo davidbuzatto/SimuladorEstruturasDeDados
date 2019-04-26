@@ -11,7 +11,7 @@ import java.util.Iterator;
 import java.util.NoSuchElementException;
 
 /**
- * Implementação de uma árvore vermelho e preto para valor/valor.
+ * Implementação de uma árvore vermelho e preto paro valor/valor.
  * 
  * Baseado no código de:
  *     SEDGEWICK, R.; WAYNE, K. Algorithms. 4. ed. 
@@ -124,23 +124,23 @@ public class ArvoreVermelhoPreto<Tipo extends Comparable<? super Tipo>>
      */
     
     /**
-     * Obtém o valor associado a uma valor.
+     * Verifica se existe um valor associado a umo valor.
      * 
      * @param valor valor a ser consultada
-     * @return o valor encontrado ou null caso não exista.
+     * @return true caso haja um valor associado à valor, false caso contrário.
      */
-    public Tipo obter( Tipo valor ) {
-        return obter( raiz, valor );
+    public boolean contem( Tipo valor ) {
+        return contem( raiz, valor ) != null;
     }
 
     /**
-     * Obtém o valor associado a uma valor em uma subárvore enraizada em um nó.
+     * Verifica se existe um valor associado a umo valor em uma subárvore enraizada em um nó.
      * 
      * @param no nó de origem da consulta
      * @param valor valor a ser consultada
-     * @return o valor associado à valor ou null caso não haja a valor.
+     * @return true caso haja um valor associado à valor, false caso contrário.
      */
-    private Tipo obter( No<Tipo> no, Tipo valor ) {
+    private Tipo contem( No<Tipo> no, Tipo valor ) {
         
         while ( no != null ) {
             
@@ -160,27 +160,6 @@ public class ArvoreVermelhoPreto<Tipo extends Comparable<? super Tipo>>
         
     }
 
-    /**
-     * Verifica se existe um valor associado a uma valor.
-     * 
-     * @param valor valor a ser consultada
-     * @return true caso haja um valor associado à valor, false caso contrário.
-     */
-    public boolean contem( Tipo valor ) {
-        return obter( valor ) != null;
-    }
-
-    /**
-     * Verifica se existe um valor associado a uma valor em uma subárvore enraizada em um nó.
-     * 
-     * @param no nó de origem da consulta
-     * @param valor valor a ser consultada
-     * @return true caso haja um valor associado à valor, false caso contrário.
-     */
-    private boolean contem( No<Tipo> no, Tipo valor ) {
-        return obter( no, valor ) != null;
-    }
-
     
     
     /**
@@ -190,9 +169,8 @@ public class ArvoreVermelhoPreto<Tipo extends Comparable<? super Tipo>>
      */
     
     /**
-     * Insere um valor em uma valor. Caso a valor já exista, sobreescreve o valor.
+     * Insere um valor. Caso o valor já exista, não faz nada.
      * 
-     * @param valor valor para inserção
      * @param valor valor para inserção
      */
     public void inserir( Tipo valor ) {
@@ -205,11 +183,10 @@ public class ArvoreVermelhoPreto<Tipo extends Comparable<? super Tipo>>
     }
 
     /**
-     * Insere um valor em uma valor em um subárvore enraizada em um nó.
-     * Caso a valor já exista, sobreescreve o valor.
+     * Insere um valor em uma subárvore enraizada em um nó.
+     * Caso o valor já exista, não faz nada.
      * 
      * @param no nó de origem da inserção
-     * @param valor valor para inserção
      * @param valor valor para inserção
      */
     private No<Tipo> inserir( No<Tipo> no, Tipo valor ) {
@@ -226,27 +203,31 @@ public class ArvoreVermelhoPreto<Tipo extends Comparable<? super Tipo>>
         }
 
         int comparacao = valor.compareTo( no.valor );
-        
+        boolean reorganizarNos = true;
         if ( comparacao < 0 ) {
             no.esquerda = inserir( no.esquerda, valor );
         } else if ( comparacao > 0 ) {
             no.direita = inserir( no.direita, valor );
-        } else {
-            no.valor = valor;
+        } else { // não faz nada
+            reorganizarNos = false;
         }
 
-        // consertando os links inclinados à direita
-        if ( isVermelho( no.direita ) && !isVermelho( no.esquerda ) ) {
-            no = rotacionarParaEsquerda( no );
+        if ( reorganizarNos ) {
+            
+            // consertando os links inclinados à direita
+            if ( isVermelho( no.direita ) && !isVermelho( no.esquerda ) ) {
+                no = rotacionarParaEsquerda( no );
+            }
+            if ( isVermelho( no.esquerda ) && isVermelho( no.esquerda.esquerda ) ) {
+                no = rotacionarParaDireita( no );
+            }
+            if ( isVermelho( no.esquerda ) && isVermelho( no.direita ) ) {
+                trocarCor( no );
+            }
+
+            no.n = tamanho( no.esquerda ) + tamanho( no.direita ) + 1;
+            
         }
-        if ( isVermelho( no.esquerda ) && isVermelho( no.esquerda.esquerda ) ) {
-            no = rotacionarParaDireita( no );
-        }
-        if ( isVermelho( no.esquerda ) && isVermelho( no.direita ) ) {
-            trocarCor( no );
-        }
-        
-        no.n = tamanho( no.esquerda ) + tamanho( no.direita ) + 1;
 
         return no;
         
@@ -259,7 +240,7 @@ public class ArvoreVermelhoPreto<Tipo extends Comparable<? super Tipo>>
      */
     
     /**
-     * Remove o nó com a menor valor.
+     * Remove o nó com o menor valor.
      */
     public void removerMinimo() {
         
@@ -282,7 +263,7 @@ public class ArvoreVermelhoPreto<Tipo extends Comparable<? super Tipo>>
     }
 
     /**
-     * Remove o nó com a menor valor da subárvore enraizada em um nó.
+     * Remove o nó com o menor valor da subárvore enraizada em um nó.
      */
     private No<Tipo> removerMinimo( No<Tipo> no ) {
         
@@ -301,7 +282,7 @@ public class ArvoreVermelhoPreto<Tipo extends Comparable<? super Tipo>>
     }
 
     /**
-     * Remove o nó com a maior valor.
+     * Remove o nó com o maior valor.
      */
     public void removerMaximo() {
         
@@ -324,7 +305,7 @@ public class ArvoreVermelhoPreto<Tipo extends Comparable<? super Tipo>>
     }
 
     /**
-     * Remove o nó com a maior valor da subárvore enraizada em um nó.
+     * Remove o nó com o maior valor da subárvore enraizada em um nó.
      */
     private No<Tipo> removerMaximo( No<Tipo> no ) {
         
@@ -347,10 +328,9 @@ public class ArvoreVermelhoPreto<Tipo extends Comparable<? super Tipo>>
     }
 
     /**
-     * Remove um par valor-valor de acordo com a valor passada. Caso a valor não
-     * exista, não faz nada.
+     * Remove um valor. Caso o valor não exista, não faz nada.
      * 
-     * @param valor valor a ser consultada.
+     * @param valor valor a ser removido.
      */
     public void remover( Tipo valor ) {
         
@@ -373,10 +353,10 @@ public class ArvoreVermelhoPreto<Tipo extends Comparable<? super Tipo>>
     }
 
     /**
-     * Remove um par valor-valor de acordo com a valor passada de uma subárvore
-     * enraizada em um nó. Caso a valor não exista, não faz nada.
+     * Remove um valor passado de uma subárvore enraizada em um nó. 
+     * Caso o valor não exista, não faz nada.
      * 
-     * @param valor valor a ser consultada.
+     * @param valor valor a ser removido.
      */
     private No<Tipo> remover( No<Tipo> no, Tipo valor ) {
         
@@ -405,7 +385,7 @@ public class ArvoreVermelhoPreto<Tipo extends Comparable<? super Tipo>>
             }
             
             if ( valor.compareTo( no.valor ) == 0 ) {
-                no.valor = obter( no.direita, minimo( no.direita ).valor );
+                no.valor = minimo( no.direita ).valor;
                 no.direita = removerMinimo( no.direita );
             } else {
                 no.direita = remover( no.direita, valor );
@@ -599,9 +579,9 @@ public class ArvoreVermelhoPreto<Tipo extends Comparable<? super Tipo>>
      */
     
     /**
-     * Retorna a menor valor.
+     * Retorna o menor valor.
      * 
-     * @return a menor valor, null caso a valor não exista.
+     * @return o menor valor, null caso o valor não exista.
      */
     public Tipo minimo() {
         
@@ -614,10 +594,10 @@ public class ArvoreVermelhoPreto<Tipo extends Comparable<? super Tipo>>
     }
 
     /**
-     * Retorna a menor valor em uma subárvore enraizada em um nó.
+     * Retorna o menor valor em uma subárvore enraizada em um nó.
      * 
      * @param no nó de origem.
-     * @return a menor valor, null caso a valor não exista.
+     * @return o menor valor, null caso o valor não exista.
      */
     private No<Tipo> minimo( No<Tipo> no ) {
         
@@ -632,9 +612,9 @@ public class ArvoreVermelhoPreto<Tipo extends Comparable<? super Tipo>>
     }
 
     /**
-     * Retorna a maior valor.
+     * Retorna o maior valor.
      * 
-     * @return a maior valor, null caso a valor não exista.
+     * @return o maior valor, null caso o valor não exista.
      */
     public Tipo maximo() {
         
@@ -647,10 +627,10 @@ public class ArvoreVermelhoPreto<Tipo extends Comparable<? super Tipo>>
     }
 
     /**
-     * Retorna a maior valor em uma subárvore enraizada em um nó.
+     * Retorna o maior valor em uma subárvore enraizada em um nó.
      * 
      * @param no nó de origem.
-     * @return a maior valor, null caso a valor não exista.
+     * @return o maior valor, null caso o valor não exista.
      */
     private No<Tipo> maximo( No<Tipo> no ) {
         
@@ -665,10 +645,10 @@ public class ArvoreVermelhoPreto<Tipo extends Comparable<? super Tipo>>
     }
 
     /**
-     * Retorna a maior valor menor ou igual a uma valor.
+     * Retorna o maior valor menor ou igual a umo valor.
      * 
      * @param valor valor a ser consultada
-     * @return a maior valor menor ou igual a uma valor, null caso a valor não exista.
+     * @return o maior valor menor ou igual a umo valor, null caso o valor não exista.
      */
     public Tipo chao( Tipo valor ) {
         
@@ -683,11 +663,11 @@ public class ArvoreVermelhoPreto<Tipo extends Comparable<? super Tipo>>
     }
 
     /**
-     * Retorna a maior valor menor ou igual a uma valor em uma subárvore enraizada em um nó.
+     * Retorna o maior valor menor ou igual a umo valor em uma subárvore enraizada em um nó.
      * 
      * @param no nó de origem
      * @param valor valor a ser consultada
-     * @return a maior valor menor ou igual a uma valor, null caso a valor não exista.
+     * @return o maior valor menor ou igual a umo valor, null caso o valor não exista.
      */
     private No<Tipo> chao( No<Tipo> no, Tipo valor ) {
         
@@ -714,10 +694,10 @@ public class ArvoreVermelhoPreto<Tipo extends Comparable<? super Tipo>>
     }
 
     /**
-     * Retorna a menor valor maior ou igual a uma valor.
+     * Retorna o menor valor maior ou igual a umo valor.
      * 
      * @param valor valor a ser consultada
-     * @return a menor valor maior ou igual a uma valor, null caso a valor não exista.
+     * @return o menor valor maior ou igual a umo valor, null caso o valor não exista.
      */
     public Tipo teto( Tipo valor ) {
         
@@ -732,11 +712,11 @@ public class ArvoreVermelhoPreto<Tipo extends Comparable<? super Tipo>>
     }
 
     /**
-     * Retorna a menor valor maior ou igual a uma valor em uma subárvore enraizada em um nó.
+     * Retorna o menor valor maior ou igual a umo valor em uma subárvore enraizada em um nó.
      * 
      * @param no nó de origem
      * @param valor valor a ser consultada
-     * @return a menor valor maior ou igual a uma valor, null caso a valor não exista.
+     * @return o menor valor maior ou igual a umo valor, null caso o valor não exista.
      */
     private No<Tipo> teto( No<Tipo> x, Tipo valor ) {
         
@@ -763,10 +743,10 @@ public class ArvoreVermelhoPreto<Tipo extends Comparable<? super Tipo>>
     }
 
     /**
-     * Retorna a valor que tem o determinado ranque.
+     * Retorna o valor que tem o determinado ranque.
      * 
      * @param k ranque a ser verificado
-     * @return a valor com o ranque passado, null caso o ranque não exista
+     * @return o valor com o ranque passado, null caso o ranque não exista
      */
     public Tipo selecionar( int k ) {
         
@@ -780,11 +760,11 @@ public class ArvoreVermelhoPreto<Tipo extends Comparable<? super Tipo>>
     }
 
     /**
-     * Retorna a valor que tem o determinado ranque em uma subárvore enraizada em um nó
+     * Retorna o valor que tem o determinado ranque em uma subárvore enraizada em um nó
      * 
      * @param no nó de origem
      * @param k ranque a ser verificado
-     * @return a valor com o ranque passado, null caso o ranque não exista
+     * @return o valor com o ranque passado, null caso o ranque não exista
      */
     private No<Tipo> selecionar( No<Tipo> no, int k ) {
         
@@ -804,21 +784,21 @@ public class ArvoreVermelhoPreto<Tipo extends Comparable<? super Tipo>>
     }
 
     /**
-     * Obtém o ranque de uma valor.
+     * Obtém o ranque de umo valor.
      * 
      * @param valor valor a ser consultada
-     * @return o ranque da valor, 0 caso não exista
+     * @return o ranque do valor, 0 caso não exista
      */
     public int ranque( Tipo valor ) {
         return ranque( raiz, valor );
     }
 
     /**
-     * Obtém o ranque de uma valor em uma subárvore enraizada em um nó.
+     * Obtém o ranque de umo valor em uma subárvore enraizada em um nó.
      * 
      * @param no nó de origem
      * @param valor valor a ser consultada
-     * @return o ranque da valor, 0 caso não exista
+     * @return o ranque do valor, 0 caso não exista
      */
     private int ranque( No<Tipo> no, Tipo valor ) {
         
@@ -847,20 +827,20 @@ public class ArvoreVermelhoPreto<Tipo extends Comparable<? super Tipo>>
      */
     
     /**
-     * Obtém todas as valores na forma de um iterável.
+     * Obtém todos os valores na forma de um iterável.
      * 
-     * @return todas as valores.
+     * @return todos os valores.
      */
     public Iterable<Tipo> valores() {
         return valores( minimo(), maximo() );
     }
 
     /**
-     * Obtém todas as valores de um intervalo na forma de um iterável.
+     * Obtém todos os valores de um intervalo na forma de um iterável.
      * 
      * @param menor valor de ínicio
      * @param maior valor de fim
-     * @return todas as valores no intervalo.
+     * @return todos os valores no intervalo.
      */
     public Iterable<Tipo> valores( Tipo menor, Tipo maior ) {
         
@@ -877,13 +857,13 @@ public class ArvoreVermelhoPreto<Tipo extends Comparable<? super Tipo>>
     }
 
     /**
-     * Obtém todas as valores de um intervalo na forma de um iterável em uma subárvore
+     * Obtém todos os valores de um intervalo na forma de um iterável em uma subárvore
      * enraizada em um nó.
      * 
      * @param no nó de origem
      * @param menor valor de ínicio
      * @param maior valor de fim
-     * @return todas as valores no intervalo.
+     * @return todos os valores no intervalo.
      */
     private void valores( No<Tipo> no, Fila<Tipo> fila, Tipo menor, Tipo maior ) {
         
@@ -907,11 +887,11 @@ public class ArvoreVermelhoPreto<Tipo extends Comparable<? super Tipo>>
     }
 
     /**
-     * Obtém a quantidade de valores entre duas valores.
+     * Obtém a quantidade de valores entre duos valores.
      * 
      * @param menor valor de início
      * @param maior valor de fim
-     * @return a quantidade de valores entre duas valores
+     * @return a quantidade de valores entre duos valores
      */
     public int tamanho( Tipo menor, Tipo maior ) {
         
@@ -972,14 +952,14 @@ public class ArvoreVermelhoPreto<Tipo extends Comparable<? super Tipo>>
     }
 
     /**
-     * Verifica se a subárvore enraizada em um nó tem as valores em ordem entre duas 
+     * Verifica se a subárvore enraizada em um nó tem os valores em ordem entre duas 
      * valores.
      * Credito: Bob Dondero's
      * 
      * @param no no de origem
      * @param min valor mínima
      * @param max valor máxima
-     * @return true caso seja uma ABB entre as valores, false caso contrário.
+     * @return true caso seja uma ABB entre os valores, false caso contrário.
      */
     private boolean isABB( No<Tipo> no, Tipo min, Tipo max ) {
         
@@ -1228,7 +1208,7 @@ public class ArvoreVermelhoPreto<Tipo extends Comparable<? super Tipo>>
         System.out.println( avp );
         
         for ( Integer valor : avp.valores() ) {
-            System.out.printf( "%d: %s\n", valor, avp.obter( valor ) );
+            System.out.printf( "%d: %s\n", valor, avp.contem( valor ) );
         }
         
     }

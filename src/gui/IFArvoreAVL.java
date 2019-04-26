@@ -6,7 +6,7 @@
 
 package gui;
 
-import estruturas.ArvoreAVL;
+import estruturas.ArvoreAVLCV;
 import estruturas.algoritmos.arvores.TipoPercursoArvores;
 import gui.desenho.PainelDesenho;
 import gui.desenho.estruturas.ArvoreAVLAnotada;
@@ -26,7 +26,7 @@ import javax.swing.SwingUtilities;
  */
 public class IFArvoreAVL extends javax.swing.JInternalFrame {
 
-    private ArvoreAVL<Integer> aavl;
+    private ArvoreAVLCV<Integer> aavl;
     private ArvoreAVLDesenhavel<Integer> aavlD;
     private ArvoreAVLAnotada<Integer> aavlAnt;
     private ArvoreAVLAnotada<Integer>.NoAnotado<Integer> noRemocao;
@@ -38,7 +38,7 @@ public class IFArvoreAVL extends javax.swing.JInternalFrame {
      */
     public IFArvoreAVL() {
         
-        aavl = new ArvoreAVL<>();
+        aavl = new ArvoreAVLCV<>();
         aavlD = new ArvoreAVLDesenhavel<>( aavl );
         aavlAnt = new ArvoreAVLAnotada<>( aavl );
         

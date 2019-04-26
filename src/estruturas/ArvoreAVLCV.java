@@ -13,7 +13,7 @@ import java.util.Iterator;
 import java.util.List;
 
 /**
- * Implementação de uma árvore AVL.
+ * Implementação de uma árvore AVL chave/valor.
  * 
  * Baseado no código de:
  *     WEISS, M. A. Data Structures and Algorithm Analysis in Java. 3. ed. 
@@ -21,7 +21,7 @@ import java.util.List;
  * 
  * @author David Buzatto
  */
-public class ArvoreAVL<Tipo extends Comparable<? super Tipo>> implements Iterable<Tipo> {
+public class ArvoreAVLCV<Tipo extends Comparable<? super Tipo>> implements Iterable<Tipo> {
 
     /*
      * Classe interna que define os nós da árvore.
@@ -47,7 +47,7 @@ public class ArvoreAVL<Tipo extends Comparable<? super Tipo>> implements Iterabl
     /**
      * Constrói uma Árvore AVL vazia.
      */
-    public ArvoreAVL() {
+    public ArvoreAVLCV() {
         raiz = null;
     }
 
@@ -439,7 +439,7 @@ public class ArvoreAVL<Tipo extends Comparable<? super Tipo>> implements Iterabl
      */
     public static void main( String[] args ) {
         
-        ArvoreAVL<Integer> aavl = new ArvoreAVL<>();
+        ArvoreAVLCV<Integer> aavl = new ArvoreAVLCV<>();
         
         aavl.inserir( 6 );
         System.out.println( aavl );
