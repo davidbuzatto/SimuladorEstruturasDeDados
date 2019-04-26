@@ -17,7 +17,7 @@ import java.util.List;
  * 
  * @author David Buzatto
  */
-public class PercursosArvoreAVL {
+public class PercursosArvoreAVLCV {
     
     /**
      * Retorna uma lista contendo os ítens da árvore na ordem do percurso
