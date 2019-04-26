@@ -19,8 +19,8 @@ import java.util.NoSuchElementException;
  * 
  * @author David Buzatto
  */
-public class ArvoreVermelhoPretoPre<Tipo extends Comparable<? super Tipo>> 
-        implements Iterable<ArvoreVermelhoPretoPre<Tipo>.No<Tipo>> {
+public class ArvoreVermelhoPreto<Tipo extends Comparable<? super Tipo>> 
+        implements Iterable<ArvoreVermelhoPreto<Tipo>.No<Tipo>> {
 
     /*
      * Classe interna que define os nós da árvore.
@@ -1210,7 +1210,7 @@ public class ArvoreVermelhoPretoPre<Tipo extends Comparable<? super Tipo>>
      */
     public static void main( String[] args ) {
         
-        ArvoreVermelhoPretoPre<Integer> avp = new ArvoreVermelhoPretoPre<>();
+        ArvoreVermelhoPreto<Integer> avp = new ArvoreVermelhoPreto<>();
         
         avp.inserir( 6 );
         System.out.println( avp );
