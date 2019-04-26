@@ -16,20 +16,20 @@ import java.util.List;
  * 
  * @author David Buzatto
  */
-public class TabelaSimbolos<Chave, Valor> implements Iterable<Valor> {
+public class TabelaSimbolosES<TipoChave extends Comparable<? super TipoChave>, TipoValor> implements Iterable<TipoValor> {
     
     /*
      * Classe privada que define os nós da estrutura encadeada da tabela de 
      * símbolos.
      */
-    private class No<Chave, Valor> {
-        Chave chave;
-        Valor valor;
-        No<Chave, Valor> anterior;
+    private class No<TipoChave, TipoValor> {
+        TipoChave chave;
+        TipoValor valor;
+        No<TipoChave, TipoValor> anterior;
     }
     
     // marca o primeiro nó da estrutura
-    private No<Chave, Valor> primeiro;
+    private No<TipoChave, TipoValor> primeiro;
     
     // tamanho da fila
     private int tamanho;
@@ -37,7 +37,7 @@ public class TabelaSimbolos<Chave, Valor> implements Iterable<Valor> {
     /**
      * Constrói uma tabela de símbolos vazia.
      */
-    public TabelaSimbolos() {
+    public TabelaSimbolosES() {
         primeiro = null;
         tamanho = 0;
     }
@@ -45,14 +45,14 @@ public class TabelaSimbolos<Chave, Valor> implements Iterable<Valor> {
     /**
      * Insere um novo valor na tabela de símbolos.
      * 
-     * @param chave Chave usada para armazenar o valor.
-     * @param valor Valor a ser armazenado.
+     * @param chave chave usada para armazenar o valor.
+     * @param valor valor a ser armazenado.
      */
-    public void inserir( Chave chave, Valor valor ) {
+    public void inserir( TipoChave chave, TipoValor valor ) {
         
         if ( estaVazia() ) {
             
-            No<Chave, Valor> novoNo = new No<>();
+            No<TipoChave, TipoValor> novoNo = new No<>();
             novoNo.chave = chave;
             novoNo.valor = valor;
             novoNo.anterior = null;
@@ -64,7 +64,7 @@ public class TabelaSimbolos<Chave, Valor> implements Iterable<Valor> {
         } else {
             
             boolean encontrou = false;
-            No<Chave, Valor> atual = primeiro;
+            No<TipoChave, TipoValor> atual = primeiro;
             
             while ( atual != null ) {
                 
@@ -83,7 +83,7 @@ public class TabelaSimbolos<Chave, Valor> implements Iterable<Valor> {
             // mudando sua posição
             if ( !encontrou ) {
                 
-                No<Chave, Valor> novoNo = new No<>();
+                No<TipoChave, TipoValor> novoNo = new No<>();
                 novoNo.chave = chave;
                 novoNo.valor = valor;
                 novoNo.anterior = primeiro;
@@ -102,12 +102,12 @@ public class TabelaSimbolos<Chave, Valor> implements Iterable<Valor> {
      * Obtém o valor contido na tabela de símbolos que está associado à chave
      * passada.
      * 
-     * @param chave Chave a ser utilizada na pesquisa.
-     * @return Valor encontrado na posição. Retorna null caso não encontre.
+     * @param chave cahve a ser utilizada na pesquisa.
+     * @return valor encontrado na posição. Retorna null caso não encontre.
      */
-    public Valor obter( Chave chave ) {
+    public TipoValor obter( TipoChave chave ) {
         
-        No<Chave, Valor> atual = primeiro;
+        No<TipoChave, TipoValor> atual = primeiro;
 
         while ( atual != null ) {
             if ( atual.chave.equals( chave ) ) {
@@ -124,9 +124,9 @@ public class TabelaSimbolos<Chave, Valor> implements Iterable<Valor> {
      * Remove o elemento associado à chave, inclusive a chave da tabela de 
      * símbolos.
      * 
-     * @param chave Chave a ser utilizada na pesquisa.
+     * @param chave chave a ser utilizada na pesquisa.
      */
-    public void remover( Chave chave ) {
+    public void remover( TipoChave chave ) {
 
         if ( !estaVazia() ) {
             
@@ -138,7 +138,7 @@ public class TabelaSimbolos<Chave, Valor> implements Iterable<Valor> {
             } else if ( primeiro.chave.equals( chave ) ) {
 
                 // temp é o elemento com a chave
-                No<Chave, Valor> temp = primeiro;
+                No<TipoChave, TipoValor> temp = primeiro;
                 primeiro = temp.anterior;
                 temp.anterior = null;
 
@@ -146,7 +146,7 @@ public class TabelaSimbolos<Chave, Valor> implements Iterable<Valor> {
 
             } else {
 
-                No<Chave, Valor> atual = primeiro;
+                No<TipoChave, TipoValor> atual = primeiro;
 
                 while ( atual != null ) {
 
@@ -154,7 +154,7 @@ public class TabelaSimbolos<Chave, Valor> implements Iterable<Valor> {
                     if ( atual.anterior.chave.equals( chave ) ) {
 
                         // temp é o elemento com a chave
-                        No<Chave, Valor> temp = atual.anterior;
+                        No<TipoChave, TipoValor> temp = atual.anterior;
                         atual.anterior = temp.anterior;
                         temp.anterior = null;
 
@@ -178,13 +178,13 @@ public class TabelaSimbolos<Chave, Valor> implements Iterable<Valor> {
      * Verifica se a tabela de símbolos contém um elemento indexado com a chave
      * especificada.
      * 
-     * @param chave Chave a ser utilizada na busca.
+     * @param chave chave a ser utilizada na busca.
      * @return true caso a tabela contenha o elemento especificado, false caso
      * contrário.
      */
-    public boolean contem( Chave chave ) {
+    public boolean contem( TipoChave chave ) {
         
-        for ( Chave ch : chaves() ) {
+        for ( TipoChave ch : chaves() ) {
             if ( ch.equals( chave ) ) {
                 return true;
             }
@@ -199,7 +199,7 @@ public class TabelaSimbolos<Chave, Valor> implements Iterable<Valor> {
      */
     public void esvaziar() {
         
-        for ( Chave chave : chaves() ) {
+        for ( TipoChave chave : chaves() ) {
             remover( chave );
         }
         
@@ -228,10 +228,10 @@ public class TabelaSimbolos<Chave, Valor> implements Iterable<Valor> {
      * 
      * @return Coleção com as chaves da tabela de símbolos.
      */
-    public Iterable<Chave> chaves() {
+    public Iterable<TipoChave> chaves() {
         
-        List<Chave> lista = new ArrayList<>();
-        No<Chave, Valor> atual = primeiro;
+        List<TipoChave> lista = new ArrayList<>();
+        No<TipoChave, TipoValor> atual = primeiro;
         
         while ( atual != null ) {
             lista.add( atual.chave );
@@ -254,7 +254,7 @@ public class TabelaSimbolos<Chave, Valor> implements Iterable<Valor> {
         if ( !estaVazia() ) {
             
             // percorrendo a estrutura encadeada
-            No<Chave, Valor> atual = primeiro;
+            No<TipoChave, TipoValor> atual = primeiro;
 
             while ( atual != null ) {
                 
@@ -284,11 +284,11 @@ public class TabelaSimbolos<Chave, Valor> implements Iterable<Valor> {
      * Este iterador percorre a tabela de símbolos no sentido primeiro -> último.
      */
     @Override
-    public Iterator<Valor> iterator() {
+    public Iterator<TipoValor> iterator() {
         
-        return new Iterator<Valor>() {
+        return new Iterator<TipoValor>() {
             
-            private No<Chave, Valor> atual = primeiro;
+            private No<TipoChave, TipoValor> atual = primeiro;
             
             @Override
             public boolean hasNext() {
@@ -296,8 +296,8 @@ public class TabelaSimbolos<Chave, Valor> implements Iterable<Valor> {
             }
 
             @Override
-            public Valor next() {
-                Valor item = atual.valor;
+            public TipoValor next() {
+                TipoValor item = atual.valor;
                 atual = atual.anterior;
                 return item;
             }
@@ -312,19 +312,19 @@ public class TabelaSimbolos<Chave, Valor> implements Iterable<Valor> {
     }
     public static void main( String[] args ) {
         
-        TabelaSimbolos<String, String> tabelaSimbolos = new TabelaSimbolos<>();
+        TabelaSimbolosES<String, String> tabelaSimbolos = new TabelaSimbolosES<>();
         
-        tabelaSimbolos.inserir( "A", "Valor 1" );
+        tabelaSimbolos.inserir( "A", "TipoValor 1" );
         System.out.println( tabelaSimbolos );
-        tabelaSimbolos.inserir( "X", "Valor 2" );
+        tabelaSimbolos.inserir( "X", "TipoValor 2" );
         System.out.println( tabelaSimbolos );
-        tabelaSimbolos.inserir( "C", "Valor 3" );
+        tabelaSimbolos.inserir( "C", "TipoValor 3" );
         System.out.println( tabelaSimbolos );
-        tabelaSimbolos.inserir( "D", "Valor 4" );
+        tabelaSimbolos.inserir( "D", "TipoValor 4" );
         System.out.println( tabelaSimbolos );
-        tabelaSimbolos.inserir( "A", "Valor 5" );
+        tabelaSimbolos.inserir( "A", "TipoValor 5" );
         System.out.println( tabelaSimbolos );
-        tabelaSimbolos.inserir( "Y", "Valor 6" );
+        tabelaSimbolos.inserir( "Y", "TipoValor 6" );
         System.out.println( tabelaSimbolos );
         
         // chaves

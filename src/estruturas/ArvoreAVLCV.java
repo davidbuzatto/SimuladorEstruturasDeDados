@@ -108,8 +108,8 @@ public class ArvoreAVLCV<TipoChave extends Comparable<? super TipoChave>, TipoVa
      * @param chave chave a ser pesquisada.
      * @return true caso tenha encontrado, false caso contrário.
      */
-    public boolean contemChave( TipoChave chave ) {
-        return contemChave( raiz, chave );
+    public boolean contem( TipoChave chave ) {
+        return contem( raiz, chave );
     }
     
     /**
@@ -119,7 +119,7 @@ public class ArvoreAVLCV<TipoChave extends Comparable<? super TipoChave>, TipoVa
      * @param chave chave a ser pesquisada.
      * @return true caso tenha encontrado, false caso contrário.
      */
-    private boolean contemChave( No<TipoChave, TipoValor> no, TipoChave chave ) {
+    private boolean contem( No<TipoChave, TipoValor> no, TipoChave chave ) {
         
         while ( no != null ) {
             
@@ -526,7 +526,7 @@ public class ArvoreAVLCV<TipoChave extends Comparable<? super TipoChave>, TipoVa
         Collections.shuffle( elementos );
         for ( ArvoreAVLCV<Integer, String>.No<Integer, String> e : elementos ) {
             System.out.printf( "%4d está na árvore? => %s\n", e.chave,
-                    aavl.contemChave( e.chave ) ? "SIM" : "NÃO" );
+                    aavl.contem( e.chave ) ? "SIM" : "NÃO" );
         }
         
         System.out.println( "\n----- Remoção -----" );

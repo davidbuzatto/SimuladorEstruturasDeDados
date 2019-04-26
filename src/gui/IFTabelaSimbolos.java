@@ -6,7 +6,7 @@
 
 package gui;
 
-import estruturas.TabelaSimbolos;
+import estruturas.TabelaSimbolosES;
 import gui.desenho.PainelDesenho;
 import gui.desenho.estruturas.TabelaSimbolosDesenhavel;
 import javax.swing.DefaultComboBoxModel;
@@ -18,7 +18,7 @@ import javax.swing.DefaultComboBoxModel;
  */
 public class IFTabelaSimbolos extends javax.swing.JInternalFrame {
 
-    private TabelaSimbolos<String, String> tabelaSimbolos;
+    private TabelaSimbolosES<String, String> tabelaSimbolos;
     private TabelaSimbolosDesenhavel tabelaSimbolosD;
     private DefaultComboBoxModel<String> dcbm;
     
@@ -27,7 +27,7 @@ public class IFTabelaSimbolos extends javax.swing.JInternalFrame {
      */
     public IFTabelaSimbolos() {
         
-        tabelaSimbolos = new TabelaSimbolos<>();
+        tabelaSimbolos = new TabelaSimbolosES<>();
         tabelaSimbolosD = new TabelaSimbolosDesenhavel( tabelaSimbolos );
         
         initComponents();

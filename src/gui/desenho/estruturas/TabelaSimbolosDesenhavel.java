@@ -6,7 +6,7 @@
 
 package gui.desenho.estruturas;
 
-import estruturas.TabelaSimbolos;
+import estruturas.TabelaSimbolosES;
 import uteis.UteisDesenho;
 import java.awt.BasicStroke;
 import java.awt.Color;
@@ -22,10 +22,10 @@ import javax.swing.JPanel;
  */
 public class TabelaSimbolosDesenhavel implements Desenhavel {
     
-    private TabelaSimbolos<String, String> tabelaSimbolos;
+    private TabelaSimbolosES<String, String> tabelaSimbolos;
     private JPanel painel;
     
-    public TabelaSimbolosDesenhavel( TabelaSimbolos<String, String> tabelaSimbolos ) {
+    public TabelaSimbolosDesenhavel( TabelaSimbolosES<String, String> tabelaSimbolos ) {
         this.tabelaSimbolos = tabelaSimbolos;
     }
     

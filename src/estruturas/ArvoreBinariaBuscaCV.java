@@ -152,12 +152,50 @@ public class ArvoreBinariaBuscaCV<TipoChave extends Comparable<? super TipoChave
     }
     
     /**
+     * Obtém o valor associado a uma chave.
+     * 
+     * @param chave chave a ser consultada
+     * @return o valor associado à chave ou null caso não haja a chave.
+     */
+    public TipoValor obter( TipoChave chave ) {
+        return obter( raiz, chave );
+    }
+
+    /**
+     * Obtém o valor associado a uma chave em uma subárvore enraizada em um nó.
+     * 
+     * @param no nó de origem da consulta
+     * @param chave chave a ser consultada
+     * @return o valor associado à chave ou null caso não haja a chave.
+     */
+    private TipoValor obter( No<TipoChave, TipoValor> no, TipoChave chave ) {
+        
+        while ( no != null ) {
+            
+            int comparacao = chave.compareTo( no.chave );
+            
+            if ( comparacao < 0 ) {
+                no = no.esquerda;
+            } else if ( comparacao > 0 ) {
+                no = no.direita;
+            } else {
+                return no.valor;
+            }
+            
+        }
+        
+        return null;
+        
+    }
+    
+    
+    /**
      * Verifica se uma chave está contida na árvore.
      * 
      * @param chave Chave a ser pesquisada.
      * @return true caso tenha encontrado, false caso contrário.
      */
-    public boolean contemChave( TipoChave chave ) {
+    public boolean contem( TipoChave chave ) {
         
         /*
          * Algoritmo iterativo.
@@ -205,14 +243,14 @@ public class ArvoreBinariaBuscaCV<TipoChave extends Comparable<? super TipoChave
         /*
          * Algoritmo recursivo.
          */
-        return contemChave( raiz, chave );
+        return contem( raiz, chave );
         
     }
 
     /*
      * Método privado para a consulta recursiva.
      */
-    private boolean contemChave( No<TipoChave, TipoValor> no, TipoChave chave ) {
+    private boolean contem( No<TipoChave, TipoValor> no, TipoChave chave ) {
 
         boolean achou = false;
         int comparacao = 0;
@@ -224,9 +262,9 @@ public class ArvoreBinariaBuscaCV<TipoChave extends Comparable<? super TipoChave
             if ( comparacao == 0 ) {
                 achou = true;
             } else if ( comparacao < 0 ) {
-                achou = contemChave( no.esquerda, chave );
+                achou = contem( no.esquerda, chave );
             } else { // comparacao > 0
-                achou = contemChave( no.direita, chave );
+                achou = contem( no.direita, chave );
             }
             
         }
@@ -612,7 +650,7 @@ public class ArvoreBinariaBuscaCV<TipoChave extends Comparable<? super TipoChave
         Collections.shuffle( elementos );
         for ( ArvoreBinariaBuscaCV<Integer, String>.No<Integer, String> e : elementos ) {
             System.out.printf( "%4d está na árvore? => %s\n", e.chave,
-                    abb.contemChave( e.chave ) ? "SIM" : "NÃO" );
+                    abb.contem( e.chave ) ? "SIM" : "NÃO" );
         }
         
         System.out.println( "\n----- Remoção -----" );
