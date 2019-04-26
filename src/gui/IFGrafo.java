@@ -34,6 +34,7 @@ import javax.swing.JOptionPane;
 import javax.swing.SwingUtilities;
 import javax.swing.filechooser.FileFilter;
 import javax.swing.filechooser.FileNameExtensionFilter;
+import uteis.UteisGrafo;
 
 /**
  * Janela para a simulação de grafos.
@@ -77,34 +78,10 @@ public class IFGrafo extends javax.swing.JInternalFrame {
         
         grafoD.setPainel( painelDesenho );
         
-        // grafo base
-        grafoAnt.adicionarVertice( 100, 100, tamanhoVertice );
-        grafoAnt.adicionarVertice( 150, 200, tamanhoVertice );
-        grafoAnt.adicionarVertice( 250, 200, tamanhoVertice );
-        grafoAnt.adicionarVertice( 200, 300, tamanhoVertice );
-        grafoAnt.adicionarVertice( 300, 300, tamanhoVertice );
-        grafoAnt.adicionarVertice( 100, 400, tamanhoVertice );
-        grafoAnt.adicionarVertice( 350, 200, tamanhoVertice );
-        grafoAnt.adicionarVertice( 450, 150, tamanhoVertice );
-        grafoAnt.adicionarVertice( 550, 150, tamanhoVertice );
-        grafoAnt.adicionarVertice( 450, 250, tamanhoVertice );
-        grafoAnt.adicionarVertice( 550, 250, tamanhoVertice );
-        grafoAnt.adicionarVertice( 450, 350, tamanhoVertice );
-        grafoAnt.adicionarVertice( 550, 350, tamanhoVertice );
-        
-        grafoAnt.adicionarAresta( 0, 5 );
-        grafoAnt.adicionarAresta( 4, 3 );
-        grafoAnt.adicionarAresta( 0, 1 );
-        grafoAnt.adicionarAresta( 9, 12 );
-        grafoAnt.adicionarAresta( 6, 4 );
-        grafoAnt.adicionarAresta( 5, 4 );
-        grafoAnt.adicionarAresta( 0, 2 );
-        grafoAnt.adicionarAresta( 11, 12 );
-        grafoAnt.adicionarAresta( 9, 10 );
-        grafoAnt.adicionarAresta( 0, 6 );
-        grafoAnt.adicionarAresta( 7, 8 );
-        grafoAnt.adicionarAresta( 9, 11 );
-        grafoAnt.adicionarAresta( 5, 3 );
+        UteisGrafo.criarGrafoBase( grafoAnt, tamanhoVertice );
+        //UteisGrafo.criarGrafoExemplo1( grafoAnt, tamanhoVertice );
+        //UteisGrafo.criarGrafoExemplo2( grafoAnt, tamanhoVertice );
+        //UteisGrafo.criarGrafoExemplo3( grafoAnt, tamanhoVertice );
         
         atualizarDadosGrafo();
         painelDesenho.repaint();

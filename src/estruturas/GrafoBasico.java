@@ -55,6 +55,8 @@ public class GrafoBasico {
         // com laço
         adj[v].inserirInicio( w );
         adj[w].inserirInicio( v );
+        /*adj[v].inserirFim( w );
+        adj[w].inserirFim( v );*/
         
         e += 1;
         

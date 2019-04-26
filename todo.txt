@@ -1,0 +1,5 @@
+- grafo ponderado
+    - algoritmos de grafo ponderado
+- digrafo ponderado
+- tentar arrumar o desenho da árvore vermelho-preto
+- salvar grafos de exemplo

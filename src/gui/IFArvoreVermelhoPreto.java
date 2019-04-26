@@ -6,8 +6,8 @@
 
 package gui;
 
-import estruturas.ArvoreVermelhoPreto;
-import estruturas.ArvoreVermelhoPreto;
+import estruturas.ArvoreVermelhoPretoCV;
+import estruturas.ArvoreVermelhoPretoCV;
 import estruturas.algoritmos.arvores.TipoPercursoArvores;
 import gui.desenho.PainelDesenho;
 import gui.desenho.estruturas.ArvoreVermelhoPretoAnotada;
@@ -29,7 +29,7 @@ import javax.swing.SwingUtilities;
  */
 public class IFArvoreVermelhoPreto extends javax.swing.JInternalFrame {
 
-    private ArvoreVermelhoPreto<Integer, String> avp;
+    private ArvoreVermelhoPretoCV<Integer, String> avp;
     private ArvoreVermelhoPretoDesenhavel<Integer, String> avpD;
     private ArvoreVermelhoPretoAnotada<Integer, String> avpAnt;
     private ArvoreVermelhoPretoAnotada<Integer, String>.NoAnotado<Integer, String> noRemocao;
@@ -41,7 +41,7 @@ public class IFArvoreVermelhoPreto extends javax.swing.JInternalFrame {
      */
     public IFArvoreVermelhoPreto() {
         
-        avp = new ArvoreVermelhoPreto<>();
+        avp = new ArvoreVermelhoPretoCV<>();
         avpD = new ArvoreVermelhoPretoDesenhavel<>( avp );
         avpAnt = new ArvoreVermelhoPretoAnotada<>( avp );
         

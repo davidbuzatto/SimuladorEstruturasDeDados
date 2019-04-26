@@ -6,8 +6,7 @@
 
 package estruturas.algoritmos.arvores;
 
-import estruturas.ArvoreVermelhoPretoPre;
-import estruturas.ArvoreVermelhoPretoPre;
+import estruturas.ArvoreVermelhoPretoCV;
 import estruturas.Fila;
 import estruturas.Pilha;
 import java.util.ArrayList;
@@ -18,21 +17,22 @@ import java.util.List;
  * 
  * @author David Buzatto
  */
-public class PercursosArvoreVermelhoPreto {
+public class PercursosArvoreVermelhoPretoCV {
     
     /**
      * Retorna uma lista contendo os ítens da árvore na ordem do percurso
      * especificado.
      * 
-     * @param <Tipo> Tipo do valor.
+     * @param <TipoChave> Tipo da chave da árvore.
+     * @param <TipoValor> Tipo do valor associado a uma chave da árvore.
      * @param avp Árvore que será percorrida.
      * @param tipo Tipo do percurso a ser executado.
      * @return Lista de elementos com os nós na ordem do percurso executado.
      */
-    public static <Tipo extends Comparable<? super Tipo>> Iterable<ArvoreVermelhoPretoPre<Tipo>.No<Tipo>> percorrer( 
-            ArvoreVermelhoPretoPre<Tipo> avp, TipoPercursoArvores tipo ) {
+    public static <TipoChave extends Comparable<? super TipoChave>, TipoValor> Iterable<ArvoreVermelhoPretoCV<TipoChave, TipoValor>.No<TipoChave, TipoValor>> percorrer( 
+            ArvoreVermelhoPretoCV<TipoChave, TipoValor> avp, TipoPercursoArvores tipo ) {
         
-        List<ArvoreVermelhoPretoPre<Tipo>.No<Tipo>> elementos = new ArrayList<>();
+        List<ArvoreVermelhoPretoCV<TipoChave, TipoValor>.No<TipoChave, TipoValor>> elementos = new ArrayList<>();
         
         switch ( tipo ) {
             case PRE_ORDEM:
@@ -68,9 +68,9 @@ public class PercursosArvoreVermelhoPreto {
     /*
      * Métodos privados para os percursos.
      */
-    private static <Tipo extends Comparable<? super Tipo>> void preOrdem( 
-            ArvoreVermelhoPretoPre<Tipo>.No<Tipo> no, 
-            List<ArvoreVermelhoPretoPre<Tipo>.No<Tipo>> elementos ) {
+    private static <TipoChave extends Comparable<? super TipoChave>, TipoValor> void preOrdem( 
+            ArvoreVermelhoPretoCV<TipoChave, TipoValor>.No<TipoChave, TipoValor> no, 
+            List<ArvoreVermelhoPretoCV<TipoChave, TipoValor>.No<TipoChave, TipoValor>> elementos ) {
         
         if ( no != null ) {
             elementos.add( no );
@@ -80,9 +80,9 @@ public class PercursosArvoreVermelhoPreto {
         
     }
     
-    private static <Tipo extends Comparable<? super Tipo>> void emOrdem( 
-            ArvoreVermelhoPretoPre<Tipo>.No<Tipo> no, 
-            List<ArvoreVermelhoPretoPre<Tipo>.No<Tipo>> elementos ) {
+    private static <TipoChave extends Comparable<? super TipoChave>, TipoValor> void emOrdem( 
+            ArvoreVermelhoPretoCV<TipoChave, TipoValor>.No<TipoChave, TipoValor> no, 
+            List<ArvoreVermelhoPretoCV<TipoChave, TipoValor>.No<TipoChave, TipoValor>> elementos ) {
         
         if ( no != null ) {
             emOrdem( no.esquerda, elementos );
@@ -92,9 +92,9 @@ public class PercursosArvoreVermelhoPreto {
         
     }
     
-    private static <Tipo extends Comparable<? super Tipo>> void posOrdem( 
-            ArvoreVermelhoPretoPre<Tipo>.No<Tipo> no, 
-            List<ArvoreVermelhoPretoPre<Tipo>.No<Tipo>> elementos ) {
+    private static <TipoChave extends Comparable<? super TipoChave>, TipoValor> void posOrdem( 
+            ArvoreVermelhoPretoCV<TipoChave, TipoValor>.No<TipoChave, TipoValor> no, 
+            List<ArvoreVermelhoPretoCV<TipoChave, TipoValor>.No<TipoChave, TipoValor>> elementos ) {
         
         if ( no != null ) {
             posOrdem( no.esquerda, elementos );
@@ -104,18 +104,18 @@ public class PercursosArvoreVermelhoPreto {
         
     }
     
-    private static <Tipo extends Comparable<? super Tipo>> void emNivel( 
-            ArvoreVermelhoPretoPre<Tipo>.No<Tipo> no, 
-            List<ArvoreVermelhoPretoPre<Tipo>.No<Tipo>> elementos ) {
+    private static <TipoChave extends Comparable<? super TipoChave>, TipoValor> void emNivel( 
+            ArvoreVermelhoPretoCV<TipoChave, TipoValor>.No<TipoChave, TipoValor> no, 
+            List<ArvoreVermelhoPretoCV<TipoChave, TipoValor>.No<TipoChave, TipoValor>> elementos ) {
         
         if ( no != null ) {
             
-            Fila<ArvoreVermelhoPretoPre<Tipo>.No<Tipo>> fila = new Fila<>();
+            Fila<ArvoreVermelhoPretoCV<TipoChave, TipoValor>.No<TipoChave, TipoValor>> fila = new Fila<>();
             fila.enfileirar( no );
 
             while ( !fila.estaVazia() ) {
 
-                ArvoreVermelhoPretoPre<Tipo>.No<Tipo> atual = fila.desenfileirar();
+                ArvoreVermelhoPretoCV<TipoChave, TipoValor>.No<TipoChave, TipoValor> atual = fila.desenfileirar();
                 elementos.add( atual );
 
                 if ( atual.esquerda != null ) {
@@ -132,9 +132,9 @@ public class PercursosArvoreVermelhoPreto {
         
     }
     
-    private static <Tipo extends Comparable<? super Tipo>> void preOrdemInverso( 
-            ArvoreVermelhoPretoPre<Tipo>.No<Tipo> no, 
-            List<ArvoreVermelhoPretoPre<Tipo>.No<Tipo>> elementos ) {
+    private static <TipoChave extends Comparable<? super TipoChave>, TipoValor> void preOrdemInverso( 
+            ArvoreVermelhoPretoCV<TipoChave, TipoValor>.No<TipoChave, TipoValor> no, 
+            List<ArvoreVermelhoPretoCV<TipoChave, TipoValor>.No<TipoChave, TipoValor>> elementos ) {
         
         if ( no != null ) {
             elementos.add( no );
@@ -144,9 +144,9 @@ public class PercursosArvoreVermelhoPreto {
         
     }
     
-    private static <Tipo extends Comparable<? super Tipo>> void emOrdemInverso( 
-            ArvoreVermelhoPretoPre<Tipo>.No<Tipo> no, 
-            List<ArvoreVermelhoPretoPre<Tipo>.No<Tipo>> elementos ) {
+    private static <TipoChave extends Comparable<? super TipoChave>, TipoValor> void emOrdemInverso( 
+            ArvoreVermelhoPretoCV<TipoChave, TipoValor>.No<TipoChave, TipoValor> no, 
+            List<ArvoreVermelhoPretoCV<TipoChave, TipoValor>.No<TipoChave, TipoValor>> elementos ) {
         
         if ( no != null ) {
             emOrdemInverso( no.direita, elementos );
@@ -156,9 +156,9 @@ public class PercursosArvoreVermelhoPreto {
         
     }
     
-    private static <Tipo extends Comparable<? super Tipo>> void posOrdemInverso( 
-            ArvoreVermelhoPretoPre<Tipo>.No<Tipo> no, 
-            List<ArvoreVermelhoPretoPre<Tipo>.No<Tipo>> elementos ) {
+    private static <TipoChave extends Comparable<? super TipoChave>, TipoValor> void posOrdemInverso( 
+            ArvoreVermelhoPretoCV<TipoChave, TipoValor>.No<TipoChave, TipoValor> no, 
+            List<ArvoreVermelhoPretoCV<TipoChave, TipoValor>.No<TipoChave, TipoValor>> elementos ) {
         
         if ( no != null ) {
             posOrdemInverso( no.direita, elementos );
@@ -168,19 +168,19 @@ public class PercursosArvoreVermelhoPreto {
         
     }
     
-    private static <Tipo extends Comparable<? super Tipo>> void emNivelInverso( 
-            ArvoreVermelhoPretoPre<Tipo>.No<Tipo> no, 
-            List<ArvoreVermelhoPretoPre<Tipo>.No<Tipo>> elementos ) {
+    private static <TipoChave extends Comparable<? super TipoChave>, TipoValor> void emNivelInverso( 
+            ArvoreVermelhoPretoCV<TipoChave, TipoValor>.No<TipoChave, TipoValor> no, 
+            List<ArvoreVermelhoPretoCV<TipoChave, TipoValor>.No<TipoChave, TipoValor>> elementos ) {
         
         if ( no != null ) {
             
-            Fila<ArvoreVermelhoPretoPre<Tipo>.No<Tipo>> fila = new Fila<>();
-            Pilha<ArvoreVermelhoPretoPre<Tipo>.No<Tipo>> pilha = new Pilha<>();
+            Fila<ArvoreVermelhoPretoCV<TipoChave, TipoValor>.No<TipoChave, TipoValor>> fila = new Fila<>();
+            Pilha<ArvoreVermelhoPretoCV<TipoChave, TipoValor>.No<TipoChave, TipoValor>> pilha = new Pilha<>();
             fila.enfileirar( no );
 
             while ( !fila.estaVazia() ) {
 
-                ArvoreVermelhoPretoPre<Tipo>.No<Tipo> atual = fila.desenfileirar();
+                ArvoreVermelhoPretoCV<TipoChave, TipoValor>.No<TipoChave, TipoValor> atual = fila.desenfileirar();
                 pilha.empilhar( atual );
 
                 if ( atual.esquerda != null ) {

@@ -6,19 +6,15 @@
 
 package estruturas;
 
-import estruturas.algoritmos.arvores.PercursosArvoreBinariaBusca;
+import estruturas.algoritmos.arvores.PercursosArvoreBinariaBuscaCV;
 import estruturas.algoritmos.arvores.TipoPercursoArvores;
-import gui.desenho.estruturas.ArvoreBinariaBuscaAnotada;
 import java.util.Collections;
 import java.util.Iterator;
 import java.util.List;
 
 /**
  * Implementação de uma árvore binária de busca não balanceada.
- * Esta árvore opera apenas com valores. Para a utilização como tabela de símbolos
- * (o que é o mais comum), deveria-se tratar os valores desta implementação
- * como chaves da tabela de símbolos. Verifique a implementação da classe
- * ArvoreBinariaBuscaCV.
+ * Esta árvore opera com chaves associadas a valores.
  * 
  * Algumas modificações de acesso foram feitas na classe, permitindo que alguns
  * detalhes internos da classe sejam acessíveis externamente. Essa mudança
@@ -26,44 +22,54 @@ import java.util.List;
  * pela classe ArvoreBuscaBinariaAnotada e pela classe com os algoritmos de 
  * percursos.
  * 
- * @param <Tipo> Tipo dos elementos armazenados na árvore.
+ * @param <TipoChave> Tipo das chaves armazenadas na árvore.
+ * @param <TipoChave> Tipo dos valores associados às chaves.
  * 
  * @author David Buzatto
  */
-public class ArvoreBinariaBusca<Tipo extends Comparable<? super Tipo>> implements Iterable<Tipo> {
+public class ArvoreBinariaBuscaCV<TipoChave extends Comparable<? super TipoChave>, TipoValor> 
+        implements Iterable<ArvoreBinariaBuscaCV<TipoChave, TipoValor>.No<TipoChave, TipoValor>> {
     
     /*
      * Classe interna que define os nós da árvore.
      * É pública para poder acessar a estrutura dos nós externamente
      * no simulador e nos percursos. Deveria ser privada.
      */
-    public class No<Tipo> {
-        public Tipo valor;
-        public No<Tipo> esquerda;
-        public No<Tipo> direita;
+    public class No<TipoChave, TipoValor> {
+        public TipoChave chave;
+        public TipoValor valor;
+        public No<TipoChave, TipoValor> esquerda;
+        public No<TipoChave, TipoValor> direita;
+
+        @Override
+        public String toString() {
+            return chave + " => " + valor;
+        }
     }
     
     // raiz da árvore
-    private No<Tipo> raiz;
+    private No<TipoChave, TipoValor> raiz;
     
     /**
      * Constrói uma árvore binária de busca vazia.
      */
-    public ArvoreBinariaBusca() {
+    public ArvoreBinariaBuscaCV() {
         raiz = null;
     }
     
     /**
-     * Insere um elemento na árvore.
+     * Insere uma chave associada a um valor.
      * 
-     * @param valor Elemento a ser inserido.
+     * @param chave Elemento a ser inserida.
+     * @param valor Valor a ser associado à chave.
      */
-    public void inserir( Tipo valor ) {
+    public void inserir( TipoChave chave, TipoValor valor ) {
         
             /*
              * Algoritmo iterativo.
              */
-            /*No<Tipo> novoNo = new No<>();
+            /*No<TipoChave, TipoValor> novoNo = new No<>();
+            novoNo.chave = chave;
             novoNo.valor = valor;
             novoNo.esquerda = null;
             novoNo.direita = null;
@@ -73,12 +79,12 @@ public class ArvoreBinariaBusca<Tipo extends Comparable<? super Tipo>> implement
             } else {
 
                boolean achou = false;
-               No<Tipo> temp = raiz;
+               No<TipoChave, TipoValor> temp = raiz;
                int comparacao = 0;
 
                while ( !achou ) {
                    
-                   comparacao = valor.compareTo( temp.valor );
+                   comparacao = chave.compareTo( temp.chave );
                    
                    if ( comparacao < 0 ) {
 
@@ -98,8 +104,9 @@ public class ArvoreBinariaBusca<Tipo extends Comparable<? super Tipo>> implement
                            temp = temp.direita;
                        }
 
-                   } else { // igual, não insere
-                       break;
+                   } else { // igual, substitui o valor
+                       temp.valor = valor;
+                       achou = true;
                    }
 
                }
@@ -109,30 +116,33 @@ public class ArvoreBinariaBusca<Tipo extends Comparable<? super Tipo>> implement
             /*
              * Algoritmo recursivo.
              */
-            raiz = inserir( raiz, valor );
+            raiz = inserir( raiz, chave, valor );
         
     }
     
     /*
      * Método privado para a inserção recursiva.
      */
-    private No<Tipo> inserir( No<Tipo> no, Tipo valor ) {
+    private No<TipoChave, TipoValor> inserir( No<TipoChave, TipoValor> no, TipoChave chave, TipoValor valor ) {
         
         if ( no == null ) {
 
             no = new No<>();
+            no.chave = chave;
             no.valor = valor;
             no.esquerda = null;
             no.direita = null;
 
         } else {
             
-            int comparacao = valor.compareTo( no.valor );
+            int comparacao = chave.compareTo( no.chave );
             
             if ( comparacao < 0 ) {
-                no.esquerda = inserir( no.esquerda, valor );
+                no.esquerda = inserir( no.esquerda, chave, valor );
             } else if ( comparacao > 0 ) {
-                no.direita = inserir( no.direita, valor );
+                no.direita = inserir( no.direita, chave, valor );
+            } else { // substitui o valor
+                no.valor = valor;
             }
             
         }
@@ -142,12 +152,12 @@ public class ArvoreBinariaBusca<Tipo extends Comparable<? super Tipo>> implement
     }
     
     /**
-     * Verifica se um valor está contido na árvore.
+     * Verifica se uma chave está contida na árvore.
      * 
-     * @param valor Valor a ser pesquisado.
+     * @param chave Chave a ser pesquisada.
      * @return true caso tenha encontrado, false caso contrário.
      */
-    public boolean contem( Tipo valor ) {
+    public boolean contemChave( TipoChave chave ) {
         
         /*
          * Algoritmo iterativo.
@@ -156,12 +166,12 @@ public class ArvoreBinariaBusca<Tipo extends Comparable<? super Tipo>> implement
         
         if ( !estaVazia() ) {
 
-            No<Tipo> temp = raiz;
+            No<TipoChave, TipoValor> temp = raiz;
             int comparacao = 0;
 
             while ( !achou ) {
                 
-                comparacao = valor.compareTo( temp.valor );
+                comparacao = chave.compareTo( temp.chave );
                 
                 if ( comparacao == 0 ) {
                     achou = true;
@@ -195,28 +205,28 @@ public class ArvoreBinariaBusca<Tipo extends Comparable<? super Tipo>> implement
         /*
          * Algoritmo recursivo.
          */
-        return contem( raiz, valor );
+        return contemChave( raiz, chave );
         
     }
 
     /*
      * Método privado para a consulta recursiva.
      */
-    private boolean contem( No<Tipo> no, Tipo valor ) {
+    private boolean contemChave( No<TipoChave, TipoValor> no, TipoChave chave ) {
 
         boolean achou = false;
         int comparacao = 0;
         
         if ( no != null ) {
             
-            comparacao = valor.compareTo( no.valor );
+            comparacao = chave.compareTo( no.chave );
             
             if ( comparacao == 0 ) {
                 achou = true;
             } else if ( comparacao < 0 ) {
-                achou = contem( no.esquerda, valor );
+                achou = contemChave( no.esquerda, chave );
             } else { // comparacao > 0
-                achou = contem( no.direita, valor );
+                achou = contemChave( no.direita, chave );
             }
             
         }
@@ -226,25 +236,25 @@ public class ArvoreBinariaBusca<Tipo extends Comparable<? super Tipo>> implement
     }
     
     /**
-     * Remove um elemento da árvore (Hibbard Deletion).
+     * Remove uma chave de árvore, caso exista (Hibbard Deletion).
      * 
-     * @param valor Valor a ser removido.
+     * @param chave Chave a ser removida.
      */
-    public void remover( Tipo valor ) {
+    public void remover( TipoChave chave ) {
 
         /*
          * Algoritmo iterativo.
          */
         /*if ( !estaVazia() ) {
 
-            No<Tipo> atual = raiz;
-            No<Tipo> anterior = null;
+            No<TipoChave, TipoValor> atual = raiz;
+            No<TipoChave, TipoValor> anterior = null;
             char caminho = '\0';
             int comparacao = 0;
 
             while ( true ) {
                 
-                comparacao = valor.compareTo( atual.valor );
+                comparacao = chave.compareTo( atual.chave );
                 
                 if ( comparacao == 0 ) {
                     
@@ -303,7 +313,7 @@ public class ArvoreBinariaBusca<Tipo extends Comparable<? super Tipo>> implement
 
                         // busca pelo menor nó, onde a subárvore esquerda
                         // será inserida
-                        No<Tipo> menor = atual.direita;
+                        No<TipoChave, TipoValor> menor = atual.direita;
 
                         while ( menor.esquerda != null ) {
                             menor = menor.esquerda;
@@ -360,19 +370,19 @@ public class ArvoreBinariaBusca<Tipo extends Comparable<? super Tipo>> implement
         /*
          * Algoritmo recursivo.
          */
-        raiz = remover( raiz, valor );
+        raiz = remover( raiz, chave );
 
     }
     
     /*
      * Método privado para a remoção recursiva (Hibbard Deletion).
      */
-    private No<Tipo> remover( No<Tipo> no, Tipo valor ) {
+    private No<TipoChave, TipoValor> remover( No<TipoChave, TipoValor> no, TipoChave chave) {
         
         if ( no != null ) {
             
-            No<Tipo> temp;
-            int comparacao = valor.compareTo( no.valor );
+            No<TipoChave, TipoValor> temp;
+            int comparacao = chave.compareTo( no.chave );
 
             if ( comparacao == 0 ) {
 
@@ -405,7 +415,7 @@ public class ArvoreBinariaBusca<Tipo extends Comparable<? super Tipo>> implement
                     // busca pelo menor nó, onde a subárvore esquerda
                     // será inserida
                     temp = no.direita;
-                    No<Tipo> menor = temp;
+                    No<TipoChave, TipoValor> menor = temp;
 
                     while ( menor.esquerda != null ) {
                         menor = menor.esquerda;
@@ -423,9 +433,9 @@ public class ArvoreBinariaBusca<Tipo extends Comparable<? super Tipo>> implement
                 }
 
             } else if ( comparacao < 0 ) {
-                no.esquerda = remover( no.esquerda, valor );
+                no.esquerda = remover( no.esquerda, chave );
             } else { // comparacao > 0
-                no.direita = remover( no.direita, valor );
+                no.direita = remover( no.direita, chave );
             }
             
         }
@@ -444,7 +454,7 @@ public class ArvoreBinariaBusca<Tipo extends Comparable<? super Tipo>> implement
     /*
      * Método privado para remoção de todos os itens de forma recursiva.
      */
-    private No<Tipo> desalocar( No<Tipo> no ) {
+    private No<TipoChave, TipoValor> desalocar( No<TipoChave, TipoValor> no ) {
 
         if ( no != null ) {
             no.esquerda = desalocar( no.esquerda );
@@ -475,7 +485,7 @@ public class ArvoreBinariaBusca<Tipo extends Comparable<? super Tipo>> implement
         
         if ( !estaVazia() ) {
             
-            for ( Tipo valor : PercursosArvoreBinariaBusca.percorrer( this, TipoPercursoArvores.EM_ORDEM ) ) {
+            for ( No<TipoChave, TipoValor> valor : PercursosArvoreBinariaBuscaCV.percorrer( this, TipoPercursoArvores.EM_ORDEM ) ) {
                 
                 if ( valor.equals( raiz.valor ) ) {
                     sb.append( valor ).append( " <- raiz\n" );
@@ -499,8 +509,8 @@ public class ArvoreBinariaBusca<Tipo extends Comparable<? super Tipo>> implement
      * Este iterador percorre a árvore usando o percurso em ordem.
      */
     @Override
-    public Iterator<Tipo> iterator() {
-        return PercursosArvoreBinariaBusca.percorrer( this, TipoPercursoArvores.EM_ORDEM ).iterator();
+    public Iterator<No<TipoChave, TipoValor>> iterator() {
+        return PercursosArvoreBinariaBuscaCV.percorrer( this, TipoPercursoArvores.EM_ORDEM ).iterator();
     }
 
     /**
@@ -509,7 +519,7 @@ public class ArvoreBinariaBusca<Tipo extends Comparable<? super Tipo>> implement
      * 
      * @return Nó com a raiz da árvore.
      */
-    public No<Tipo> getRaiz() {
+    public No<TipoChave, TipoValor> getRaiz() {
         return raiz;
     }
     
@@ -520,120 +530,97 @@ public class ArvoreBinariaBusca<Tipo extends Comparable<? super Tipo>> implement
      */
     public static void main( String[] args ) {
         
-        ArvoreBinariaBusca<Integer> abb = new ArvoreBinariaBusca<>();
+        ArvoreBinariaBuscaCV<Integer, String> abb = new ArvoreBinariaBuscaCV<>();
         
-        abb.inserir( 6 );
+        abb.inserir( 6, "seis" );
         System.out.println( abb );
-        abb.inserir( 8 );
+        abb.inserir( 8, "oito" );
         System.out.println( abb );
-        abb.inserir( 7 );
+        abb.inserir( 7, "sete" );
         System.out.println( abb );
-        abb.inserir( 4 );
+        abb.inserir( 4, "quatro" );
         System.out.println( abb );
-        abb.inserir( 5 );
+        abb.inserir( 5, "cinco" );
         System.out.println( abb );
-        abb.inserir( 9 );
+        abb.inserir( 9, "nove" );
         System.out.println( abb );
-        abb.inserir( 3 );
+        abb.inserir( 3, "três" );
         System.out.println( abb );
         
         // usando o iterador
         System.out.println( "Iterador (Em Ordem):" );
-        for ( Integer v : abb ) {
+        for ( ArvoreBinariaBuscaCV<Integer, String>.No<Integer, String> v : abb ) {
             System.out.println( "Item: " + v );
         }
         System.out.println();
         
         System.out.println( "----- Percursos -----" );
         System.out.print( "Pré-Ordem: " );
-        for ( Integer e : PercursosArvoreBinariaBusca.percorrer( abb, TipoPercursoArvores.PRE_ORDEM ) ) {
+        for ( ArvoreBinariaBuscaCV<Integer, String>.No<Integer, String> e : PercursosArvoreBinariaBuscaCV.percorrer( abb, TipoPercursoArvores.PRE_ORDEM ) ) {
             System.out.print( e + " " );
         }
         System.out.println();
         
         System.out.print( "Em Ordem: " );
-        for ( Integer e : PercursosArvoreBinariaBusca.percorrer( abb, TipoPercursoArvores.EM_ORDEM ) ) {
+        for ( ArvoreBinariaBuscaCV<Integer, String>.No<Integer, String> e : PercursosArvoreBinariaBuscaCV.percorrer( abb, TipoPercursoArvores.EM_ORDEM ) ) {
             System.out.print( e + " " );
         }
         System.out.println();
         
         System.out.print( "Pós-Ordem: " );
-        for ( Integer e : PercursosArvoreBinariaBusca.percorrer( abb, TipoPercursoArvores.POS_ORDEM ) ) {
+        for ( ArvoreBinariaBuscaCV<Integer, String>.No<Integer, String> e : PercursosArvoreBinariaBuscaCV.percorrer( abb, TipoPercursoArvores.POS_ORDEM ) ) {
             System.out.print( e + " " );
         }
         System.out.println();
         
         System.out.print( "Em Nível: " );
-        for ( Integer e : PercursosArvoreBinariaBusca.percorrer( abb, TipoPercursoArvores.EM_NIVEL ) ) {
+        for ( ArvoreBinariaBuscaCV<Integer, String>.No<Integer, String> e : PercursosArvoreBinariaBuscaCV.percorrer( abb, TipoPercursoArvores.EM_NIVEL ) ) {
             System.out.print( e + " " );
         }
         System.out.println();
         
         System.out.print( "Pré-Ordem Inverso: " );
-        for ( Integer e : PercursosArvoreBinariaBusca.percorrer( abb, TipoPercursoArvores.PRE_ORDEM_INVERSO ) ) {
+        for ( ArvoreBinariaBuscaCV<Integer, String>.No<Integer, String> e : PercursosArvoreBinariaBuscaCV.percorrer( abb, TipoPercursoArvores.PRE_ORDEM_INVERSO ) ) {
             System.out.print( e + " " );
         }
         System.out.println();
         
         System.out.print( "Em Ordem Inverso: " );
-        for ( Integer e : PercursosArvoreBinariaBusca.percorrer( abb, TipoPercursoArvores.EM_ORDEM_INVERSO ) ) {
+        for ( ArvoreBinariaBuscaCV<Integer, String>.No<Integer, String> e : PercursosArvoreBinariaBuscaCV.percorrer( abb, TipoPercursoArvores.EM_ORDEM_INVERSO ) ) {
             System.out.print( e + " " );
         }
         System.out.println();
         
         System.out.print( "Pós-Ordem Inverso: " );
-        for ( Integer e : PercursosArvoreBinariaBusca.percorrer( abb, TipoPercursoArvores.POS_ORDEM_INVERSO ) ) {
+        for ( ArvoreBinariaBuscaCV<Integer, String>.No<Integer, String> e : PercursosArvoreBinariaBuscaCV.percorrer( abb, TipoPercursoArvores.POS_ORDEM_INVERSO ) ) {
             System.out.print( e + " " );
         }
         System.out.println();
         
         System.out.print( "Em Nível Inverso: " );
-        for ( Integer e : PercursosArvoreBinariaBusca.percorrer( abb, TipoPercursoArvores.EM_NIVEL_INVERSO ) ) {
+        for ( ArvoreBinariaBuscaCV<Integer, String>.No<Integer, String> e : PercursosArvoreBinariaBuscaCV.percorrer( abb, TipoPercursoArvores.EM_NIVEL_INVERSO ) ) {
             System.out.print( e + " " );
         }
         System.out.println();
         
         // consultas
         System.out.println( "\n----- Consultas -----" );
-        List<Integer> elementos = (List<Integer>) PercursosArvoreBinariaBusca.percorrer( abb, TipoPercursoArvores.EM_ORDEM );
-        elementos.add( 15 );
+        List<ArvoreBinariaBuscaCV<Integer, String>.No<Integer, String>> elementos = (List<ArvoreBinariaBuscaCV<Integer, String>.No<Integer, String>>) PercursosArvoreBinariaBuscaCV.percorrer( abb, TipoPercursoArvores.EM_ORDEM );
+        /*elementos.add( 15 );
         elementos.add( 19 );
-        elementos.add( -4 );
+        elementos.add( -4 );*/
         Collections.shuffle( elementos );
-        for ( Integer e : elementos ) {
-            System.out.printf( "%4d está na árvore? => %s\n", e,
-                    abb.contem( e ) ? "SIM" : "NÃO" );
+        for ( ArvoreBinariaBuscaCV<Integer, String>.No<Integer, String> e : elementos ) {
+            System.out.printf( "%4d está na árvore? => %s\n", e.chave,
+                    abb.contemChave( e.chave ) ? "SIM" : "NÃO" );
         }
         
         System.out.println( "\n----- Remoção -----" );
         System.out.println( abb );
-        for ( Integer e : elementos ) {
-            System.out.printf( "Removendo o elemento %4d...\n", e );
-            abb.remover( e );
+        for ( ArvoreBinariaBuscaCV<Integer, String>.No<Integer, String> e : elementos ) {
+            System.out.printf( "Removendo a chave %4d...\n", e.chave );
+            abb.remover( e.chave );
             System.out.println( abb );
-        }
-        
-        // utilizando a árvore binária de busca anotada para testar os dados
-        abb.inserir( 8 );
-        abb.inserir( 4 );
-        abb.inserir( 2 );
-        abb.inserir( 1 );
-        abb.inserir( 3 );
-        abb.inserir( 6 );
-        abb.inserir( 5 );
-        abb.inserir( 7 );
-        abb.inserir( 12 );
-        abb.inserir( 10 );
-        abb.inserir( 9 );
-        abb.inserir( 11 );
-        abb.inserir( 14 );
-        abb.inserir( 13 );
-        abb.inserir( 15 );
-        
-        ArvoreBinariaBuscaAnotada<Integer> abbAnt = new ArvoreBinariaBuscaAnotada<>( abb );
-        System.out.println( abbAnt );
-        for ( ArvoreBinariaBuscaAnotada<Integer>.NoAnotado<Integer> n : abbAnt.percorrer( TipoPercursoArvores.EM_ORDEM ) ) {
-            System.out.println( n );
         }
         
     }

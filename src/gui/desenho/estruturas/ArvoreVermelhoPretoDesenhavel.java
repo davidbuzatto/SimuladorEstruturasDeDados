@@ -6,7 +6,7 @@
 
 package gui.desenho.estruturas;
 
-import estruturas.ArvoreVermelhoPreto;
+import estruturas.ArvoreVermelhoPretoCV;
 import estruturas.algoritmos.arvores.TipoPercursoArvores;
 import gui.desenho.PainelDesenho;
 import java.awt.BasicStroke;
@@ -27,7 +27,7 @@ import uteis.UteisDesenho;
  */
 public class ArvoreVermelhoPretoDesenhavel<TipoChave extends Comparable<? super TipoChave>, TipoValor> implements Desenhavel {
     
-    private ArvoreVermelhoPreto<TipoChave, TipoValor> avp;
+    private ArvoreVermelhoPretoCV<TipoChave, TipoValor> avp;
     private PainelDesenho painel;
     private ArvoreVermelhoPretoAnotada<TipoChave, TipoValor> avpAnt;
     private boolean mostrarAtributosNos;
@@ -44,7 +44,7 @@ public class ArvoreVermelhoPretoDesenhavel<TipoChave extends Comparable<? super 
     // lista de itens do percurso executado
     private List<ArvoreVermelhoPretoAnotada<Integer, String>.NoAnotado<Integer, String>> listaPercurso;
     
-    public ArvoreVermelhoPretoDesenhavel( ArvoreVermelhoPreto<TipoChave, TipoValor> abb ) {
+    public ArvoreVermelhoPretoDesenhavel( ArvoreVermelhoPretoCV<TipoChave, TipoValor> abb ) {
         this.avp = abb;
         diametroNos = 30;
         listaPercurso = new ArrayList<>();
@@ -178,7 +178,7 @@ public class ArvoreVermelhoPretoDesenhavel<TipoChave extends Comparable<? super 
                 
                 if ( no.pai != null ) {
                     
-                    if ( no.cor == ArvoreVermelhoPreto.CorNo.VERMELHO ) {
+                    if ( no.cor == ArvoreVermelhoPretoCV.CorNo.VERMELHO ) {
                         g2d.setColor( Color.RED );
                     } else {
                         g2d.setColor( Color.BLACK );

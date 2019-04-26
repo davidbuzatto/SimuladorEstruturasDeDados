@@ -108,6 +108,8 @@ public class Grafo<Tipo extends Comparable<? super Tipo>> implements Serializabl
         
         getAdjacentes( v ).add( 0, w );
         getAdjacentes( w ).add( 0, v );
+        /*getAdjacentes( v ).add( w );
+        getAdjacentes( w ).add( v );*/
         
         quantidadeArestas++;
         

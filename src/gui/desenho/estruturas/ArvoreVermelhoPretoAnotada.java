@@ -6,7 +6,7 @@
 
 package gui.desenho.estruturas;
 
-import estruturas.ArvoreVermelhoPreto;
+import estruturas.ArvoreVermelhoPretoCV;
 import estruturas.Fila;
 import estruturas.algoritmos.arvores.TipoPercursoArvores;
 import estruturas.Pilha;
@@ -40,7 +40,7 @@ public class ArvoreVermelhoPretoAnotada<TipoChave extends Comparable<? super Tip
 
         // atributos dos nós
         public int n;
-        public ArvoreVermelhoPreto.CorNo cor;
+        public ArvoreVermelhoPretoCV.CorNo cor;
         public boolean folha;
         public int nivel;
         public int rank;
@@ -58,7 +58,7 @@ public class ArvoreVermelhoPretoAnotada<TipoChave extends Comparable<? super Tip
         @Override
         public String toString() {
             //return "NoAnotado{" + "valor=" + valor + ", n=" + n + ", cor=" + cor + ", folha=" + folha + ", nivel=" + nivel + ", rank=" + rank + ", grau=" + grau + ", ehRaiz=" + ehRaiz + ", pai=" + (pai != null ? pai.valor : pai) + '}';
-            return chave + " -> " + valor + " (" + ( cor == ArvoreVermelhoPreto.CorNo.VERMELHO ? "V" : "P" ) + ")";
+            return chave + " -> " + valor + " (" + ( cor == ArvoreVermelhoPretoCV.CorNo.VERMELHO ? "V" : "P" ) + ")";
         }
 
     }
@@ -78,7 +78,7 @@ public class ArvoreVermelhoPretoAnotada<TipoChave extends Comparable<? super Tip
      * Cria uma árvore anotada com base em uma árvore vermelho-preto passada.
      * @param avp Árvore vermelho-preto que será usada como base.
      */
-    public ArvoreVermelhoPretoAnotada( ArvoreVermelhoPreto<TipoChave, TipoValor> avp ) {
+    public ArvoreVermelhoPretoAnotada( ArvoreVermelhoPretoCV<TipoChave, TipoValor> avp ) {
         copiar( avp, avp.getRaiz() );
         processar( raiz, null );
     }
@@ -91,7 +91,7 @@ public class ArvoreVermelhoPretoAnotada<TipoChave extends Comparable<? super Tip
      * @param no Nó que se quer iniciar a cópia (nó da árvore original).
      * @return Um nó anotado para a construção recursiva.
      */
-    private NoAnotado<TipoChave, TipoValor> copiar( ArvoreVermelhoPreto<TipoChave, TipoValor> avp, ArvoreVermelhoPreto<TipoChave, TipoValor>.No<TipoChave, TipoValor> no ) {
+    private NoAnotado<TipoChave, TipoValor> copiar( ArvoreVermelhoPretoCV<TipoChave, TipoValor> avp, ArvoreVermelhoPretoCV<TipoChave, TipoValor>.No<TipoChave, TipoValor> no ) {
 
         NoAnotado<TipoChave, TipoValor> novoNo = null;
 

@@ -5,7 +5,7 @@
  */
 package estruturas;
 
-import estruturas.algoritmos.arvores.PercursosArvoreVermelhoPreto;
+import estruturas.algoritmos.arvores.PercursosArvoreVermelhoPretoCV;
 import estruturas.algoritmos.arvores.TipoPercursoArvores;
 import java.util.Iterator;
 import java.util.NoSuchElementException;
@@ -19,8 +19,8 @@ import java.util.NoSuchElementException;
  * 
  * @author David Buzatto
  */
-public class ArvoreVermelhoPreto<TipoChave extends Comparable<? super TipoChave>, TipoValor> 
-        implements Iterable<ArvoreVermelhoPreto<TipoChave, TipoValor>.No<TipoChave, TipoValor>> {
+public class ArvoreVermelhoPretoCV<TipoChave extends Comparable<? super TipoChave>, TipoValor> 
+        implements Iterable<ArvoreVermelhoPretoCV<TipoChave, TipoValor>.No<TipoChave, TipoValor>> {
 
     /*
      * Classe interna que define os nós da árvore.
@@ -1167,7 +1167,7 @@ public class ArvoreVermelhoPreto<TipoChave extends Comparable<? super TipoChave>
         
         if ( !estaVazia() ) {
             
-            for ( No<TipoChave, TipoValor> no : PercursosArvoreVermelhoPreto.percorrer( this, TipoPercursoArvores.EM_ORDEM ) ) {
+            for ( No<TipoChave, TipoValor> no : PercursosArvoreVermelhoPretoCV.percorrer( this, TipoPercursoArvores.EM_ORDEM ) ) {
                 
                 if ( no == raiz ) {
                     sb.append( no ).append( " <- raiz\n" );
@@ -1193,7 +1193,7 @@ public class ArvoreVermelhoPreto<TipoChave extends Comparable<? super TipoChave>
      */
     @Override
     public Iterator<No<TipoChave, TipoValor>> iterator() {
-        return PercursosArvoreVermelhoPreto.percorrer( this, TipoPercursoArvores.EM_ORDEM ).iterator();
+        return PercursosArvoreVermelhoPretoCV.percorrer( this, TipoPercursoArvores.EM_ORDEM ).iterator();
     }
     
     /**
@@ -1213,7 +1213,7 @@ public class ArvoreVermelhoPreto<TipoChave extends Comparable<? super TipoChave>
      */
     public static void main( String[] args ) {
         
-        ArvoreVermelhoPreto<Integer, String> avp = new ArvoreVermelhoPreto<>();
+        ArvoreVermelhoPretoCV<Integer, String> avp = new ArvoreVermelhoPretoCV<>();
         
         avp.inserir( 6, "seis" );
         System.out.println( avp );

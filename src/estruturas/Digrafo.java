@@ -112,6 +112,7 @@ public class Digrafo<Tipo extends Comparable<? super Tipo>> implements Serializa
         adicionarVertice( w );
         
         getAdjacentes( v ).add( 0, w );
+        //getAdjacentes( v ).add( w );
         
         quantidadeArestas++;
         
