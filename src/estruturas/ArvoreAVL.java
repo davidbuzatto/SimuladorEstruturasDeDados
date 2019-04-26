@@ -5,7 +5,7 @@
  */
 package estruturas;
 
-import estruturas.algoritmos.arvores.PercursosArvoreAVLCV;
+import estruturas.algoritmos.arvores.PercursosArvoreAVL;
 import estruturas.algoritmos.arvores.TipoPercursoArvores;
 import gui.desenho.estruturas.ArvoreAVLAnotada;
 import java.util.Collections;
@@ -394,7 +394,7 @@ public class ArvoreAVL<Tipo extends Comparable<? super Tipo>> implements Iterabl
         
         if ( !estaVazia() ) {
             
-            for ( Tipo valor : PercursosArvoreAVLCV.percorrer( this, TipoPercursoArvores.EM_ORDEM ) ) {
+            for ( Tipo valor : PercursosArvoreAVL.percorrer( this, TipoPercursoArvores.EM_ORDEM ) ) {
                 
                 if ( valor.equals( raiz.valor ) ) {
                     sb.append( valor ).append( " <- raiz\n" );
@@ -419,7 +419,7 @@ public class ArvoreAVL<Tipo extends Comparable<? super Tipo>> implements Iterabl
      */
     @Override
     public Iterator<Tipo> iterator() {
-        return PercursosArvoreAVLCV.percorrer( this, TipoPercursoArvores.EM_ORDEM ).iterator();
+        return PercursosArvoreAVL.percorrer( this, TipoPercursoArvores.EM_ORDEM ).iterator();
     }
     
     /**
@@ -465,56 +465,56 @@ public class ArvoreAVL<Tipo extends Comparable<? super Tipo>> implements Iterabl
         
         System.out.println( "----- Percursos -----" );
         System.out.print( "Pré-Ordem: " );
-        for ( Integer e : PercursosArvoreAVLCV.percorrer( aavl, TipoPercursoArvores.PRE_ORDEM ) ) {
+        for ( Integer e : PercursosArvoreAVL.percorrer( aavl, TipoPercursoArvores.PRE_ORDEM ) ) {
             System.out.print( e + " " );
         }
         System.out.println();
         
         System.out.print( "Em Ordem: " );
-        for ( Integer e : PercursosArvoreAVLCV.percorrer( aavl, TipoPercursoArvores.EM_ORDEM ) ) {
+        for ( Integer e : PercursosArvoreAVL.percorrer( aavl, TipoPercursoArvores.EM_ORDEM ) ) {
             System.out.print( e + " " );
         }
         System.out.println();
         
         System.out.print( "Pós-Ordem: " );
-        for ( Integer e : PercursosArvoreAVLCV.percorrer( aavl, TipoPercursoArvores.POS_ORDEM ) ) {
+        for ( Integer e : PercursosArvoreAVL.percorrer( aavl, TipoPercursoArvores.POS_ORDEM ) ) {
             System.out.print( e + " " );
         }
         System.out.println();
         
         System.out.print( "Em Nível: " );
-        for ( Integer e : PercursosArvoreAVLCV.percorrer( aavl, TipoPercursoArvores.EM_NIVEL ) ) {
+        for ( Integer e : PercursosArvoreAVL.percorrer( aavl, TipoPercursoArvores.EM_NIVEL ) ) {
             System.out.print( e + " " );
         }
         System.out.println();
         
         System.out.print( "Pré-Ordem Inverso: " );
-        for ( Integer e : PercursosArvoreAVLCV.percorrer( aavl, TipoPercursoArvores.PRE_ORDEM_INVERSO ) ) {
+        for ( Integer e : PercursosArvoreAVL.percorrer( aavl, TipoPercursoArvores.PRE_ORDEM_INVERSO ) ) {
             System.out.print( e + " " );
         }
         System.out.println();
         
         System.out.print( "Em Ordem Inverso: " );
-        for ( Integer e : PercursosArvoreAVLCV.percorrer( aavl, TipoPercursoArvores.EM_ORDEM_INVERSO ) ) {
+        for ( Integer e : PercursosArvoreAVL.percorrer( aavl, TipoPercursoArvores.EM_ORDEM_INVERSO ) ) {
             System.out.print( e + " " );
         }
         System.out.println();
         
         System.out.print( "Pós-Ordem Inverso: " );
-        for ( Integer e : PercursosArvoreAVLCV.percorrer( aavl, TipoPercursoArvores.POS_ORDEM_INVERSO ) ) {
+        for ( Integer e : PercursosArvoreAVL.percorrer( aavl, TipoPercursoArvores.POS_ORDEM_INVERSO ) ) {
             System.out.print( e + " " );
         }
         System.out.println();
         
         System.out.print( "Em Nível Inverso: " );
-        for ( Integer e : PercursosArvoreAVLCV.percorrer( aavl, TipoPercursoArvores.EM_NIVEL_INVERSO ) ) {
+        for ( Integer e : PercursosArvoreAVL.percorrer( aavl, TipoPercursoArvores.EM_NIVEL_INVERSO ) ) {
             System.out.print( e + " " );
         }
         System.out.println();
         
         // consultas
         System.out.println( "\n----- Consultas -----" );
-        List<Integer> elementos = (List<Integer>) PercursosArvoreAVLCV.percorrer( aavl, TipoPercursoArvores.EM_ORDEM );
+        List<Integer> elementos = (List<Integer>) PercursosArvoreAVL.percorrer( aavl, TipoPercursoArvores.EM_ORDEM );
         elementos.add( 15 );
         elementos.add( 19 );
         elementos.add( -4 );
@@ -548,12 +548,6 @@ public class ArvoreAVL<Tipo extends Comparable<? super Tipo>> implements Iterabl
         aavl.inserir( 14 );
         aavl.inserir( 13 );
         aavl.inserir( 15 );
-        
-        ArvoreAVLAnotada<Integer> abbAnt = new ArvoreAVLAnotada<>( aavl );
-        System.out.println( abbAnt );
-        for ( ArvoreAVLAnotada<Integer>.NoAnotado<Integer> n : abbAnt.percorrer( TipoPercursoArvores.EM_ORDEM ) ) {
-            System.out.println( n );
-        }
         
     }
 
