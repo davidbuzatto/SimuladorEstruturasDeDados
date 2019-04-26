@@ -7,7 +7,6 @@ package estruturas;
 
 import estruturas.algoritmos.arvores.PercursosArvoreAVLCV;
 import estruturas.algoritmos.arvores.TipoPercursoArvores;
-import gui.desenho.estruturas.ArvoreAVLAnotada;
 import java.util.Collections;
 import java.util.Iterator;
 import java.util.List;
@@ -21,27 +20,34 @@ import java.util.List;
  * 
  * @author David Buzatto
  */
-public class ArvoreAVLCV<Tipo extends Comparable<? super Tipo>> implements Iterable<Tipo> {
+public class ArvoreAVLCV<TipoChave extends Comparable<? super TipoChave>, TipoValor> 
+        implements Iterable<ArvoreAVLCV<TipoChave, TipoValor>.No<TipoChave, TipoValor>> {
 
     /*
      * Classe interna que define os nós da árvore.
      * É pública para poder acessar a estrutura dos nós externamente
      * no simulador e nos percursos. Deveria ser privada.
      */
-    public class No<Tipo> {
+    public class No<TipoChave, TipoValor> {
         
         public int altura;
         
-        public Tipo valor;
-        public No<Tipo> esquerda;
-        public No<Tipo> direita;
+        public TipoChave chave;
+        public TipoValor valor;
+        public No<TipoChave, TipoValor> esquerda;
+        public No<TipoChave, TipoValor> direita;
+        
+        @Override
+        public String toString() {
+            return chave + " => " + valor;
+        }
         
     }
     
     // raiz da árvore
-    private No<Tipo> raiz;
+    private No<TipoChave, TipoValor> raiz;
     
-    // valor máximo na diferença de alturas de duas subárvores
+    // chave máximo na diferença de alturas de duas subárvores
     private static final int DESBALANCEAMENTO_PERMITIDO = 1;
     
     /**
@@ -52,26 +58,28 @@ public class ArvoreAVLCV<Tipo extends Comparable<? super Tipo>> implements Itera
     }
 
     /**
-     * Insere um elemento na árvore. Elementos duplicados são ignorados.
+     * Insere um elemento na árvore. Substitui o valor caso a chave exista.
      * 
-     * @param valor Elemento a ser inserido.
+     * @param chave Elemento a ser inserido.
      */
-    public void inserir( Tipo valor ) {
-        raiz = inserir( raiz, valor );
+    public void inserir( TipoChave chave, TipoValor valor ) {
+        raiz = inserir( raiz, chave, valor );
     }
     
     /**
      * Método privado para inserção recursiva na subárvore.
      *
      * @param no raiz da subárvore.
-     * @param valor elemento que será inserido.
+     * @param chave elemento que será inserido.
+     * @param valor valor associado à chave.
      * @return a nova raiz da subárvore.
      */
-    private No<Tipo> inserir( No<Tipo> no, Tipo valor ) {
+    private No<TipoChave, TipoValor> inserir( No<TipoChave, TipoValor> no, TipoChave chave, TipoValor valor ) {
         
         if ( no == null ) {
             
-            no = new No<Tipo>();
+            no = new No<TipoChave, TipoValor>();
+            no.chave = chave;
             no.valor = valor;
             no.esquerda = null;
             no.direita = null;
@@ -79,15 +87,15 @@ public class ArvoreAVLCV<Tipo extends Comparable<? super Tipo>> implements Itera
             
         }
 
-        int comparacao = valor.compareTo( no.valor );
+        int comparacao = chave.compareTo( no.chave );
 
         if ( comparacao < 0 ) {
-            no.esquerda = inserir( no.esquerda, valor );
+            no.esquerda = inserir( no.esquerda, chave, valor );
         } else if ( comparacao > 0 ) {
-            no.direita = inserir( no.direita, valor );
+            no.direita = inserir( no.direita, chave, valor );
+        } else {
+            no.valor = valor;
         }
-
-        // não faz nada para duplicatas
         
         // balanceia a árvore
         return balancear( no );
@@ -95,27 +103,27 @@ public class ArvoreAVLCV<Tipo extends Comparable<? super Tipo>> implements Itera
     }
     
     /**
-     * Verifica se um valor está contido na árvore.
+     * Verifica se uma chave está contida na árvore.
      *
-     * @param valor Valor a ser pesquisado.
+     * @param chave chave a ser pesquisada.
      * @return true caso tenha encontrado, false caso contrário.
      */
-    public boolean contem( Tipo valor ) {
-        return contem( raiz, valor );
+    public boolean contemChave( TipoChave chave ) {
+        return contemChave( raiz, chave );
     }
     
     /**
      * Método privado para consulta na subárvore.
      *
      * @param no raiz da subárvore.
-     * @param valor elemento que será consultado.
+     * @param chave chave a ser pesquisada.
      * @return true caso tenha encontrado, false caso contrário.
      */
-    private boolean contem( No<Tipo> no, Tipo valor ) {
+    private boolean contemChave( No<TipoChave, TipoValor> no, TipoChave chave ) {
         
         while ( no != null ) {
             
-            int comparacao = valor.compareTo( no.valor );
+            int comparacao = chave.compareTo( no.chave );
 
             if ( comparacao == 0 ) {
                 return true;
@@ -133,34 +141,34 @@ public class ArvoreAVLCV<Tipo extends Comparable<? super Tipo>> implements Itera
     /**
      * Remove um elemento da árvore.
      * 
-     * @param valor Valor a ser removido.
+     * @param chave chave a ser removida.
      */
-    public void remover( Tipo valor ) {
-        raiz = remover( raiz, valor );
+    public void remover( TipoChave chave ) {
+        raiz = remover( raiz, chave );
     }
 
     /**
      * Método privado para remoção recursiva na subárvore.
      *
      * @param no raiz da subárvore.
-     * @param valor elemento que será removido.
+     * @param chave chave que será removida.
      * @return a nova raiz da subárvore.
      */
-    private No<Tipo> remover( No<Tipo> no, Tipo valor ) {
+    private No<TipoChave, TipoValor> remover( No<TipoChave, TipoValor> no, TipoChave chave ) {
         
         if ( no == null ) {
             return no;   // não encontrado
         }
         
-        int comparacao = valor.compareTo( no.valor );
+        int comparacao = chave.compareTo( no.chave );
 
         if ( comparacao < 0 ) {
-            no.esquerda = remover( no.esquerda, valor );
+            no.esquerda = remover( no.esquerda, chave );
         } else if ( comparacao > 0 ) {
-            no.direita = remover( no.direita, valor );
+            no.direita = remover( no.direita, chave );
         } else if ( no.esquerda != null && no.direita != null ) { // dois filhos
-            no.valor = encontrarMinimo( no.direita ).valor;
-            no.direita = remover( no.direita, no.valor );
+            no.chave = encontrarMinimo( no.direita ).chave;
+            no.direita = remover( no.direita, no.chave );
         } else {
             no = ( no.esquerda != null ) ? no.esquerda : no.direita;
         }
@@ -174,13 +182,13 @@ public class ArvoreAVLCV<Tipo extends Comparable<? super Tipo>> implements Itera
      *
      * @return o menor item ou null caso a árvore esteja vazia.
      */
-    public Tipo encontrarMinimo() {
+    public TipoChave encontrarMinimo() {
         
         if ( estaVazia() ) {
             return null;
         }
         
-        return encontrarMinimo( raiz ).valor;
+        return encontrarMinimo( raiz ).chave;
         
     }
     
@@ -190,7 +198,7 @@ public class ArvoreAVLCV<Tipo extends Comparable<? super Tipo>> implements Itera
      * @param no raiz da subárvore
      * @return o nó que contém o menor item.
      */
-    private No<Tipo> encontrarMinimo( No<Tipo> no ) {
+    private No<TipoChave, TipoValor> encontrarMinimo( No<TipoChave, TipoValor> no ) {
         
         if ( no == null ) {
             return no;
@@ -209,13 +217,13 @@ public class ArvoreAVLCV<Tipo extends Comparable<? super Tipo>> implements Itera
      *
      * @return o maior item ou null caso a árvore esteja vazia.
      */
-    public Tipo encontrarMaximo() {
+    public TipoChave encontrarMaximo() {
         
         if ( estaVazia() ) {
             return null;
         }
         
-        return encontrarMaximo( raiz ).valor;
+        return encontrarMaximo( raiz ).chave;
         
     }
     
@@ -225,7 +233,7 @@ public class ArvoreAVLCV<Tipo extends Comparable<? super Tipo>> implements Itera
      * @param no raiz da subárvore
      * @return o nó que contém o maior item.
      */
-    private No<Tipo> encontrarMaximo( No<Tipo> no ) {
+    private No<TipoChave, TipoValor> encontrarMaximo( No<TipoChave, TipoValor> no ) {
         
         if ( no == null ) {
             return no;
@@ -249,7 +257,7 @@ public class ArvoreAVLCV<Tipo extends Comparable<? super Tipo>> implements Itera
     /*
      * Método privado para remoção de todos os itens de forma recursiva.
      */
-    private No<Tipo> desalocar( No<Tipo> no ) {
+    private No<TipoChave, TipoValor> desalocar( No<TipoChave, TipoValor> no ) {
 
         if ( no != null ) {
             no.esquerda = desalocar( no.esquerda );
@@ -270,7 +278,7 @@ public class ArvoreAVLCV<Tipo extends Comparable<? super Tipo>> implements Itera
     }
     
     // Assume que no está balanceado ou está sendo balanceado
-    private No<Tipo> balancear( No<Tipo> no ) {
+    private No<TipoChave, TipoValor> balancear( No<TipoChave, TipoValor> no ) {
         
         if ( no == null ) {
             return no;
@@ -300,7 +308,7 @@ public class ArvoreAVLCV<Tipo extends Comparable<? super Tipo>> implements Itera
         verificarBalanceamento( raiz );
     }
 
-    private int verificarBalanceamento( No<Tipo> no ) {
+    private int verificarBalanceamento( No<TipoChave, TipoValor> no ) {
         
         if ( no == null ) {
             return -1;
@@ -326,7 +334,7 @@ public class ArvoreAVLCV<Tipo extends Comparable<? super Tipo>> implements Itera
     /**
      * Retorna a altura de um no ou -1 caso no seja nulo.
      */
-    private int altura( No<Tipo> no ) {
+    private int altura( No<TipoChave, TipoValor> no ) {
         return no == null ? -1 : no.altura;
     }
 
@@ -334,8 +342,8 @@ public class ArvoreAVLCV<Tipo extends Comparable<? super Tipo>> implements Itera
      * Rotacionada um nó com filho à esquerda. Para as árvores AVL, essa é a 
      * rotação simples do caso 1. Atualiza as alturas e retorna a nova raiz.
      */
-    private No<Tipo> rotacionarComFilhoEsquerdo( No<Tipo> k2 ) {
-        No<Tipo> k1 = k2.esquerda;
+    private No<TipoChave, TipoValor> rotacionarComFilhoEsquerdo( No<TipoChave, TipoValor> k2 ) {
+        No<TipoChave, TipoValor> k1 = k2.esquerda;
         k2.esquerda = k1.direita;
         k1.direita = k2;
         k2.altura = Math.max( altura( k2.esquerda ), altura( k2.direita ) ) + 1;
@@ -347,8 +355,8 @@ public class ArvoreAVLCV<Tipo extends Comparable<? super Tipo>> implements Itera
      * Rotacionada um nó com filho à direita. Para as árvores AVL, essa é a 
      * rotação simples do caso 4. Atualiza as alturas e retorna a nova raiz.
      */
-    private No<Tipo> rotacionarComFilhoDireito( No<Tipo> k1 ) {
-        No<Tipo> k2 = k1.direita;
+    private No<TipoChave, TipoValor> rotacionarComFilhoDireito( No<TipoChave, TipoValor> k1 ) {
+        No<TipoChave, TipoValor> k2 = k1.direita;
         k1.direita = k2.esquerda;
         k2.esquerda = k1;
         k1.altura = Math.max( altura( k1.esquerda ), altura( k1.direita ) ) + 1;
@@ -364,7 +372,7 @@ public class ArvoreAVLCV<Tipo extends Comparable<? super Tipo>> implements Itera
      * Para as árvores AVL, essa é a rotação dupla do caso 2.
      * Atualiza as alturas e retorna a nova raiz.
      */
-    private No<Tipo> rotacionarDuploComFilhoEsquerdo( No<Tipo> k3 ) {
+    private No<TipoChave, TipoValor> rotacionarDuploComFilhoEsquerdo( No<TipoChave, TipoValor> k3 ) {
         k3.esquerda = rotacionarComFilhoDireito( k3.esquerda );
         return rotacionarComFilhoEsquerdo( k3 );
     }
@@ -377,7 +385,7 @@ public class ArvoreAVLCV<Tipo extends Comparable<? super Tipo>> implements Itera
      * Para as árvores AVL, essa é a rotação dupla do caso 3.
      * Atualiza as alturas e retorna a nova raiz.
      */
-    private No<Tipo> rotacionarDuploComFilhoDireito( No<Tipo> k1 ) {
+    private No<TipoChave, TipoValor> rotacionarDuploComFilhoDireito( No<TipoChave, TipoValor> k1 ) {
         k1.direita = rotacionarComFilhoEsquerdo( k1.direita );
         return rotacionarComFilhoDireito( k1 );
     }
@@ -394,12 +402,12 @@ public class ArvoreAVLCV<Tipo extends Comparable<? super Tipo>> implements Itera
         
         if ( !estaVazia() ) {
             
-            for ( Tipo valor : PercursosArvoreAVLCV.percorrer( this, TipoPercursoArvores.EM_ORDEM ) ) {
+            for ( No<TipoChave, TipoValor> e : PercursosArvoreAVLCV.percorrer( this, TipoPercursoArvores.EM_ORDEM ) ) {
                 
-                if ( valor.equals( raiz.valor ) ) {
-                    sb.append( valor ).append( " <- raiz\n" );
+                if ( e.equals( raiz ) ) {
+                    sb.append( e ).append( " <- raiz\n" );
                 } else {
-                    sb.append( valor ).append( "\n" );
+                    sb.append( e ).append( "\n" );
                 }
                 
             }
@@ -418,7 +426,7 @@ public class ArvoreAVLCV<Tipo extends Comparable<? super Tipo>> implements Itera
      * Este iterador percorre a árvore usando o percurso em ordem.
      */
     @Override
-    public Iterator<Tipo> iterator() {
+    public Iterator<No<TipoChave, TipoValor>> iterator() {
         return PercursosArvoreAVLCV.percorrer( this, TipoPercursoArvores.EM_ORDEM ).iterator();
     }
     
@@ -428,7 +436,7 @@ public class ArvoreAVLCV<Tipo extends Comparable<? super Tipo>> implements Itera
      * 
      * @return Nó com a raiz da árvore.
      */
-    public No<Tipo> getRaiz() {
+    public No<TipoChave, TipoValor> getRaiz() {
         return raiz;
     }
     
@@ -439,120 +447,94 @@ public class ArvoreAVLCV<Tipo extends Comparable<? super Tipo>> implements Itera
      */
     public static void main( String[] args ) {
         
-        ArvoreAVLCV<Integer> aavl = new ArvoreAVLCV<>();
+        ArvoreAVLCV<Integer, String> aavl = new ArvoreAVLCV<>();
         
-        aavl.inserir( 6 );
+        aavl.inserir( 6, "seis" );
         System.out.println( aavl );
-        aavl.inserir( 8 );
+        aavl.inserir( 8, "oito" );
         System.out.println( aavl );
-        aavl.inserir( 7 );
+        aavl.inserir( 7, "sete" );
         System.out.println( aavl );
-        aavl.inserir( 4 );
+        aavl.inserir( 4, "quatro" );
         System.out.println( aavl );
-        aavl.inserir( 5 );
+        aavl.inserir( 5, "cinco" );
         System.out.println( aavl );
-        aavl.inserir( 9 );
+        aavl.inserir( 9, "nove" );
         System.out.println( aavl );
-        aavl.inserir( 3 );
+        aavl.inserir( 3, "três" );
         System.out.println( aavl );
         
         // usando o iterador
         System.out.println( "Iterador (Em Ordem):" );
-        for ( Integer v : aavl ) {
+        for ( ArvoreAVLCV<Integer, String>.No<Integer, String> v : aavl ) {
             System.out.println( "Item: " + v );
         }
         System.out.println();
         
         System.out.println( "----- Percursos -----" );
         System.out.print( "Pré-Ordem: " );
-        for ( Integer e : PercursosArvoreAVLCV.percorrer( aavl, TipoPercursoArvores.PRE_ORDEM ) ) {
+        for ( ArvoreAVLCV<Integer, String>.No<Integer, String> e : PercursosArvoreAVLCV.percorrer( aavl, TipoPercursoArvores.PRE_ORDEM ) ) {
             System.out.print( e + " " );
         }
         System.out.println();
         
         System.out.print( "Em Ordem: " );
-        for ( Integer e : PercursosArvoreAVLCV.percorrer( aavl, TipoPercursoArvores.EM_ORDEM ) ) {
+        for ( ArvoreAVLCV<Integer, String>.No<Integer, String> e : PercursosArvoreAVLCV.percorrer( aavl, TipoPercursoArvores.EM_ORDEM ) ) {
             System.out.print( e + " " );
         }
         System.out.println();
         
         System.out.print( "Pós-Ordem: " );
-        for ( Integer e : PercursosArvoreAVLCV.percorrer( aavl, TipoPercursoArvores.POS_ORDEM ) ) {
+        for ( ArvoreAVLCV<Integer, String>.No<Integer, String> e : PercursosArvoreAVLCV.percorrer( aavl, TipoPercursoArvores.POS_ORDEM ) ) {
             System.out.print( e + " " );
         }
         System.out.println();
         
         System.out.print( "Em Nível: " );
-        for ( Integer e : PercursosArvoreAVLCV.percorrer( aavl, TipoPercursoArvores.EM_NIVEL ) ) {
+        for ( ArvoreAVLCV<Integer, String>.No<Integer, String> e : PercursosArvoreAVLCV.percorrer( aavl, TipoPercursoArvores.EM_NIVEL ) ) {
             System.out.print( e + " " );
         }
         System.out.println();
         
         System.out.print( "Pré-Ordem Inverso: " );
-        for ( Integer e : PercursosArvoreAVLCV.percorrer( aavl, TipoPercursoArvores.PRE_ORDEM_INVERSO ) ) {
+        for ( ArvoreAVLCV<Integer, String>.No<Integer, String> e : PercursosArvoreAVLCV.percorrer( aavl, TipoPercursoArvores.PRE_ORDEM_INVERSO ) ) {
             System.out.print( e + " " );
         }
         System.out.println();
         
         System.out.print( "Em Ordem Inverso: " );
-        for ( Integer e : PercursosArvoreAVLCV.percorrer( aavl, TipoPercursoArvores.EM_ORDEM_INVERSO ) ) {
+        for ( ArvoreAVLCV<Integer, String>.No<Integer, String> e : PercursosArvoreAVLCV.percorrer( aavl, TipoPercursoArvores.EM_ORDEM_INVERSO ) ) {
             System.out.print( e + " " );
         }
         System.out.println();
         
         System.out.print( "Pós-Ordem Inverso: " );
-        for ( Integer e : PercursosArvoreAVLCV.percorrer( aavl, TipoPercursoArvores.POS_ORDEM_INVERSO ) ) {
+        for ( ArvoreAVLCV<Integer, String>.No<Integer, String> e : PercursosArvoreAVLCV.percorrer( aavl, TipoPercursoArvores.POS_ORDEM_INVERSO ) ) {
             System.out.print( e + " " );
         }
         System.out.println();
         
         System.out.print( "Em Nível Inverso: " );
-        for ( Integer e : PercursosArvoreAVLCV.percorrer( aavl, TipoPercursoArvores.EM_NIVEL_INVERSO ) ) {
+        for ( ArvoreAVLCV<Integer, String>.No<Integer, String> e : PercursosArvoreAVLCV.percorrer( aavl, TipoPercursoArvores.EM_NIVEL_INVERSO ) ) {
             System.out.print( e + " " );
         }
         System.out.println();
         
         // consultas
         System.out.println( "\n----- Consultas -----" );
-        List<Integer> elementos = (List<Integer>) PercursosArvoreAVLCV.percorrer( aavl, TipoPercursoArvores.EM_ORDEM );
-        elementos.add( 15 );
-        elementos.add( 19 );
-        elementos.add( -4 );
+        List<ArvoreAVLCV<Integer, String>.No<Integer, String>> elementos = (List<ArvoreAVLCV<Integer, String>.No<Integer, String>>) PercursosArvoreAVLCV.percorrer( aavl, TipoPercursoArvores.EM_ORDEM );
         Collections.shuffle( elementos );
-        for ( Integer e : elementos ) {
-            System.out.printf( "%4d está na lista? => %s\n", e,
-                    aavl.contem( e ) ? "SIM" : "NÃO" );
+        for ( ArvoreAVLCV<Integer, String>.No<Integer, String> e : elementos ) {
+            System.out.printf( "%4d está na árvore? => %s\n", e.chave,
+                    aavl.contemChave( e.chave ) ? "SIM" : "NÃO" );
         }
         
         System.out.println( "\n----- Remoção -----" );
         System.out.println( aavl );
-        for ( Integer e : elementos ) {
-            System.out.printf( "Removendo o elemento %4d...\n", e );
-            aavl.remover( e );
+        for ( ArvoreAVLCV<Integer, String>.No<Integer, String> e : elementos ) {
+            System.out.printf( "Removendo o elemento %4d...\n", e.chave );
+            aavl.remover( e.chave );
             System.out.println( aavl );
-        }
-        
-        // utilizando a árvore binária de busca anotada para testar os dados
-        aavl.inserir( 8 );
-        aavl.inserir( 4 );
-        aavl.inserir( 2 );
-        aavl.inserir( 1 );
-        aavl.inserir( 3 );
-        aavl.inserir( 6 );
-        aavl.inserir( 5 );
-        aavl.inserir( 7 );
-        aavl.inserir( 12 );
-        aavl.inserir( 10 );
-        aavl.inserir( 9 );
-        aavl.inserir( 11 );
-        aavl.inserir( 14 );
-        aavl.inserir( 13 );
-        aavl.inserir( 15 );
-        
-        ArvoreAVLAnotada<Integer> abbAnt = new ArvoreAVLAnotada<>( aavl );
-        System.out.println( abbAnt );
-        for ( ArvoreAVLAnotada<Integer>.NoAnotado<Integer> n : abbAnt.percorrer( TipoPercursoArvores.EM_ORDEM ) ) {
-            System.out.println( n );
         }
         
     }

@@ -28,9 +28,12 @@ public class PercursosArvoreAVLCV {
      * @param tipo Tipo do percurso a ser executado.
      * @return Lista de elementos na ordem do percurso executado.
      */
-    public static <Tipo extends Comparable<? super Tipo>> Iterable<Tipo> percorrer( ArvoreAVLCV<Tipo> aavl, TipoPercursoArvores tipo ) {
+    public static 
+        <TipoChave extends Comparable<? super TipoChave>, TipoValor> 
+        Iterable<ArvoreAVLCV<TipoChave, TipoValor>.No<TipoChave, TipoValor>> 
+        percorrer( ArvoreAVLCV<TipoChave, TipoValor> aavl, TipoPercursoArvores tipo ) {
         
-        List<Tipo> elementos = new ArrayList<>();
+        List<ArvoreAVLCV<TipoChave, TipoValor>.No<TipoChave, TipoValor>> elementos = new ArrayList<>();
         
         switch ( tipo ) {
             case PRE_ORDEM:
@@ -67,47 +70,63 @@ public class PercursosArvoreAVLCV {
     /*
      * Métodos privados para os percursos.
      */
-    private static <Tipo extends Comparable<? super Tipo>> void preOrdem( ArvoreAVLCV<Tipo>.No<Tipo> no, List<Tipo> elementos ) {
+    private static 
+        <TipoChave extends Comparable<? super TipoChave>, TipoValor> 
+        void preOrdem( 
+                ArvoreAVLCV<TipoChave, TipoValor>.No<TipoChave, TipoValor> no, 
+                List<ArvoreAVLCV<TipoChave, TipoValor>.No<TipoChave, TipoValor>> elementos ) {
         
         if ( no != null ) {
-            elementos.add( no.valor );
+            elementos.add( no );
             preOrdem( no.esquerda, elementos );
             preOrdem( no.direita, elementos );
         }
         
     }
     
-    private static <Tipo extends Comparable<? super Tipo>> void emOrdem( ArvoreAVLCV<Tipo>.No<Tipo> no, List<Tipo> elementos ) {
+    private static 
+        <TipoChave extends Comparable<? super TipoChave>, TipoValor> 
+        void emOrdem( 
+                ArvoreAVLCV<TipoChave, TipoValor>.No<TipoChave, TipoValor> no, 
+                List<ArvoreAVLCV<TipoChave, TipoValor>.No<TipoChave, TipoValor>> elementos ) {
         
         if ( no != null ) {
             emOrdem( no.esquerda, elementos );
-            elementos.add( no.valor );
+            elementos.add( no );
             emOrdem( no.direita, elementos );
         }
         
     }
     
-    private static <Tipo extends Comparable<? super Tipo>> void posOrdem( ArvoreAVLCV<Tipo>.No<Tipo> no, List<Tipo> elementos ) {
+    private static 
+        <TipoChave extends Comparable<? super TipoChave>, TipoValor>  
+        void posOrdem( 
+                ArvoreAVLCV<TipoChave, TipoValor>.No<TipoChave, TipoValor> no, 
+                List<ArvoreAVLCV<TipoChave, TipoValor>.No<TipoChave, TipoValor>> elementos ) {
         
         if ( no != null ) {
             posOrdem( no.esquerda, elementos );
             posOrdem( no.direita, elementos );
-            elementos.add( no.valor );
+            elementos.add( no );
         }
         
     }
     
-    private static <Tipo extends Comparable<? super Tipo>> void emNivel( ArvoreAVLCV<Tipo>.No<Tipo> no, List<Tipo> elementos ) {
+    private static 
+        <TipoChave extends Comparable<? super TipoChave>, TipoValor>  
+        void emNivel( 
+                ArvoreAVLCV<TipoChave, TipoValor>.No<TipoChave, TipoValor> no, 
+                List<ArvoreAVLCV<TipoChave, TipoValor>.No<TipoChave, TipoValor>> elementos ) {
         
         if ( no != null ) {
             
-            Fila<ArvoreAVLCV<Tipo>.No<Tipo>> fila = new Fila<>();
+            Fila<ArvoreAVLCV<TipoChave, TipoValor>.No<TipoChave, TipoValor>> fila = new Fila<>();
             fila.enfileirar( no );
 
             while ( !fila.estaVazia() ) {
 
-                ArvoreAVLCV<Tipo>.No<Tipo> atual = fila.desenfileirar();
-                elementos.add( atual.valor );
+                ArvoreAVLCV<TipoChave, TipoValor>.No<TipoChave, TipoValor> atual = fila.desenfileirar();
+                elementos.add( atual );
 
                 if ( atual.esquerda != null ) {
                     fila.enfileirar( atual.esquerda );
@@ -123,47 +142,63 @@ public class PercursosArvoreAVLCV {
         
     }
     
-    private static <Tipo extends Comparable<? super Tipo>> void preOrdemInverso( ArvoreAVLCV<Tipo>.No<Tipo> no, List<Tipo> elementos ) {
+    private static 
+        <TipoChave extends Comparable<? super TipoChave>, TipoValor>
+        void preOrdemInverso( 
+                ArvoreAVLCV<TipoChave, TipoValor>.No<TipoChave, TipoValor> no, 
+                List<ArvoreAVLCV<TipoChave, TipoValor>.No<TipoChave, TipoValor>> elementos ) {
         
         if ( no != null ) {
-            elementos.add( no.valor );
+            elementos.add( no );
             preOrdemInverso( no.direita, elementos );
             preOrdemInverso( no.esquerda, elementos );
         }
         
     }
     
-    private static <Tipo extends Comparable<? super Tipo>> void emOrdemInverso( ArvoreAVLCV<Tipo>.No<Tipo> no, List<Tipo> elementos ) {
+    private static 
+        <TipoChave extends Comparable<? super TipoChave>, TipoValor>  
+        void emOrdemInverso( 
+                ArvoreAVLCV<TipoChave, TipoValor>.No<TipoChave, TipoValor> no, 
+                List<ArvoreAVLCV<TipoChave, TipoValor>.No<TipoChave, TipoValor>> elementos ) {
         
         if ( no != null ) {
             emOrdemInverso( no.direita, elementos );
-            elementos.add( no.valor );
+            elementos.add( no );
             emOrdemInverso( no.esquerda, elementos );
         }
         
     }
     
-    private static <Tipo extends Comparable<? super Tipo>> void posOrdemInverso( ArvoreAVLCV<Tipo>.No<Tipo> no, List<Tipo> elementos ) {
+    private static 
+        <TipoChave extends Comparable<? super TipoChave>, TipoValor> 
+        void posOrdemInverso( 
+                ArvoreAVLCV<TipoChave, TipoValor>.No<TipoChave, TipoValor> no, 
+                List<ArvoreAVLCV<TipoChave, TipoValor>.No<TipoChave, TipoValor>> elementos ) {
         
         if ( no != null ) {
             posOrdemInverso( no.direita, elementos );
             posOrdemInverso( no.esquerda, elementos );
-            elementos.add( no.valor );
+            elementos.add( no );
         }
         
     }
     
-    private static <Tipo extends Comparable<? super Tipo>> void emNivelInverso( ArvoreAVLCV<Tipo>.No<Tipo> no, List<Tipo> elementos ) {
+    private static 
+        <TipoChave extends Comparable<? super TipoChave>, TipoValor> 
+        void emNivelInverso(  
+                ArvoreAVLCV<TipoChave, TipoValor>.No<TipoChave, TipoValor> no, 
+                List<ArvoreAVLCV<TipoChave, TipoValor>.No<TipoChave, TipoValor>> elementos ) {
         
         if ( no != null ) {
             
-            Fila<ArvoreAVLCV<Tipo>.No<Tipo>> fila = new Fila<>();
-            Pilha<ArvoreAVLCV<Tipo>.No<Tipo>> pilha = new Pilha<>();
+            Fila<ArvoreAVLCV<TipoChave, TipoValor>.No<TipoChave, TipoValor>> fila = new Fila<>();
+            Pilha<ArvoreAVLCV<TipoChave, TipoValor>.No<TipoChave, TipoValor>> pilha = new Pilha<>();
             fila.enfileirar( no );
 
             while ( !fila.estaVazia() ) {
 
-                ArvoreAVLCV<Tipo>.No<Tipo> atual = fila.desenfileirar();
+                ArvoreAVLCV<TipoChave, TipoValor>.No<TipoChave, TipoValor> atual = fila.desenfileirar();
                 pilha.empilhar( atual );
 
                 if ( atual.esquerda != null ) {
@@ -177,7 +212,7 @@ public class PercursosArvoreAVLCV {
             }
 
             while ( !pilha.estaVazia() ) {
-                elementos.add( pilha.desempilhar().valor );
+                elementos.add( pilha.desempilhar() );
             }
         
         }

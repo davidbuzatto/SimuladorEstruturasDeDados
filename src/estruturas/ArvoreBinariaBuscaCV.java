@@ -43,7 +43,7 @@ public class ArvoreBinariaBuscaCV<TipoChave extends Comparable<? super TipoChave
 
         @Override
         public String toString() {
-            return chave + " => " + valor;
+            return chave + " -> " + valor;
         }
     }
     

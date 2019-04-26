@@ -6,7 +6,7 @@
 
 package gui.desenho.estruturas;
 
-import estruturas.ArvoreAVLCV;
+import estruturas.ArvoreAVL;
 import estruturas.algoritmos.arvores.TipoPercursoArvores;
 import gui.desenho.PainelDesenho;
 import java.awt.BasicStroke;
@@ -27,7 +27,7 @@ import uteis.UteisDesenho;
  */
 public class ArvoreAVLDesenhavel<Tipo extends Comparable<? super Tipo>> implements Desenhavel {
     
-    private ArvoreAVLCV<Tipo> aavl;
+    private ArvoreAVL<Tipo> aavl;
     private PainelDesenho painel;
     private ArvoreAVLAnotada<Tipo> aavlAnt;
     private boolean mostrarAtributosNos;
@@ -44,7 +44,7 @@ public class ArvoreAVLDesenhavel<Tipo extends Comparable<? super Tipo>> implemen
     // lista de itens do percurso executado
     private List<ArvoreAVLAnotada<Integer>.NoAnotado<Integer>> listaPercurso;
     
-    public ArvoreAVLDesenhavel( ArvoreAVLCV<Tipo> abb ) {
+    public ArvoreAVLDesenhavel( ArvoreAVL<Tipo> abb ) {
         this.aavl = abb;
         diametroNos = 30;
         listaPercurso = new ArrayList<>();
